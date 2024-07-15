@@ -195,7 +195,7 @@ public class Login extends javax.swing.JFrame {
             if (checkAccount()) {
                 this.dispose();
                 new Main().setVisible(true);
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
+//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
                 
             } else {
                 JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
@@ -216,7 +216,7 @@ public class Login extends javax.swing.JFrame {
         if (checkAccount()) {
             this.dispose();
             new Main().setVisible(true);
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
+//            JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
         } else {
             JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
         }

@@ -50,49 +50,71 @@ public class Main extends javax.swing.JFrame {
                 if (menuIndex == 0) {
                     main.showForm(new ManageSneaker());
                 }
-                if(menuIndex == 1) {
-                    main.showForm(new Voucher() );
+                if (menuIndex == 1) {
+                    main.showForm(new Voucher());
                 }
-                if(menuIndex == 2) {
-                    main.showForm(new OrderForm() );
+                if (menuIndex == 2) {
+                    main.showForm(new OrderForm());
                 }
-                if(menuIndex == 3) {
-                    main.showForm(new ManageOrder() );
+                if (menuIndex == 3) {
+                    main.showForm(new ManageOrder());
                 }
-                if(menuIndex == 4) {
-                        main.showForm(new ManageStaff() );
+                if (menuIndex == 4) {
+                    main.showForm(new ManageStaff());
                 }
-                if(menuIndex == 5) {
-                        main.showForm(new ManageCustomer() );
+                if (menuIndex == 5) {
+                    main.showForm(new ManageCustomer());
                 }
-                if(menuIndex == 6) {
-                    main.showForm(new Statistic() );
+                if (menuIndex == 6) {
+                    main.showForm(new Statistic());
                 }
             }
         });
-        menu.addEventShowPopup(new EventShowPopupMenu() {
-            @Override
-            public void showPopup(Component com) {
-                MenuItem item = (MenuItem) com;
-                PopupMenu popup = new PopupMenu(Main.this, item.getIndex(), item.getEventSelected(), item.getMenu().getSubMenu());
-                int x = Main.this.getX() + 52;
-                int y = Main.this.getY() + com.getY() + 500;
-                popup.setLocation(x, y);
-                popup.setVisible(true);
-            }
-        });
+//        menu.addEventShowPopup(new EventShowPopupMenu() {
+//            @Override
+//            public void showPopup(Component com) {
+//                MenuItem item = (MenuItem) com;
+//                PopupMenu popup = new PopupMenu(Main.this, item.getIndex(), item.getEventSelected(), item.getMenu().getSubMenu());
+//                int x = Main.this.getX() + 52;
+//                int y = Main.this.getY() + com.getY() + 500;
+//                popup.setLocation(x, y);
+//                popup.setVisible(true);
+//            }
+//        });
         menu.initMenuItem();
-        bg.add(menu, "w 230!, spany 2");    // Span Y 2cell
+//        bg.add(menu, "w 230!, spany 2");    // Span Y 2cell
+//        bg.add(header, "h 58!, wrap");
+//        bg.add(main, "w 100%, h 100%");
+        bg.add(menu, "w 62!, spany 2");    // Span Y 2cell
         bg.add(header, "h 58!, wrap");
         bg.add(main, "w 100%, h 100%");
         TimingTarget target = new TimingTargetAdapter() {
-            @Override
+
+//            @Override
+//            public void timingEvent(float fraction) {
+//                double width;
+//                if (menu.isShowMenu()) {
+//                    width = 60 + (170 * (1f - fraction));
+//                } else {
+//                    width = 60 + (170 * fraction);
+//                }
+//                layout.setComponentConstraints(menu, "w " + width + "!, spany2");
+//                menu.revalidate();
+//            }
+//
+//            @Override
+//            public void end() {
+//                menu.setShowMenu(!menu.isShowMenu());
+//                menu.setEnableMenu(true);
+//            }
+            
+             @Override
             public void timingEvent(float fraction) {
                 double width;
                 if (menu.isShowMenu()) {
-                    width = 60 + (170 * (1f - fraction));
-                } else {
                     width = 60 + (170 * fraction);
+                } else {
+                    width = 60 + (170 * (1f - fraction));
                 }
                 layout.setComponentConstraints(menu, "w " + width + "!, spany2");
                 menu.revalidate();
@@ -169,7 +191,7 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public static void main(String args[]) {
-        
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -187,10 +209,10 @@ public class Main extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-//            @Override
+            @Override
             public void run() {
                 new Login().setVisible(true);
             }

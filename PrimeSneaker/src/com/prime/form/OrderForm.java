@@ -1,6 +1,7 @@
 package com.prime.form;
 
 import com.prime.form.attribute.ViewQr;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -93,6 +94,9 @@ public class OrderForm extends javax.swing.JPanel {
             }
         });
         jScrollPane4.setViewportView(tblInvoice);
+        if (tblInvoice.getColumnModel().getColumnCount() > 0) {
+            tblInvoice.getColumnModel().getColumn(0).setPreferredWidth(10);
+        }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -115,11 +119,11 @@ public class OrderForm extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Tên sản phẩm", "Hãng", "Đơn giá", "Số lượng", "Thành tiền", "Action"
+                "STT", "Mã sản phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng", "Hãng", "Màu sắc", "Kích cỡ", "Đế giày", "Chất liệu", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -128,8 +132,12 @@ public class OrderForm extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(tblOder);
         if (tblOder.getColumnModel().getColumnCount() > 0) {
-            tblOder.getColumnModel().getColumn(5).setHeaderValue("");
-            tblOder.getColumnModel().getColumn(6).setHeaderValue("Action");
+            tblOder.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tblOder.getColumnModel().getColumn(1).setPreferredWidth(50);
+            tblOder.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tblOder.getColumnModel().getColumn(4).setPreferredWidth(20);
+            tblOder.getColumnModel().getColumn(7).setPreferredWidth(20);
+            tblOder.getColumnModel().getColumn(10).setPreferredWidth(100);
         }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -405,6 +413,14 @@ public class OrderForm extends javax.swing.JPanel {
         txtSearchProdDetail.setForeground(new java.awt.Color(153, 153, 153));
         txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
         txtSearchProdDetail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSearchProdDetail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtSearchProdDetailFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSearchProdDetailFocusLost(evt);
+            }
+        });
 
         tblSneaker.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -540,6 +556,20 @@ public class OrderForm extends javax.swing.JPanel {
         //        fillTableHoaDon(banHang.fillHoaDon());
         //        fillTableGioHang(banHang.getAllHDCT(WIDTH));
     }//GEN-LAST:event_jPanel1formMouseClicked
+
+    private void txtSearchProdDetailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusGained
+        if (txtSearchProdDetail.getText().equals("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm")) {
+            txtSearchProdDetail.setText("");
+            setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txtSearchProdDetailFocusGained
+
+    private void txtSearchProdDetailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusLost
+        if (txtSearchProdDetail.getText().equals("")) {
+            txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+            setForeground(new Color(39,80,150));
+        }
+    }//GEN-LAST:event_txtSearchProdDetailFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;
