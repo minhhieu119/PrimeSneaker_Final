@@ -680,16 +680,33 @@ select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, ca
               right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
               join Size si on sd.size_id = si.size_id
               join Color co on sd.color_id = co.color_id
-			  where sneaker_detail_code like '234533'
+			  where sneaker_detail_code like '2345533'
 
 select sneaker_detail_id
 from SneakerDetail
-where sneaker_detail_code = '234533'
+where sneaker_detail_code like '2345530'
 
-select sneaker_detail_id
-              from SneakerDetail
-              where sneaker_detail_code = ?
+insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
+values (?,?,?,?,?)
+
+insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
+values
 
 
+delete from [Order]
+where order_id = ?
+
+select distinct o.order_id, o.[user_id], o.voucher_id, o.total_cost, o.payment_method_id,  o.created_at, [user_id], sum(quantity) as quantity, [status]
+              from [Order] o left join OrderDetail od on o.order_id = od.order_id
+              where o.order_id = 8
+			  group by o.order_id, o.created_at, [user_id], [status]
 
 
+select * from OrderDetail
+
+update OrderDetail
+set quantity = 3
+where order_id = 14 and sneaker_detail_id = 1
+
+delete from OrderDetail
+where order_id = 8 and sneaker_detail_id = 1

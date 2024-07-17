@@ -15,7 +15,7 @@ public class Order {
     private int userId;
     private String orderQrCode;
     private String userName;
-    private String customerName;
+    private String customerName;    
     private String voucherName;
     private int paymentMethod;
     private long totalCost, receivedCash, change;

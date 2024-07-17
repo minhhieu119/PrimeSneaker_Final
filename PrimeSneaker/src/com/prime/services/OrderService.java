@@ -211,11 +211,11 @@ public class OrderService {
     public List<Order> getOrder() throws SQLException {
         List<Order> listOder = new ArrayList<>();
         sql = """
-              select distinct o.order_id, o.created_at, [user_id], count(quantity) as quantity, [status]
+              select distinct o.order_id, o.created_at, [user_id], sum(quantity) as quantity, [status]
               from [Order] o left join OrderDetail od on o.order_id = od.order_id
               where status like N'Chờ thanh toán'
               group by o.order_id, o.created_at, [user_id],[status]
-              order by created_at desc
+              order by order_id desc
               """;
 
         try {
@@ -330,7 +330,7 @@ public class OrderService {
             ps = c.prepareStatement(sql);
             ps.setInt(1, sd.getSneakerId());
             ps.setInt(2, orderId);
-            ps.setInt(3, sd.getQuantity());
+            ps.setInt(3, 1);
             ps.setLong(4, sd.getPrice());
             ps.setLong(5, sd.getQuantity() * sd.getPrice());
             return ps.executeUpdate();
@@ -341,4 +341,114 @@ public class OrderService {
         }
         return null;
     }
+    
+    public Integer updateOrder (int orderId) throws SQLException{
+        sql = """
+              update [Order]
+              set [status] = N'Đã hủy'
+              where order_id = ?
+              """;
+        
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
+    
+    public Integer updateOrderDetail (int quantity, int orderId, int sdId) throws SQLException{
+        sql = """
+              update OrderDetail
+              set quantity = ?
+              where order_id = ? and sneaker_detail_id = ?
+              """;
+        
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, quantity);
+            ps.setInt(2, orderId);
+            ps.setInt(3, sdId);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
+    
+    public Integer deleteOrderDetail (int orderId, int sdId) throws SQLException{
+        sql = """
+              delete from OrderDetail
+              where order_id = ? and sneaker_detail_id = ?
+              """;
+        
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.setInt(2, sdId);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
+    
+    
+//    public Order getOneOrder(int id) throws SQLException {
+//        Order o = new Order();
+//
+//        sql = """
+//              select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+//              from Sneaker s join Brand b on s.brand_id = b.brand_id
+//              join Category c on s.category_id = c.category_id
+//              join Sole so on s.sole_id = so.sole_id
+//              join Material m on s.material_id = m.material_id
+//              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+//              join Size si on sd.size_id = si.size_id
+//              join Color co on sd.color_id = co.color_id
+//              where order_id like ?
+//              """;
+//
+//        try {
+//            c = ConnectionJDBC.getConnection();
+//            ps = c.prepareStatement(sql);
+//            ps.setString(1,code);
+//            rs = ps.executeQuery();
+//            while (rs.next()) {
+//                sd.setSneakerId(rs.getInt("sneaker_detail_id"));
+//                sd.setSneakerCode(rs.getString("sneaker_detail_code"));
+//                sd.setSneakerName(rs.getString("sneaker_name"));
+//                sd.setPrice(rs.getLong("price"));
+//                sd.setQuantity(rs.getInt("quantity"));
+//                sd.setCategory(rs.getString("category_name"));
+//                sd.setBrand(rs.getString("brand_name"));
+//                sd.setMaterial(rs.getString("material_name"));
+//                sd.setSole(rs.getString("sole_name"));
+//                sd.setColor(rs.getString("color_name"));
+//                sd.setSize(rs.getFloat("size_number"));
+//            }
+//            return sd;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            rs.close();
+//            ps.close();
+//            c.close();
+//        }
+//        return null;
+//    }
 }

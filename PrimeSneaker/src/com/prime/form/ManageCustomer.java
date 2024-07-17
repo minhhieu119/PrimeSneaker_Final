@@ -92,10 +92,12 @@ public class ManageCustomer extends javax.swing.JPanel {
         btnAddNewStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnAddNewStaff.setText("Thêm khách hàng");
 
-        btnUpdateStaff.setBackground(new java.awt.Color(255, 255, 102));
+        btnUpdateStaff.setBackground(new java.awt.Color(39, 80, 150));
+        btnUpdateStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdateStaff.setText("Sửa khách hàng");
 
-        btnClearStaff.setBackground(new java.awt.Color(255, 0, 0));
+        btnClearStaff.setBackground(new java.awt.Color(39, 80, 150));
+        btnClearStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnClearStaff.setText("Reset");
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
