@@ -1,17 +1,120 @@
 package com.prime.form;
 
 import com.prime.form.attribute.ViewQr;
+import com.prime.main_model.Order;
+import com.prime.main_model.SneakerCart;
+import com.prime.main_model.SneakerDetail;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
+import com.prime.main_model.Voucher;
+import com.prime.services.OrderService;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 public class OrderForm extends javax.swing.JPanel {
 
-    public OrderForm() {
+    OrderService os = new OrderService();
+    DefaultTableModel modelSneaker = new DefaultTableModel();
+    DefaultTableModel modelCart = new DefaultTableModel();
+    DefaultTableModel modelInvoice = new DefaultTableModel();
+    int invoiceId;
+
+    public OrderForm() throws SQLException {
         initComponents();
         setOpaque(false);
+        addVoucher();
+        fillToListInvoice(os.getOrder());
+        fillToListSneakerDetail(os.getAllSneakerDetail());
+
     }
+
+    private void addVoucher() throws SQLException {
+        cboVoucher.removeAllItems();
+        for (Voucher vou : os.getVoucher()) {
+            cboVoucher.addItem(vou.getVoucherName());
+        }
+    }
+
+    private void fillToListSneakerDetail(List<SneakerDetail> list) throws SQLException {
+        modelSneaker = (DefaultTableModel) tblSneakerDetail.getModel();
+        modelSneaker.setRowCount(0);
+        int index = 0;
+        for (SneakerDetail sd : list) {
+            modelSneaker.addRow(new Object[]{
+                index += 1,
+                sd.getSneakerCode(),
+                sd.getSneakerName(),
+                sd.getPrice(),
+                sd.getQuantity(),
+                sd.getBrand(),
+                sd.getCategory(),
+                sd.getMaterial(),
+                sd.getSole(),
+                sd.getColor(),
+                sd.getSize()
+            });
+//System.out.println(sd);
+        }
+    }
+
+    private void fillToListInvoice(List<Order> list) throws SQLException {
+        modelInvoice = (DefaultTableModel) tblInvoice.getModel();
+        modelInvoice.setRowCount(0);
+        int index = 0;
+        for (Order o : list) {
+            modelInvoice.addRow(new Object[]{
+                index += 1,
+                o.getOrderId(),
+                o.getUserId(),
+                o.getQuantity(),
+                o.getStatus(),
+                o.getCreated_at()
+            });
+//System.out.println(sd);
+        }
+    }
+
+    private void fillToListCart(List<SneakerCart> list) throws SQLException {
+        modelCart = (DefaultTableModel) tblCart.getModel();
+        modelCart.setRowCount(0);
+        int index = 0;
+        for (SneakerCart sc : list) {
+            modelCart.addRow(new Object[]{
+                index += 1,
+                sc.getSneakerCode(),
+                sc.getSneakerName(),
+                sc.getQuantity(),
+                sc.getQuantity() * sc.getPrice(),
+                sc.getBrand(),
+                sc.getColor(),
+                sc.getSize(),
+                "Action"
+            });
+//System.out.println(sd);
+        }
+    }
+
+    private SneakerDetail getSneakerToCart() {
+        SneakerDetail sd = new SneakerDetail();
+        int index = tblSneakerDetail.getSelectedRow();
+        sd.setSneakerCode((String) tblSneakerDetail.getValueAt(index, 1));
+        sd.setSneakerName((String) tblSneakerDetail.getValueAt(index, 2));
+        sd.setPrice((long) tblSneakerDetail.getValueAt(index, 3));
+        sd.setQuantity((int) tblSneakerDetail.getValueAt(index, 4));
+        sd.setBrand((String) tblSneakerDetail.getValueAt(index, 5));
+        sd.setCategory((String) tblSneakerDetail.getValueAt(index, 6));
+        sd.setMaterial((String) tblSneakerDetail.getValueAt(index, 7));
+        sd.setSole((String) tblSneakerDetail.getValueAt(index, 8));
+        sd.setColor((String) tblSneakerDetail.getValueAt(index, 9));
+        sd.setSize((float) tblSneakerDetail.getValueAt(index, 10));
+        return sd;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -22,7 +125,7 @@ public class OrderForm extends javax.swing.JPanel {
         tblInvoice = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblOder = new javax.swing.JTable();
+        tblCart = new javax.swing.JTable();
         btnScanQR = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
@@ -59,8 +162,9 @@ public class OrderForm extends javax.swing.JPanel {
         sliderPrice = new javax.swing.JSlider();
         txtSearchProdDetail = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tblSneaker = new javax.swing.JTable();
+        tblSneakerDetail = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        lbnGia = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(1058, 770));
@@ -82,7 +186,7 @@ public class OrderForm extends javax.swing.JPanel {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã HD", "Ngày tạo", "Mã NV", "Số lượng SP", "Trạng thái"
+                "STT", "Mã HD", "Mã NV", "Số lượng SP", "Trạng thái", "Ngày tạo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -91,6 +195,11 @@ public class OrderForm extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblInvoice.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblInvoiceMouseClicked(evt);
             }
         });
         jScrollPane4.setViewportView(tblInvoice);
@@ -114,30 +223,30 @@ public class OrderForm extends javax.swing.JPanel {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Giỏ hàng"));
 
-        tblOder.setModel(new javax.swing.table.DefaultTableModel(
+        tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "STT", "Mã sản phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng", "Hãng", "Màu sắc", "Kích cỡ", "Đế giày", "Chất liệu", "Action"
+                "STT", "Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Hãng", "Màu sắc", "Kích cỡ", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, true, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tblOder);
-        if (tblOder.getColumnModel().getColumnCount() > 0) {
-            tblOder.getColumnModel().getColumn(0).setPreferredWidth(10);
-            tblOder.getColumnModel().getColumn(1).setPreferredWidth(50);
-            tblOder.getColumnModel().getColumn(2).setPreferredWidth(100);
-            tblOder.getColumnModel().getColumn(4).setPreferredWidth(20);
-            tblOder.getColumnModel().getColumn(7).setPreferredWidth(20);
-            tblOder.getColumnModel().getColumn(10).setPreferredWidth(100);
+        jScrollPane2.setViewportView(tblCart);
+        if (tblCart.getColumnModel().getColumnCount() > 0) {
+            tblCart.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tblCart.getColumnModel().getColumn(1).setPreferredWidth(50);
+            tblCart.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tblCart.getColumnModel().getColumn(3).setPreferredWidth(20);
+            tblCart.getColumnModel().getColumn(7).setPreferredWidth(20);
+            tblCart.getColumnModel().getColumn(8).setPreferredWidth(100);
         }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -235,7 +344,6 @@ public class OrderForm extends javax.swing.JPanel {
 
         cboVoucher.setBackground(new java.awt.Color(39, 80, 150));
         cboVoucher.setForeground(new java.awt.Color(255, 255, 255));
-        cboVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel19.setText("Ngày tạo:");
 
@@ -397,6 +505,11 @@ public class OrderForm extends javax.swing.JPanel {
         btnAddInvoice.setForeground(new java.awt.Color(255, 255, 255));
         btnAddInvoice.setText("Tạo hoá đơn");
         btnAddInvoice.setBorder(null);
+        btnAddInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddInvoiceActionPerformed(evt);
+            }
+        });
 
         jPanel15.setBackground(new java.awt.Color(255, 255, 255));
         jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách sản phẩm chi tiết", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -406,12 +519,18 @@ public class OrderForm extends javax.swing.JPanel {
         lblSlider.setText("Tìm theo giá:");
 
         sliderPrice.setBackground(new java.awt.Color(39, 80, 150));
-        sliderPrice.setMaximum(4000000);
+        sliderPrice.setMaximum(6000000);
         sliderPrice.setMinimum(100000);
         sliderPrice.setToolTipText("100");
+        sliderPrice.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderPriceStateChanged(evt);
+            }
+        });
 
         txtSearchProdDetail.setForeground(new java.awt.Color(153, 153, 153));
         txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+        txtSearchProdDetail.setToolTipText("");
         txtSearchProdDetail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSearchProdDetail.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -421,8 +540,13 @@ public class OrderForm extends javax.swing.JPanel {
                 txtSearchProdDetailFocusLost(evt);
             }
         });
+        txtSearchProdDetail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchProdDetailKeyReleased(evt);
+            }
+        });
 
-        tblSneaker.setModel(new javax.swing.table.DefaultTableModel(
+        tblSneakerDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null, null, null},
@@ -430,7 +554,7 @@ public class OrderForm extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã sản phẩm", "Tên sản phẩm", "Giá", "Số lượng tồn", "Danh mục", "Hãng", "Màu sắc", "Chất liệu", "Kích cỡ", "Đế giày"
+                "STT", "Mã sản phẩm", "Tên sản phẩm", "Giá", "Số lượng tồn", "Hãng", "Danh mục", "Chất liệu", "Đế giày", "Màu sắc", "Kích cỡ"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -441,7 +565,15 @@ public class OrderForm extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(tblSneaker);
+        tblSneakerDetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSneakerDetailMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblSneakerDetail);
+        if (tblSneakerDetail.getColumnModel().getColumnCount() > 0) {
+            tblSneakerDetail.getColumnModel().getColumn(0).setPreferredWidth(10);
+        }
 
         jLabel2.setText("Giá: ");
 
@@ -456,11 +588,13 @@ public class OrderForm extends javax.swing.JPanel {
                 .addComponent(txtSearchProdDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(100, 100, 100)
                 .addComponent(lblSlider)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbnGia, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3))
@@ -469,12 +603,14 @@ public class OrderForm extends javax.swing.JPanel {
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSearchProdDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbnGia, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSearchProdDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -567,9 +703,66 @@ public class OrderForm extends javax.swing.JPanel {
     private void txtSearchProdDetailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusLost
         if (txtSearchProdDetail.getText().equals("")) {
             txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
-            setForeground(new Color(39,80,150));
+            setForeground(new Color(39, 80, 150));
         }
     }//GEN-LAST:event_txtSearchProdDetailFocusLost
+
+    private void btnAddInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInvoiceActionPerformed
+        int stt = 0;
+        try {
+            if (os.addInvoice() > 0) {
+                fillToListInvoice(os.getOrder());
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnAddInvoiceActionPerformed
+
+    private void txtSearchProdDetailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProdDetailKeyReleased
+        String key = txtSearchProdDetail.getText().trim();
+        try {
+            if (key.isBlank()) {
+                fillToListSneakerDetail(os.getAllSneakerDetail());
+            } else {
+//                System.out.println(key);
+                fillToListSneakerDetail(os.searchSD(key));
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_txtSearchProdDetailKeyReleased
+
+    private void sliderPriceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderPriceStateChanged
+        int price = sliderPrice.getValue();
+        try {
+            lbnGia.setText("" + price);
+            fillToListSneakerDetail(os.searchPrice(price));
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_sliderPriceStateChanged
+
+    private void tblInvoiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInvoiceMouseClicked
+        int index = tblInvoice.getSelectedRow();
+        invoiceId = (int) tblInvoice.getValueAt(index, 1);
+        try {
+//            System.out.println(invoiceId);
+            fillToListCart(os.getToCart(invoiceId));
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tblInvoiceMouseClicked
+
+    private void tblSneakerDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSneakerDetailMouseClicked
+        try {
+            if (evt.getClickCount() == 2) {
+                String sneakerId = (String) tblSneakerDetail.getValueAt(tblSneakerDetail.getSelectedRow(), 1);
+//            System.out.println(invoiceId);
+                os.addToCart(os.getIdSneakerDetail(sneakerId), invoiceId);
+                fillToListCart(os.getToCart(invoiceId));
+                fillToListInvoice(os.getOrder());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng sửa số lượng", "Thông báo",1);
+        }
+    }//GEN-LAST:event_tblSneakerDetailMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;
@@ -603,10 +796,11 @@ public class OrderForm extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblSlider;
+    private javax.swing.JLabel lbnGia;
     private javax.swing.JSlider sliderPrice;
+    private javax.swing.JTable tblCart;
     private javax.swing.JTable tblInvoice;
-    private javax.swing.JTable tblOder;
-    private javax.swing.JTable tblSneaker;
+    private javax.swing.JTable tblSneakerDetail;
     private javax.swing.JTextField txtChange;
     private javax.swing.JTextField txtInvoiceId;
     private javax.swing.JTextField txtMoneyCash;

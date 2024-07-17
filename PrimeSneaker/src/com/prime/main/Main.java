@@ -20,6 +20,9 @@ import com.prime.swing.icon.IconFontSwing;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -54,7 +57,11 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new Voucher());
                 }
                 if (menuIndex == 2) {
-                    main.showForm(new OrderForm());
+                    try {
+                        main.showForm(new OrderForm());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 if (menuIndex == 3) {
                     main.showForm(new ManageOrder());

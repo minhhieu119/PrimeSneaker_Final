@@ -625,10 +625,70 @@ select * from Customer
 select * from PaymentMethod
 select * from [Role]
 select * from [User]
+
+
+
+select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+from Sneaker s join Brand b on s.brand_id = b.brand_id
+join Category c on s.category_id = c.category_id
+join Sole so on s.sole_id = so.sole_id
+join Material m on s.material_id = m.material_id
+right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+join Size si on sd.size_id = si.size_id
+join Color co on sd.color_id = co.color_id
+group by sneaker_detail_code, sneaker_name, quantity, price, category_name, brand_name, color_name, material_name,sole_name, size_number
+having price < 2000000
+ 
 select * from Voucher
+select voucher_name
+from Voucher
+where deleted = 1
+order by voucher_id asc
 
+select distinct o.order_id, o.created_at, [user_id], count(quantity) as quantity, [status]
+from [Order] o left join OrderDetail od on o.order_id = od.order_id
+where status like N'Chờ thanh toán'
+group by o.order_id, o.created_at, [user_id],[status]
+order by created_at desc
 
+insert into [Order] ([status])
+values (N'Chờ thanh toán')
 
+select sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
+from OrderDetail od left join [Order] o on od.order_id = o.order_id
+join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
+join Color c on sd.color_id = c.color_id
+join Size si on sd.size_id = si.size_id
+join Sneaker s on sd.sneaker_id = s.sneaker_id
+join Brand b on s.brand_id = b.brand_id
+where o.order_id = 12
+
+select distinct sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
+              from OrderDetail od right join [Order] o on od.order_id = o.order_id
+              join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
+              join Color c on sd.color_id = c.color_id
+              join Size si on sd.size_id = si.size_id
+              join Sneaker s on sd.sneaker_id = s.sneaker_id
+              join Brand b on s.brand_id = b.brand_id
+              where o.order_id = 4
+
+select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+              from Sneaker s join Brand b on s.brand_id = b.brand_id
+              join Category c on s.category_id = c.category_id
+              join Sole so on s.sole_id = so.sole_id
+              join Material m on s.material_id = m.material_id
+              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+              join Size si on sd.size_id = si.size_id
+              join Color co on sd.color_id = co.color_id
+			  where sneaker_detail_code like '234533'
+
+select sneaker_detail_id
+from SneakerDetail
+where sneaker_detail_code = '234533'
+
+select sneaker_detail_id
+              from SneakerDetail
+              where sneaker_detail_code = ?
 
 
 
