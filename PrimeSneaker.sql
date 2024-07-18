@@ -710,3 +710,17 @@ where order_id = 14 and sneaker_detail_id = 1
 
 delete from OrderDetail
 where order_id = 8 and sneaker_detail_id = 1
+
+select o.order_id,sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
+              from OrderDetail od left join [Order] o on od.order_id = o.order_id
+              join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
+              join Color c on sd.color_id = c.color_id
+              join Size si on sd.size_id = si.size_id
+              join Sneaker s on sd.sneaker_id = s.sneaker_id
+              join Brand b on s.brand_id = b.brand_id
+              where o.order_id = 2
+
+select * from SneakerDetail
+select sneaker_detail_id
+from SneakerDetail
+where sneaker_detail_code = 2345533

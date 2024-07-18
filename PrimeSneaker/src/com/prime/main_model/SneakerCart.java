@@ -9,6 +9,7 @@ package com.prime.main_model;
  * @author MSII
  */
 public class SneakerCart {
+    private int order_id;
     private String sneakerCode;
     private String sneakerName;
     private int quantity;
@@ -20,7 +21,8 @@ public class SneakerCart {
     public SneakerCart() {
     }
 
-    public SneakerCart(String sneakerCode, String sneakerName, int quantity, long price, String brand, String color, float size) {
+    public SneakerCart(int order_id, String sneakerCode, String sneakerName, int quantity, long price, String brand, String color, float size) {
+        this.order_id = order_id;
         this.sneakerCode = sneakerCode;
         this.sneakerName = sneakerName;
         this.quantity = quantity;
@@ -29,6 +31,18 @@ public class SneakerCart {
         this.color = color;
         this.size = size;
     }
+
+    public int getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
+    }
+
+    
+
+    
 
     public String getSneakerCode() {
         return sneakerCode;

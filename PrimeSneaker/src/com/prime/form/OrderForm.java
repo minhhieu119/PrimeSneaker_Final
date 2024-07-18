@@ -89,6 +89,7 @@ public class OrderForm extends javax.swing.JPanel {
         for (SneakerCart sc : list) {
             modelCart.addRow(new Object[]{
                 stt += 1,
+                sc.getOrder_id(),
                 sc.getSneakerCode(),
                 sc.getSneakerName(),
                 sc.getQuantity(),
@@ -100,6 +101,10 @@ public class OrderForm extends javax.swing.JPanel {
             });
 //System.out.println(sd);
         }
+    }
+    
+    public Integer getQuantity(int quantity){
+        return quantity;
     }
 
     private void showDetail() {
@@ -209,7 +214,7 @@ public class OrderForm extends javax.swing.JPanel {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã HD", "Mã NV", "Số lượng SP", "Trạng thái", "Ngày tạo"
+                "STT", "Mã HĐ", "Mã NV", "Số lượng SP", "Trạng thái", "Ngày tạo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -251,11 +256,11 @@ public class OrderForm extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Hãng", "Màu sắc", "Kích cỡ"
+                "STT", "Mã HĐ", "Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Hãng", "Màu sắc", "Kích cỡ"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -270,10 +275,10 @@ public class OrderForm extends javax.swing.JPanel {
         jScrollPane2.setViewportView(tblCart);
         if (tblCart.getColumnModel().getColumnCount() > 0) {
             tblCart.getColumnModel().getColumn(0).setPreferredWidth(10);
-            tblCart.getColumnModel().getColumn(1).setPreferredWidth(50);
-            tblCart.getColumnModel().getColumn(2).setPreferredWidth(100);
-            tblCart.getColumnModel().getColumn(3).setPreferredWidth(20);
-            tblCart.getColumnModel().getColumn(7).setPreferredWidth(20);
+            tblCart.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tblCart.getColumnModel().getColumn(3).setPreferredWidth(100);
+            tblCart.getColumnModel().getColumn(4).setPreferredWidth(20);
+            tblCart.getColumnModel().getColumn(8).setPreferredWidth(20);
         }
 
         jPanel2.setBackground(new java.awt.Color(185, 213, 246));
@@ -878,11 +883,13 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_tblInvoiceMouseClicked
 
     private void txtCartQuantityUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCartQuantityUpdateActionPerformed
-        if (cartIndex == 0) {
+        if (tblCart.getSelectedRow() != -1) {
+            new CartQuantity().setVisible(true);
+            System.out.println(getQuantity(SOMEBITS));
+        } else {
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm trong giỏ", "Thông báo", 1);
-            return;
         }
-        new CartQuantity().setVisible(true);
+
     }//GEN-LAST:event_txtCartQuantityUpdateActionPerformed
 
     private void txtPhoneNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneNumberActionPerformed
@@ -895,14 +902,14 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void tblSneakerDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSneakerDetailMouseClicked
         try {
-            
+
             if (evt.getClickCount() == 2) {
                 if (invoiceId == 0) {
                     JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 1);
                     return;
                 }
                 index = tblSneakerDetail.getSelectedRow();
-                os.addToCart(os.getIdSneakerDetail((String) tblSneakerDetail.getValueAt(index, 1)), invoiceId);
+                os.addToCart(os.getSneakerDetail((String) tblSneakerDetail.getValueAt(index, 1)), invoiceId);
                 fillToListCart(os.getToCart(invoiceId));
                 fillToListInvoice(os.getOrder());
             }
@@ -911,24 +918,40 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_tblSneakerDetailMouseClicked
 
     private void btnDeleteCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCartActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa không?", "Thông báo", 2);
-        
-        if (confirm != 0) {
-            return;
-        }
+
         try {
-            int sdId = os.getIdSneakerDetail((String) tblCart.getValueAt(index, 1)).getSneakerId();
-            if (invoiceId == 0) {
-                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 1);
-                return;
-            }
-            if (os.deleteOrderDetail(invoiceId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
-                fillToListCart(os.getToCart(invoiceId));
-                fillToListInvoice(os.getOrder());
-                JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
+            int sdId;
+            int orderId;
+
+            if (tblCart.getSelectedRow() != -1) {
+//                cartIndex = tblCart.getSelectedRow();
+//                sdId = os.getIdSneakerDetail((String) tblCart.getValueAt(cartIndex, 1)).getSneakerId();
+//                if (os.deleteOrderDetail(invoiceId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
+//                    fillToListCart(os.getToCart(invoiceId));
+//                    fillToListInvoice(os.getOrder());
+//                    JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Xóa không thành công", "Thông báo", 1);
+//                }
+                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa không?", "Thông báo", 2);
+
+                if (confirm != 0) {
+                    return;
+                }
+                index = tblCart.getSelectedRow();
+                sdId = os.getIdSneaker((String) tblCart.getValueAt(index, 2));
+                orderId = (int) tblCart.getValueAt(index, 1);
+                if (os.deleteOrderDetail(orderId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
+                    fillToListCart(os.getToCart(orderId));
+                    fillToListInvoice(os.getOrder());
+                    JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xóa không thành công", "Thông báo", 1);
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Xóa không thành công", "Thông báo", 1);
+                JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm cần xóa", "Thông báo", 1);
             }
+
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btnDeleteCartActionPerformed

@@ -242,7 +242,7 @@ public class OrderService {
     public List<SneakerCart> getToCart(int orderId) throws SQLException {
         List<SneakerCart> listSC = new ArrayList<>();
         sql = """
-              select sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
+              select o.order_id, sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
               from OrderDetail od left join [Order] o on od.order_id = o.order_id
               join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
               join Color c on sd.color_id = c.color_id
@@ -259,7 +259,7 @@ public class OrderService {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                SneakerCart sc = new SneakerCart(rs.getString("sneaker_detail_code"), rs.getString("sneaker_name"), rs.getInt("quantity"),
+                SneakerCart sc = new SneakerCart(rs.getInt("order_id"),rs.getString("sneaker_detail_code"), rs.getString("sneaker_name"), rs.getInt("quantity"),
                         rs.getLong("price"), rs.getString("brand_name"), rs.getString("color_name"), rs.getFloat("size_number"));
                 listSC.add(sc);
             }
@@ -274,7 +274,7 @@ public class OrderService {
         return listSC;
     }
     
-    public SneakerDetail getIdSneakerDetail(String code) throws SQLException {
+    public SneakerDetail getSneakerDetail(String code) throws SQLException {
         SneakerDetail sd = new SneakerDetail();
 
         sql = """
@@ -308,6 +308,32 @@ public class OrderService {
                 sd.setSize(rs.getFloat("size_number"));
             }
             return sd;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
+    
+    public Integer getIdSneaker(String code) throws SQLException{
+        sql = """
+              select sneaker_detail_id
+              from SneakerDetail
+              where sneaker_detail_code = ?
+              """;
+        
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+            while (rs.next()){
+                return rs.getInt("sneaker_detail_id");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -363,7 +389,7 @@ public class OrderService {
         return null;
     }
     
-    public Integer updateOrderDetail (int quantity, int orderId, int sdId) throws SQLException{
+    public Integer updateOrderDetailQuantity (int quantity, int orderId, int sdId) throws SQLException{
         sql = """
               update OrderDetail
               set quantity = ?
@@ -451,4 +477,6 @@ public class OrderService {
 //        }
 //        return null;
 //    }
+    
+   
 }

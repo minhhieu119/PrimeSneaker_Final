@@ -4,6 +4,8 @@
  */
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.OrderForm;
+import com.prime.services.OrderService;
 import javax.swing.JOptionPane;
 
 /**
@@ -11,10 +13,8 @@ import javax.swing.JOptionPane;
  * @author MSII
  */
 public class CartQuantity extends javax.swing.JFrame {
-
-    /**
-     * Creates new form CartQuantity
-     */
+    OrderService os = new OrderService();
+    
     public CartQuantity() {
         initComponents();
         setLocationRelativeTo(null);
@@ -100,7 +100,12 @@ public class CartQuantity extends javax.swing.JFrame {
             quantity = Integer.parseInt(txtCartQuantity.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Số lượng phải là số", "Thông báo", 1);
+            return;
         }
+        
+        quantity = Integer.parseInt(txtCartQuantity.getText());
+        
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
