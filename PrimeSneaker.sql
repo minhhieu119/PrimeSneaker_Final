@@ -143,19 +143,6 @@ create table Customer
 )
 go
 
-create table PaymentMethod
-(
-	payment_method_id int identity(1,1) primary key,
-	method_name nvarchar(50),
-	[description] nvarchar(200),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
-)
-go
-
 create table Sneaker
 (
 	sneaker_id int identity(1,1) primary key,
@@ -210,7 +197,7 @@ create table [Order]
 	[user_id] int,
 	customer_id int,
 	voucher_id int,
-	payment_method_id int,
+	payment_method nvarchar(40),
 	order_qr_code varchar(50),
 	total_cost money check(total_cost >= 0),
 	received_cash money check(received_cash >= 0),
@@ -239,32 +226,6 @@ create table OrderDetail
 )
 go
 
---create table Collar
---(
---	collar_id int identity(1,1) primary key,
---	type_collar nvarchar(30),
---	created_at date default getdate(),
---	updated_at date default getdate(),
---	created_by int,
---	updated_by int,
---	deleted bit default 1
---)
---go
-
---create table Exchange
---(
---	exchange_id int identity(1,1) primary key,
---	reason nvarchar(100),
---	[status] nvarchar(50),
---	note nvarchar(255),
---	created_at date default getdate(),
---	updated_at date default getdate(),
---	created_by int,
---	updated_by int,
---	deleted bit default 1
---)
---go
-
 alter table [Image] add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
 alter table SneakerDetail add foreign key (sneaker_id) references Sneaker (sneaker_id)
@@ -282,7 +243,6 @@ alter table OrderDetail add foreign key (order_id) references [Order] (order_id)
 alter table [Order] add foreign key ([user_id]) references [User] ([user_id])
 alter table [Order] add foreign key (customer_id) references Customer (customer_id)
 alter table [Order] add foreign key (voucher_id) references Voucher (voucher_id)
-alter table [Order] add foreign key (payment_method_id) references PaymentMethod (payment_method_id)
 
 alter table [User] add foreign key (role_id) references [Role] (role_id)
 
@@ -361,11 +321,6 @@ values (1, 'NV001', N'Bùi Minh Hiếu', 1, '1997-09-11', '0975416197', N'Đan P
 (2, 'NV008', N'Hoàng Kim Bảo', 1, '1999-09-21', '0975323447', N'Chí Linh - Hải Dương', 'baokh@gmail.com','0017533787', 'bao2222', 'baohq2222', N'Đã nghỉ việc')
 go
 
---Nhập dữ liệu Payment method
-insert into PaymentMethod (method_name, [description])
-values (N'Tiền mặt', N'Khách hàng trả bằng tiền mặt'),
-(N'Chuyển khoản', N'Chuyển khoản qua ngân hàng')
-
 --Nhập dữ liệu Customer
 insert into Customer(full_name, gender, date_of_birth, [address], phone_number)
 values (N'Nguyễn Văn Hiếu', 1, '1990-05-10', N'123 Trịnh Văn Bô, Nam Từ Liêm, Hà Nội', '0843456789'),
@@ -394,6 +349,9 @@ values ('VOUCHER1', N'Khuyến mãi hè', 0.1, NULL, 100000, 500000, 20, '2024-0
 ('VOUCHER8', N'Khuyến mãi sinh nhật khách hàng', 0.3, NULL, 400000, 950000, 20, '2024-08-01', '2024-05-31'),
 ('VOUCHER9', N'Khuyến mãi valentine', NULL, 120000, 200000, 700000, 20, '2024-09-01', '2024-04-30'),
 ('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0.35, NULL, 500000, 1000000, 20, '2024-01-01', '2024-03-31');
+
+insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date)
+values ('VOUCHER0', N'Không', 0, NULL, 0, 0, 0,'2022-12-31' , '2100-12-31')
 
 --Nhập dữ liệu bảng Sneaker
 insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name, [description])
@@ -559,28 +517,28 @@ insert into [Image] (sneaker_detail_id, image_url)
 values (10, 'anh10.jpg')
 
 --Nhập dữ liệu Order
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (2, 2, 1, 1, '09366432', 1620000, 1620000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 1, null, 2, '09366433', 2000000, 2000000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (2, 3, null, 2, '09366434', 1400000, 1500000, 100000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 4, 4, 1, '09366435', 2600000, 26000000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 5, 4, 2, '09366436', 1500000, 1500000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 6, null, 1, '09366427', 1200000, 1200000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (5, 7, null, 1, '09366437', 1800000, 2000000, 200000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 8, 1, 2, '09366438', 2600000, 2600000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 9, 4, 2, '09366439', 1200000, 1200000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (5, 10, null, 1, '09366410', 1400000, 1500000, 50000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (6, 11, null, 1, '09366411', 1000000, 1000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (2, 2, 1, '09366432', 1620000, 1620000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id,  order_qr_code, total_cost, received_cash, [change], [status], note)
+values (3, 1, null, '09366433', 2000000, 2000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (2, 3, null, '09366434', 1400000, 1500000, 100000, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (3, 4, 4, '09366435', 2600000, 26000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (4, 5, 4, '09366436', 1500000, 1500000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (4, 6, null, '09366427', 1200000, 1200000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (5, 7, null, '09366437', 1800000, 2000000, 200000, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (4, 8, 1, '09366438', 2600000, 2600000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (3, 9, 4, '09366439', 1200000, 1200000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (5, 10, null, '09366410', 1400000, 1500000, 50000, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (6, 11, null, '09366411', 1000000, 1000000, 0, N'Đã thanh toán', null)
 
 -- Nhập dữ liệu Order Detail
 insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
@@ -625,6 +583,7 @@ select * from Customer
 select * from PaymentMethod
 select * from [Role]
 select * from [User]
+select * from Voucher
 
 
 
@@ -724,3 +683,15 @@ select * from SneakerDetail
 select sneaker_detail_id
 from SneakerDetail
 where sneaker_detail_code = 2345533
+
+
+select top 1 full_name
+from Customer
+where phone_number like '%0%'
+
+--select order_id, [user_id], voucher_name, o.created_at, sum(od.total_cost), 
+--from [Order] o join Voucher v on o.voucher_id = v.voucher_id
+--join OrderDetail od on o.order_id = od.order_id
+--where order_id = 16
+
+

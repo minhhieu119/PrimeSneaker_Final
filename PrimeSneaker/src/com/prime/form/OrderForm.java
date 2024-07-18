@@ -102,8 +102,8 @@ public class OrderForm extends javax.swing.JPanel {
 //System.out.println(sd);
         }
     }
-    
-    public Integer getQuantity(int quantity){
+
+    public Integer getQuantity(int quantity) {
         return quantity;
     }
 
@@ -177,8 +177,8 @@ public class OrderForm extends javax.swing.JPanel {
         txtMoneyTransfer = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         txtChange = new javax.swing.JTextField();
-        btnAddInvoice1 = new javax.swing.JButton();
-        btnAddInvoice2 = new javax.swing.JButton();
+        btnPay = new javax.swing.JButton();
+        btnDeleteOrder = new javax.swing.JButton();
         jLabel26 = new javax.swing.JLabel();
         txtDiscoutCost = new javax.swing.JTextField();
         txtTotalCost = new javax.swing.JTextField();
@@ -361,11 +361,15 @@ public class OrderForm extends javax.swing.JPanel {
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin khách hàng"));
 
-        txtPhoneNumber.setEditable(false);
         txtPhoneNumber.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
         txtPhoneNumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPhoneNumberActionPerformed(evt);
+            }
+        });
+        txtPhoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPhoneNumberKeyReleased(evt);
             }
         });
 
@@ -438,6 +442,7 @@ public class OrderForm extends javax.swing.JPanel {
 
         cboVoucher.setBackground(new java.awt.Color(39, 80, 150));
         cboVoucher.setForeground(new java.awt.Color(255, 255, 255));
+        cboVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Không áp dụng" }));
 
         jLabel19.setText("Ngày tạo:");
 
@@ -472,15 +477,20 @@ public class OrderForm extends javax.swing.JPanel {
         txtChange.setEditable(false);
         txtChange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        btnAddInvoice1.setBackground(new java.awt.Color(39, 80, 150));
-        btnAddInvoice1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnAddInvoice1.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddInvoice1.setText("Thanh toán");
+        btnPay.setBackground(new java.awt.Color(39, 80, 150));
+        btnPay.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPay.setForeground(new java.awt.Color(255, 255, 255));
+        btnPay.setText("Thanh toán");
 
-        btnAddInvoice2.setBackground(new java.awt.Color(39, 80, 150));
-        btnAddInvoice2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnAddInvoice2.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddInvoice2.setText("Huỷ hoá đơn");
+        btnDeleteOrder.setBackground(new java.awt.Color(39, 80, 150));
+        btnDeleteOrder.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDeleteOrder.setForeground(new java.awt.Color(255, 255, 255));
+        btnDeleteOrder.setText("Huỷ hoá đơn");
+        btnDeleteOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteOrderActionPerformed(evt);
+            }
+        });
 
         jLabel26.setText("Tiền giảm");
 
@@ -520,9 +530,9 @@ public class OrderForm extends javax.swing.JPanel {
                             .addComponent(txtDiscoutCost, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                             .addComponent(txtTotalCost)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(btnAddInvoice2)
+                        .addComponent(btnDeleteOrder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                        .addComponent(btnAddInvoice1))
+                        .addComponent(btnPay))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,7 +551,7 @@ public class OrderForm extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddInvoice1, btnAddInvoice2});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDeleteOrder, btnPay});
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24, jLabel25});
 
@@ -594,14 +604,14 @@ public class OrderForm extends javax.swing.JPanel {
                     .addComponent(txtChange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAddInvoice2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddInvoice1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDeleteOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboPaymentMethod, cboVoucher, txtChange, txtDiscoutCost, txtInvoiceId, txtMoneyCash, txtMoneyTransfer, txtOrderCost, txtStaffId, txtStartDateCreated, txtTotalCost});
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddInvoice1, btnAddInvoice2});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDeleteOrder, btnPay});
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24, jLabel25});
 
@@ -957,15 +967,55 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDeleteCartActionPerformed
 
     private void tblCartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCartMouseClicked
-        cartIndex = tblCart.getSelectedRow();
+
     }//GEN-LAST:event_tblCartMouseClicked
+
+    private void btnDeleteOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOrderActionPerformed
+        index = tblInvoice.getSelectedRow();
+        try {
+            if (index != -1) {
+                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn không ?", "Thông báo", 1);
+                if (confirm != 0) {
+                    return;
+                }
+
+                if (os.updateOrder((int) tblInvoice.getValueAt(index, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(index, 1)) != 0) {
+                    fillToListInvoice(os.getOrder());
+                    JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn cần hủy", "Thông báo", 1);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi hủy hóa đơn", "Thông báo", 2);
+        }
+
+
+    }//GEN-LAST:event_btnDeleteOrderActionPerformed
+
+    private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
+        String name;
+        try {
+            if (txtPhoneNumber.getText().isBlank()) {
+                txtNameCustomer.setText("Khách lẻ");
+            } else {
+                name = os.getCustomerName(txtPhoneNumber.getText());
+                txtNameCustomer.setText(name);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_txtPhoneNumberKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;
-    private javax.swing.JButton btnAddInvoice1;
-    private javax.swing.JButton btnAddInvoice2;
     private javax.swing.JButton btnDeleteCart;
+    private javax.swing.JButton btnDeleteOrder;
     private javax.swing.JButton btnListCustomer;
+    private javax.swing.JButton btnPay;
     private javax.swing.JButton btnScanQR;
     private javax.swing.JComboBox<String> cboPaymentMethod;
     private javax.swing.JComboBox<String> cboVoucher;
