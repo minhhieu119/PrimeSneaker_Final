@@ -109,21 +109,55 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void showDetail() throws SQLException {
         Order o = os.getOneOrder(invoiceId);
-        txtInvoiceId.setText(o.getOrderId() + "");
-        txtStaffId.setText(o.getUserId() + "");
-        txtStartDateCreated.setText(o.getCreated_at() + "");
-        txtOrderCost.setText(o.getTotalCost() + "");
-        if (o.getVoucherName() == null) {
-            cboVoucher.setSelectedIndex(0);
+        indexOrder = tblInvoice.getSelectedRow();
+        if (o.getOrderId() == 0) {
+            System.out.println(tblInvoice.getValueAt(indexOrder, 1));
+            txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
+            txtStaffId.setText(o.getUserId() + "");
+            txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
+            txtOrderCost.setText(o.getTotalCost() + "");
+            if (o.getVoucherName() == null) {
+                cboVoucher.setSelectedIndex(0);
+            } else {
+                cboVoucher.setSelectedItem(o.getVoucherName());
+            }
+            if (o.getPaymentMethod() == null) {
+                cboPaymentMethod.setSelectedIndex(0);
+            } else {
+                cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
+            }
+            voucherProcess();
         } else {
-            cboVoucher.setSelectedItem(o.getVoucherName());
+            txtInvoiceId.setText(o.getOrderId() + "");
+            txtStaffId.setText(o.getUserId() + "");
+            txtStartDateCreated.setText(o.getCreated_at() + "");
+            txtOrderCost.setText(o.getTotalCost() + "");
+            if (o.getVoucherName() == null) {
+                cboVoucher.setSelectedIndex(0);
+            } else {
+                cboVoucher.setSelectedItem(o.getVoucherName());
+            }
+            if (o.getPaymentMethod() == null) {
+                cboPaymentMethod.setSelectedIndex(0);
+            } else {
+                cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
+            }
+            voucherProcess();
         }
-        if (o.getPaymentMethod() == null) {
-            cboPaymentMethod.setSelectedIndex(0);
-        } else {
-            cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
-        }
-        voucherProcess();
+
+    }
+
+    private void clearForm() {
+        txtInvoiceId.setText("");
+        txtStaffId.setText("");
+        cboVoucher.setSelectedIndex(0);
+        txtStartDateCreated.setText("");
+        txtOrderCost.setText("");
+        txtDiscoutCost.setText("");
+        txtTotalCost.setText("");
+        cboPaymentMethod.setSelectedIndex(0);
+        txtMoneyCash.setText("");
+        txtMoneyTransfer.setText("");
     }
 
     private SneakerDetail getSneakerToCart() {
@@ -141,7 +175,6 @@ public class OrderForm extends javax.swing.JPanel {
         sd.setSize((float) tblSneakerDetail.getValueAt(index, 10));
         return sd;
     }
-    
 
     private void voucherProcess() throws SQLException {
         Voucher v = os.getOneVoucher((String) cboVoucher.getSelectedItem());
@@ -151,6 +184,7 @@ public class OrderForm extends javax.swing.JPanel {
         long minOrderValue = v.getMinOrderValue();
         if (cboVoucher.getSelectedIndex() == 0) {
             txtDiscoutCost.setText("0");
+            txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
         } else {
             if (discountRate == 0) {
                 if (orderCost >= minOrderValue) {
@@ -211,8 +245,6 @@ public class OrderForm extends javax.swing.JPanel {
         txtMoneyCash = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         txtMoneyTransfer = new javax.swing.JTextField();
-        jLabel25 = new javax.swing.JLabel();
-        txtChange = new javax.swing.JTextField();
         btnPay = new javax.swing.JButton();
         btnDeleteOrder = new javax.swing.JButton();
         jLabel26 = new javax.swing.JLabel();
@@ -471,7 +503,6 @@ public class OrderForm extends javax.swing.JPanel {
 
         jLabel17.setText("Mã NV:");
 
-        txtStaffId.setEditable(false);
         txtStaffId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel18.setText("Giảm giá:");
@@ -515,21 +546,23 @@ public class OrderForm extends javax.swing.JPanel {
         jLabel22.setText("TIền mặt:");
 
         txtMoneyCash.setEditable(false);
-        txtMoneyCash.setBackground(new java.awt.Color(242, 242, 242));
         txtMoneyCash.setText("0");
         txtMoneyCash.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtMoneyCash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMoneyCashActionPerformed(evt);
+            }
+        });
+        txtMoneyCash.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMoneyCashKeyReleased(evt);
+            }
+        });
 
         jLabel24.setText("Tiền CK:");
 
-        txtMoneyTransfer.setEditable(false);
         txtMoneyTransfer.setText("0");
         txtMoneyTransfer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
-
-        jLabel25.setText("Tiền trả lại:");
-
-        txtChange.setEditable(false);
-        txtChange.setText("0");
-        txtChange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         btnPay.setBackground(new java.awt.Color(39, 80, 150));
         btnPay.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -567,7 +600,6 @@ public class OrderForm extends javax.swing.JPanel {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel24)
                             .addComponent(jLabel22)
                             .addComponent(jLabel21))
@@ -575,8 +607,7 @@ public class OrderForm extends javax.swing.JPanel {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txtMoneyTransfer, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMoneyCash, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboPaymentMethod, 0, 142, Short.MAX_VALUE)
-                            .addComponent(txtChange)))
+                            .addComponent(cboPaymentMethod, 0, 142, Short.MAX_VALUE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -609,7 +640,7 @@ public class OrderForm extends javax.swing.JPanel {
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDeleteOrder, btnPay});
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24, jLabel25});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24});
 
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -654,22 +685,18 @@ public class OrderForm extends javax.swing.JPanel {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMoneyTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtChange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(54, 54, 54)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDeleteOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboPaymentMethod, cboVoucher, txtChange, txtDiscoutCost, txtInvoiceId, txtMoneyCash, txtMoneyTransfer, txtOrderCost, txtStaffId, txtStartDateCreated, txtTotalCost});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboPaymentMethod, cboVoucher, txtDiscoutCost, txtInvoiceId, txtMoneyCash, txtMoneyTransfer, txtOrderCost, txtStaffId, txtStartDateCreated, txtTotalCost});
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDeleteOrder, btnPay});
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24, jLabel25});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24});
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -901,10 +928,12 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSearchProdDetailFocusLost
 
     private void btnAddInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInvoiceActionPerformed
-        int stt = 0;
+
         try {
             if (os.addInvoice() > 0) {
                 fillToListInvoice(os.getOrder());
+                tblInvoice.setRowSelectionInterval(0, 0);
+                showDetail();
             }
         } catch (Exception e) {
         }
@@ -935,9 +964,10 @@ public class OrderForm extends javax.swing.JPanel {
     private void tblInvoiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInvoiceMouseClicked
         int index = tblInvoice.getSelectedRow();
         invoiceId = (int) tblInvoice.getValueAt(index, 1);
+        System.out.println(invoiceId);
         try {
             showDetail();
-            
+
 //            System.out.println(invoiceId);
             fillToListCart(os.getToCart(invoiceId));
         } catch (SQLException ex) {
@@ -1001,6 +1031,7 @@ public class OrderForm extends javax.swing.JPanel {
                 if (os.deleteOrderDetail(orderId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
                     fillToListCart(os.getToCart(orderId));
                     fillToListInvoice(os.getOrder());
+                    showDetail();
                     JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
                 } else {
                     JOptionPane.showMessageDialog(this, "Xóa không thành công", "Thông báo", 1);
@@ -1029,6 +1060,7 @@ public class OrderForm extends javax.swing.JPanel {
                 if (os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != 0) {
                     fillToListInvoice(os.getOrder());
                     JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
+                    clearForm();
                 } else {
                     JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
                 }
@@ -1059,13 +1091,16 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void cboPaymentMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPaymentMethodActionPerformed
         if (cboPaymentMethod.getSelectedIndex() == 0) {
-            txtMoneyTransfer.setEditable(false);
+
+            txtMoneyCash.setText("");
             txtMoneyCash.setEditable(true);
             txtMoneyTransfer.setText("0");
+            txtMoneyTransfer.setEditable(false);
+
         } else {
-            txtMoneyTransfer.setEditable(true);
             txtMoneyCash.setEditable(false);
             txtMoneyCash.setText("0");
+            txtMoneyTransfer.setText(txtTotalCost.getText());
         }
     }//GEN-LAST:event_cboPaymentMethodActionPerformed
 
@@ -1080,6 +1115,14 @@ public class OrderForm extends javax.swing.JPanel {
     private void txtOrderCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrderCostActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtOrderCostActionPerformed
+
+    private void txtMoneyCashKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMoneyCashKeyReleased
+
+    }//GEN-LAST:event_txtMoneyCashKeyReleased
+
+    private void txtMoneyCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMoneyCashActionPerformed
+
+    }//GEN-LAST:event_txtMoneyCashActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;
@@ -1101,7 +1144,6 @@ public class OrderForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
@@ -1123,7 +1165,6 @@ public class OrderForm extends javax.swing.JPanel {
     private javax.swing.JTable tblInvoice;
     private javax.swing.JTable tblSneakerDetail;
     private javax.swing.JButton txtCartQuantityUpdate;
-    private javax.swing.JTextField txtChange;
     private javax.swing.JTextField txtDiscoutCost;
     private javax.swing.JTextField txtInvoiceId;
     private javax.swing.JTextField txtMoneyCash;

@@ -699,7 +699,7 @@ group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method, rec
 select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quantity) as total_cost, payment_method, received_cash, [change]
               from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
               join OrderDetail od on o.order_id = od.order_id
-              where o.order_id = 12 and v.deleted = 1
+              where o.order_id = 15 and v.deleted = 1
               group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method, received_cash, [change]
 
 
@@ -709,3 +709,9 @@ select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quan
               from Voucher
               where deleted = 1 and start_date < getdate() and getdate() < end_date
               order by voucher_id asc
+
+			  select * from [Order]
+			  select o.order_id, [user_id], voucher_name, o.created_at, payment_method, received_cash, [change]
+              from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
+              join OrderDetail od on o.order_id = od.order_id
+              where o.order_id = 15 and v.deleted = 1
