@@ -74,7 +74,7 @@ public class OrderService {
         sql = """
               select voucher_name
               from Voucher
-              where deleted = 1
+              where deleted = 1 and start_date < getdate() and getdate() < end_date
               order by voucher_id asc
               """;
 
@@ -95,6 +95,41 @@ public class OrderService {
             c.close();
         }
         return listVoucher;
+    }
+    
+    public Voucher getOneVoucher(String name) throws SQLException {
+        Voucher v = new Voucher();
+        sql = """
+              select voucher_id, voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date
+              from Voucher
+              where voucher_name like ?
+              """;
+
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, name);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                v.setVoucherId(rs.getInt("voucher_id"));
+                v.setVoucherCode(rs.getString("voucher_code"));
+                v.setVoucherName(rs.getString("voucher_name"));
+                v.setDiscountRate(rs.getFloat("discount_rate"));
+                v.setDiscountAmount(rs.getLong("discount_amount"));
+                v.setMaxDiscount(rs.getFloat("max_discount"));
+                v.setMinOrderValue(rs.getLong("min_order_value"));
+                v.setQuantity(rs.getInt("quantity"));
+                v.setStartDate(rs.getDate("start_date"));
+                v.setEndDate(rs.getDate("end_date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return v;
     }
 
     public List<SneakerDetail> searchSD(String key) throws SQLException {
@@ -463,47 +498,40 @@ public class OrderService {
         return name;
     }
 
-//    public Order getOneOrder(int id) throws SQLException {
-//        Order o = new Order();
-//
-//        sql = """
-//              select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
-//              from Sneaker s join Brand b on s.brand_id = b.brand_id
-//              join Category c on s.category_id = c.category_id
-//              join Sole so on s.sole_id = so.sole_id
-//              join Material m on s.material_id = m.material_id
-//              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
-//              join Size si on sd.size_id = si.size_id
-//              join Color co on sd.color_id = co.color_id
-//              where order_id like ?
-//              """;
-//
-//        try {
-//            c = ConnectionJDBC.getConnection();
-//            ps = c.prepareStatement(sql);
-//            ps.setString(1,code);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                sd.setSneakerId(rs.getInt("sneaker_detail_id"));
-//                sd.setSneakerCode(rs.getString("sneaker_detail_code"));
-//                sd.setSneakerName(rs.getString("sneaker_name"));
-//                sd.setPrice(rs.getLong("price"));
-//                sd.setQuantity(rs.getInt("quantity"));
-//                sd.setCategory(rs.getString("category_name"));
-//                sd.setBrand(rs.getString("brand_name"));
-//                sd.setMaterial(rs.getString("material_name"));
-//                sd.setSole(rs.getString("sole_name"));
-//                sd.setColor(rs.getString("color_name"));
-//                sd.setSize(rs.getFloat("size_number"));
-//            }
-//            return sd;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            rs.close();
-//            ps.close();
-//            c.close();
-//        }
-//        return null;
-//    }
+    public Order getOneOrder(int id) throws SQLException {
+        Order o = new Order();
+
+        sql = """
+              select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quantity) as total_cost, payment_method, received_cash, [change]
+              from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
+              join OrderDetail od on o.order_id = od.order_id
+              where o.order_id = ?
+              group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method, received_cash, [change]
+              """;
+
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1,id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                o.setOrderId(rs.getInt("order_id"));
+                o.setUserId(rs.getInt("user_id"));
+                o.setVoucherName(rs.getString("voucher_name"));
+                o.setCreated_at(rs.getDate("created_at"));
+                o.setTotalCost(rs.getLong("total_cost"));
+                o.setPaymentMethod(rs.getString("payment_method"));
+                o.setReceivedCash(rs.getLong("received_cash"));
+                o.setChange(rs.getLong("change"));
+            }
+            return o;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return o;
+    }
 }

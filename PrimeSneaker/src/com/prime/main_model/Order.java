@@ -17,7 +17,7 @@ public class Order {
     private String userName;
     private String customerName;    
     private String voucherName;
-    private int paymentMethod;
+    private String paymentMethod;
     private long totalCost, receivedCash, change;
     private int quantity;
     private String status;
@@ -38,7 +38,7 @@ public class Order {
     
     
 
-    public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, int paymentMethod, long totalCost, long receivedCash, long change, String status, String note) {
+    public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, String status, String note) {
         this.userId = userId;
         this.orderQrCode = orderQrCode;
         this.userName = userName;
@@ -52,7 +52,7 @@ public class Order {
         this.note = note;
     }
 
-    public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, int paymentMethod, long totalCost, long receivedCash, long change, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
+    public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
         this.userId = userId;
         this.orderQrCode = orderQrCode;
         this.userName = userName;
@@ -118,11 +118,11 @@ public class Order {
         this.voucherName = voucherName;
     }
 
-    public int getPaymentMethod() {
+    public String getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(int paymentMethod) {
+    public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
@@ -204,6 +204,11 @@ public class Order {
 
     public void setUpdated_by(String updated_by) {
         this.updated_by = updated_by;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" + "orderId=" + orderId + ", userId=" + userId + ", orderQrCode=" + orderQrCode + ", userName=" + userName + ", customerName=" + customerName + ", voucherName=" + voucherName + ", paymentMethod=" + paymentMethod + ", totalCost=" + totalCost + ", receivedCash=" + receivedCash + ", change=" + change + ", quantity=" + quantity + ", status=" + status + ", note=" + note + ", created_at=" + created_at + ", update_at=" + update_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
     }
     
     

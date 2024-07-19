@@ -23,9 +23,10 @@ public class OrderForm extends javax.swing.JPanel {
     DefaultTableModel modelSneaker = new DefaultTableModel();
     DefaultTableModel modelCart = new DefaultTableModel();
     DefaultTableModel modelInvoice = new DefaultTableModel();
-    int invoiceId = 0;
-    int cartIndex = 0;
-    int index;
+    int invoiceId;
+    int cartIndex;
+    int indexOrder;
+    int indexSneaker;
 
     public OrderForm() throws SQLException {
         initComponents();
@@ -33,7 +34,6 @@ public class OrderForm extends javax.swing.JPanel {
         addVoucher();
         fillToListInvoice(os.getOrder());
         fillToListSneakerDetail(os.getAllSneakerDetail());
-
     }
 
     private void addVoucher() throws SQLException {
@@ -107,17 +107,23 @@ public class OrderForm extends javax.swing.JPanel {
         return quantity;
     }
 
-    private void showDetail() {
-        txtInvoiceId.setText((String) tblInvoice.getValueAt(index, 1));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        cboVoucher.setSelectedItem(ABORT);
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
-        txtStaffId.setText((String) tblInvoice.getValueAt(index, 2));
+    private void showDetail() throws SQLException {
+        Order o = os.getOneOrder(invoiceId);
+        txtInvoiceId.setText(o.getOrderId() + "");
+        txtStaffId.setText(o.getUserId() + "");
+        txtStartDateCreated.setText(o.getCreated_at() + "");
+        txtOrderCost.setText(o.getTotalCost() + "");
+        if (o.getVoucherName() == null) {
+            cboVoucher.setSelectedIndex(0);
+        } else {
+            cboVoucher.setSelectedItem(o.getVoucherName());
+        }
+        if (o.getPaymentMethod() == null) {
+            cboPaymentMethod.setSelectedIndex(0);
+        } else {
+            cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
+        }
+        voucherProcess();
     }
 
     private SneakerDetail getSneakerToCart() {
@@ -134,6 +140,36 @@ public class OrderForm extends javax.swing.JPanel {
         sd.setColor((String) tblSneakerDetail.getValueAt(index, 9));
         sd.setSize((float) tblSneakerDetail.getValueAt(index, 10));
         return sd;
+    }
+    
+
+    private void voucherProcess() throws SQLException {
+        Voucher v = os.getOneVoucher((String) cboVoucher.getSelectedItem());
+        long orderCost = Long.parseLong(txtOrderCost.getText());
+        float discountRate = v.getDiscountRate();
+        long discountAmount = v.getDiscountAmount();
+        long minOrderValue = v.getMinOrderValue();
+        if (cboVoucher.getSelectedIndex() == 0) {
+            txtDiscoutCost.setText("0");
+        } else {
+            if (discountRate == 0) {
+                if (orderCost >= minOrderValue) {
+                    txtDiscoutCost.setText(discountAmount + "");
+                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                } else {
+                    txtDiscoutCost.setText("0");
+                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                }
+            } else {
+                if (orderCost >= minOrderValue) {
+                    txtDiscoutCost.setText((orderCost * discountRate) + "");
+                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                } else {
+                    txtDiscoutCost.setText("0");
+                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -443,6 +479,11 @@ public class OrderForm extends javax.swing.JPanel {
         cboVoucher.setBackground(new java.awt.Color(39, 80, 150));
         cboVoucher.setForeground(new java.awt.Color(255, 255, 255));
         cboVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Không áp dụng" }));
+        cboVoucher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboVoucherActionPerformed(evt);
+            }
+        });
 
         jLabel19.setText("Ngày tạo:");
 
@@ -452,16 +493,28 @@ public class OrderForm extends javax.swing.JPanel {
         jLabel20.setText("Tiền HĐ");
 
         txtOrderCost.setEditable(false);
+        txtOrderCost.setText("0");
         txtOrderCost.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtOrderCost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtOrderCostActionPerformed(evt);
+            }
+        });
 
         jLabel21.setText("Hình thức TT:");
 
         cboPaymentMethod.setBackground(new java.awt.Color(39, 80, 150));
         cboPaymentMethod.setForeground(new java.awt.Color(255, 255, 255));
-        cboPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiền mặt", "Chuyển khoản", "Cả hai" }));
+        cboPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiền mặt", "Chuyển khoản" }));
+        cboPaymentMethod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboPaymentMethodActionPerformed(evt);
+            }
+        });
 
         jLabel22.setText("TIền mặt:");
 
+        txtMoneyCash.setEditable(false);
         txtMoneyCash.setBackground(new java.awt.Color(242, 242, 242));
         txtMoneyCash.setText("0");
         txtMoneyCash.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
@@ -475,6 +528,7 @@ public class OrderForm extends javax.swing.JPanel {
         jLabel25.setText("Tiền trả lại:");
 
         txtChange.setEditable(false);
+        txtChange.setText("0");
         txtChange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         btnPay.setBackground(new java.awt.Color(39, 80, 150));
@@ -495,9 +549,11 @@ public class OrderForm extends javax.swing.JPanel {
         jLabel26.setText("Tiền giảm");
 
         txtDiscoutCost.setBackground(new java.awt.Color(242, 242, 242));
+        txtDiscoutCost.setText("0");
         txtDiscoutCost.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         txtTotalCost.setBackground(new java.awt.Color(242, 242, 242));
+        txtTotalCost.setText("0");
         txtTotalCost.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel1.setText("Tiền TT");
@@ -827,10 +883,7 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnScanQRActionPerformed
 
     private void jPanel1formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1formMouseClicked
-        // TODO add your handling code here:
-
-        //        fillTableHoaDon(banHang.fillHoaDon());
-        //        fillTableGioHang(banHang.getAllHDCT(WIDTH));
+        // TODO add your handling code here
     }//GEN-LAST:event_jPanel1formMouseClicked
 
     private void txtSearchProdDetailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusGained
@@ -883,6 +936,8 @@ public class OrderForm extends javax.swing.JPanel {
         int index = tblInvoice.getSelectedRow();
         invoiceId = (int) tblInvoice.getValueAt(index, 1);
         try {
+            showDetail();
+            
 //            System.out.println(invoiceId);
             fillToListCart(os.getToCart(invoiceId));
         } catch (SQLException ex) {
@@ -918,10 +973,11 @@ public class OrderForm extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 1);
                     return;
                 }
-                index = tblSneakerDetail.getSelectedRow();
-                os.addToCart(os.getSneakerDetail((String) tblSneakerDetail.getValueAt(index, 1)), invoiceId);
+                indexSneaker = tblSneakerDetail.getSelectedRow();
+                os.addToCart(os.getSneakerDetail((String) tblSneakerDetail.getValueAt(indexSneaker, 1)), invoiceId);
                 fillToListCart(os.getToCart(invoiceId));
                 fillToListInvoice(os.getOrder());
+                showDetail();
             }
         } catch (Exception e) {
         }
@@ -934,23 +990,14 @@ public class OrderForm extends javax.swing.JPanel {
             int orderId;
 
             if (tblCart.getSelectedRow() != -1) {
-//                cartIndex = tblCart.getSelectedRow();
-//                sdId = os.getIdSneakerDetail((String) tblCart.getValueAt(cartIndex, 1)).getSneakerId();
-//                if (os.deleteOrderDetail(invoiceId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
-//                    fillToListCart(os.getToCart(invoiceId));
-//                    fillToListInvoice(os.getOrder());
-//                    JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
-//                } else {
-//                    JOptionPane.showMessageDialog(this, "Xóa không thành công", "Thông báo", 1);
-//                }
-                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa không?", "Thông báo", 2);
+                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa khỏi giỏ hàng không?", "Thông báo", 2);
 
                 if (confirm != 0) {
                     return;
                 }
-                index = tblCart.getSelectedRow();
-                sdId = os.getIdSneaker((String) tblCart.getValueAt(index, 2));
-                orderId = (int) tblCart.getValueAt(index, 1);
+                cartIndex = tblCart.getSelectedRow();
+                sdId = os.getIdSneaker((String) tblCart.getValueAt(cartIndex, 2));
+                orderId = (int) tblCart.getValueAt(cartIndex, 1);
                 if (os.deleteOrderDetail(orderId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
                     fillToListCart(os.getToCart(orderId));
                     fillToListInvoice(os.getOrder());
@@ -971,15 +1018,15 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_tblCartMouseClicked
 
     private void btnDeleteOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOrderActionPerformed
-        index = tblInvoice.getSelectedRow();
+        indexOrder = tblInvoice.getSelectedRow();
         try {
-            if (index != -1) {
+            if (indexOrder != -1) {
                 int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn không ?", "Thông báo", 1);
                 if (confirm != 0) {
                     return;
                 }
 
-                if (os.updateOrder((int) tblInvoice.getValueAt(index, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(index, 1)) != 0) {
+                if (os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != 0) {
                     fillToListInvoice(os.getOrder());
                     JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
                 } else {
@@ -1009,6 +1056,30 @@ public class OrderForm extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_txtPhoneNumberKeyReleased
+
+    private void cboPaymentMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPaymentMethodActionPerformed
+        if (cboPaymentMethod.getSelectedIndex() == 0) {
+            txtMoneyTransfer.setEditable(false);
+            txtMoneyCash.setEditable(true);
+            txtMoneyTransfer.setText("0");
+        } else {
+            txtMoneyTransfer.setEditable(true);
+            txtMoneyCash.setEditable(false);
+            txtMoneyCash.setText("0");
+        }
+    }//GEN-LAST:event_cboPaymentMethodActionPerformed
+
+    private void cboVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboVoucherActionPerformed
+        try {
+            voucherProcess();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboVoucherActionPerformed
+
+    private void txtOrderCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrderCostActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtOrderCostActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;
