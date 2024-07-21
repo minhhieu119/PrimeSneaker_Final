@@ -151,6 +151,7 @@ create table Sneaker
 	sole_id int,
 	material_id int,
 	sneaker_name nvarchar(100),
+	[status] nvarchar(150),
 	[description] nvarchar(200),
 	created_at date default getdate(),
 	updated_at date default getdate(),
@@ -257,10 +258,10 @@ alter table [User] add foreign key (role_id) references [Role] (role_id)
 --alter table Exchange add foreign key (order_id) references [Order] (order_id)
 --alter table Exchange add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
---drop table OrderDetail
---drop table SneakerDetail
---drop table Sneaker
---drop table [Image]
+drop table OrderDetail
+drop table SneakerDetail
+drop table Sneaker
+drop table [Image]
 --drop table Brand
 --drop table Category
 --drop table Color
@@ -354,97 +355,97 @@ insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount,
 values ('VOUCHER0', N'Không', 0, NULL, 0, 0, 0,'2022-12-31' , '2100-12-31')
 
 --Nhập dữ liệu bảng Sneaker
-insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name, [description])
+insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name,[status], [description])
 values
 --#den, da, nike
-(1,1,1,2,N'Giày Nike Air Jordan 4', N'Phiên bản đặc biệt của dòng sản phẩm Air Jordan, được thiết kế để tôn vinh và tái hiện lại phiên bản kinh điển “Bred” (Black and Red) của dòng Air Jordan 4'),
+(1,1,1,2,N'Giày Nike Air Jordan 4', N'Đang bán', N'Phiên bản đặc biệt của dòng sản phẩm Air Jordan, được thiết kế để tôn vinh và tái hiện lại phiên bản kinh điển “Bred” (Black and Red) của dòng Air Jordan 4'),
 
 --xám, đế cao su, nike
-(1,1,1,3,N'Nike Jordan 1 Dior', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
+(1,1,1,3,N'Nike Jordan 1 Dior', N'Đang bán', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
 
 --Đen, da, vải, nike
-(1,2,1,5,N'Nike Pegasus 40', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
+(1,2,1,5,N'Nike Pegasus 40', N'Chưa mở bán', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
 
 --trắng, da, nike
-(1,3,5,3,N'Nike Air Force 1', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
+(1,3,5,3,N'Nike Air Force 1', N'Chưa mở bán', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
 
 --trắng, da, adidas
-(2,1,3,1,N'Adidas Superstar', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
+(2,1,3,1,N'Adidas Superstar', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --da suede, trắng, đen, nâu, đế EVA, adidas
-(2,5,2,2,N'Adidas Samba', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
+(2,5,2,2,N'Adidas Samba', N'Đang bán', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
 
 --Xanh, adidas, vải
-(2,2,1,4,N'Adidas Ultraboost', N'Đã được bày bán trên Sneaker Daily Shop'),
+(2,2,1,4,N'Adidas Ultraboost', N'Đang bán', N'Đã được bày bán trên Sneaker Daily Shop'),
 
 -- da, adidas, 5900000
-(2,2,1,5,N'Giày adidas golf wide tour', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
+(2,2,1,5,N'Giày adidas golf wide tour', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --trắng, cao su, converse, 2.200.000₫ -> 1.390.000₫
-(4,5,1,5,N'Giày Converse Chuck 70', N' Là một trong những mẫu giày đang được nhiều bạn trẻ kiếm tìm hiện nay'),
+(4,5,1,5,N'Giày Converse Chuck 70', N'Đang bán', N' Là một trong những mẫu giày đang được nhiều bạn trẻ kiếm tìm hiện nay'),
 
 --converse, trắng, đế cao su, 2.990.000₫ 1.490.000₫
-(4,5,1,5,N'Giày Converse Chuck Taylor All Star', N'Hứa hẹn là một siêu phẩm mà bất cứ sneakerhead nào cũng mong muốn sở hữu trong tủ giày của mình'),
+(4,5,1,5,N'Giày Converse Chuck Taylor All Star', N'Đang bán', N'Hứa hẹn là một siêu phẩm mà bất cứ sneakerhead nào cũng mong muốn sở hữu trong tủ giày của mình'),
 
 --lining, xanh, bóng rổ, 1.490.000₫
-(3,1,3,2,N'Giày Li-Ning bóng rổ', N'Đôi giày chuyên dụng được thiết kế đặc biệt cho các vận động viên nam chơi bóng rổ'),
+(3,1,3,2,N'Giày Li-Ning bóng rổ', N'Đang bán', N'Đôi giày chuyên dụng được thiết kế đặc biệt cho các vận động viên nam chơi bóng rổ'),
 
 --lining, trắng, 2.380.000₫
-(3,5,5,1,N'Giày Li-ning Common 70s', N'Phong cách thời trang, cá tính, trẻ trung, phù hợp cho đi học, đi làm, đi chơi, dạo phố'),
+(3,5,5,1,N'Giày Li-ning Common 70s', N'Đang bán', N'Phong cách thời trang, cá tính, trẻ trung, phù hợp cho đi học, đi làm, đi chơi, dạo phố'),
 
 --lining, vàng, hồng, 2.580.000₫
-(3,2,1,6,N'Giày chạy bộ Chitu 7', N'Năng động, trẻ trung, phù hợp cho chạy bộ'),
+(3,2,1,6,N'Giày chạy bộ Chitu 7', N'Đang bán', N'Năng động, trẻ trung, phù hợp cho chạy bộ'),
 
 --fila, trắng, 1.490.000₫
-(6,5,2,3,N'Giày Fila Ranger', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
+(6,5,2,3,N'Giày Fila Ranger', N'Đang bán', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
 
 --fila, trắng, 2.290.000₫
-(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
+(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Đang bán', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
 
 --mlb, trắng, 2.790.000₫
-(5,3,2,2,N'Giày MLB Chunky Liner', N'No description'),
+(5,3,2,2,N'Giày MLB Chunky Liner', N'Đang bán', N'No description'),
 
 --mlb, trắng, 1.500.000₫
-(5,5,3,2,N'Giày MLB BigBall Chunky', N'Phong cách Chunky'),
+(5,5,3,2,N'Giày MLB BigBall Chunky', N'Đang bán', N'Phong cách Chunky'),
 
 --mlb, trắng, 3.390.000₫
-(5,2,2,4,N'Giày MLB Chunky Runner SD', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
+(5,2,2,4,N'Giày MLB Chunky Runner SD', N'Đang bán', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
 
 --newb, trắng-lục, 3.790.000₫
-(7,5,3,4,N'Giày New Balance 550 ', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
+(7,5,3,4,N'Giày New Balance 550 ', N'Đang bán', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
 
 --newb, trắng, 2.590.000₫
-(7,2,1,5,N'Giày New Balance Fresh Foam X 880v14', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
+(7,2,1,5,N'Giày New Balance Fresh Foam X 880v14', N'Đang bán', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
 
 --newb, xám, 1.690.000₫
-(7,1,2,6,N'Giày New Balance Fresh Foam BB v2', N'Phiên bản thuộc dòng giày thể thao cổ điển của New Balance'),
+(7,1,2,6,N'Giày New Balance Fresh Foam BB v2', N'Đang bán', N'Phiên bản thuộc dòng giày thể thao cổ điển của New Balance'),
 
 --puma, 1.990.000₫, trắng
-(9,1,2,4,N'Giày Puma Basket Heart Patent', N'Giày Puma'),
+(9,1,2,4,N'Giày Puma Basket Heart Patent', N'Đang bán', N'Giày Puma'),
 
 --puma, trắng, 1.980.000₫
-(9,2,2,5,N'Giày Puma Velocity NITRO 3', N'No description'),
+(9,2,2,5,N'Giày Puma Velocity NITRO 3', N'Đang bán', N'No description'),
 
 --puma, trắng-đen, 2.980.000₫
-(9,4,3,2,N'Giày Puma Mayze', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
+(9,4,3,2,N'Giày Puma Mayze', N'Đang bán', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
 
 --puma, xanh, 2.090.000₫
-(9,5,1,5,N'Giày Puma Suede Classic', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
+(9,5,1,5,N'Giày Puma Suede Classic', N'Đang bán', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
 
 --reebok, đen, 1.790.000₫
-(11,5,5,3,N'Giày Reebok Royal Pervader', N'No description'),
+(11,5,5,3,N'Giày Reebok Royal Pervader', N'Đang bán', N'No description'),
 
 --reebok, trắng, 1.790.000₫
-(11,2,5,2,N'Giày Reebok Floatride Energy 5', N'Phù hợp cho những người yêu thích phong cách thể thao và đang tìm kiếm một đôi giày thể thao năng động và trẻ trung'),
+(11,2,5,2,N'Giày Reebok Floatride Energy 5', N'Đang bán', N'Phù hợp cho những người yêu thích phong cách thể thao và đang tìm kiếm một đôi giày thể thao năng động và trẻ trung'),
 
 --vans, trắng, 2.290.000₫
-(10,5,3,4,N'Giày Vans Old Skool', N'No description'),
+(10,5,3,4,N'Giày Vans Old Skool', N'Đang bán', N'No description'),
 
 --vans, trắng, 2.500.000₫
-(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'No description'),
+(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'Đang bán', N'No description'),
 
 --vans, đen-lục, 1.690.000₫
-(10,5,3,4,N'Giày Vans classic', N'No description')
+(10,5,3,4,N'Giày Vans classic', N'Đang bán', N'No description')
 
 --Nhập dữ liệu SneakerDetail
 insert into SneakerDetail  (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
@@ -580,138 +581,9 @@ select * from Material
 select * from Size
 select * from Sole
 select * from Customer
-select * from PaymentMethod
 select * from [Role]
 select * from [User]
 select * from Voucher
 
 
 
-select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
-from Sneaker s join Brand b on s.brand_id = b.brand_id
-join Category c on s.category_id = c.category_id
-join Sole so on s.sole_id = so.sole_id
-join Material m on s.material_id = m.material_id
-right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
-join Size si on sd.size_id = si.size_id
-join Color co on sd.color_id = co.color_id
-group by sneaker_detail_code, sneaker_name, quantity, price, category_name, brand_name, color_name, material_name,sole_name, size_number
-having price < 2000000
- 
-select * from Voucher
-select voucher_name
-from Voucher
-where deleted = 1
-order by voucher_id asc
-
-select distinct o.order_id, o.created_at, [user_id], count(quantity) as quantity, [status]
-from [Order] o left join OrderDetail od on o.order_id = od.order_id
-where status like N'Chờ thanh toán'
-group by o.order_id, o.created_at, [user_id],[status]
-order by created_at desc
-
-insert into [Order] ([status])
-values (N'Chờ thanh toán')
-
-select sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
-from OrderDetail od left join [Order] o on od.order_id = o.order_id
-join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-join Color c on sd.color_id = c.color_id
-join Size si on sd.size_id = si.size_id
-join Sneaker s on sd.sneaker_id = s.sneaker_id
-join Brand b on s.brand_id = b.brand_id
-where o.order_id = 12
-
-select distinct sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
-              from OrderDetail od right join [Order] o on od.order_id = o.order_id
-              join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-              join Color c on sd.color_id = c.color_id
-              join Size si on sd.size_id = si.size_id
-              join Sneaker s on sd.sneaker_id = s.sneaker_id
-              join Brand b on s.brand_id = b.brand_id
-              where o.order_id = 4
-
-select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
-              from Sneaker s join Brand b on s.brand_id = b.brand_id
-              join Category c on s.category_id = c.category_id
-              join Sole so on s.sole_id = so.sole_id
-              join Material m on s.material_id = m.material_id
-              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
-              join Size si on sd.size_id = si.size_id
-              join Color co on sd.color_id = co.color_id
-			  where sneaker_detail_code like '2345533'
-
-select sneaker_detail_id
-from SneakerDetail
-where sneaker_detail_code like '2345530'
-
-insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
-values (?,?,?,?,?)
-
-insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
-values
-
-
-delete from [Order]
-where order_id = ?
-
-select distinct o.order_id, o.[user_id], o.voucher_id, o.total_cost, o.payment_method_id,  o.created_at, [user_id], sum(quantity) as quantity, [status]
-              from [Order] o left join OrderDetail od on o.order_id = od.order_id
-              where o.order_id = 8
-			  group by o.order_id, o.created_at, [user_id], [status]
-
-
-select * from OrderDetail
-
-update OrderDetail
-set quantity = 3
-where order_id = 14 and sneaker_detail_id = 1
-
-delete from OrderDetail
-where order_id = 8 and sneaker_detail_id = 1
-
-select o.order_id,sneaker_detail_code, sneaker_name, od.quantity, od.price, b.brand_name, color_name, size_number
-              from OrderDetail od left join [Order] o on od.order_id = o.order_id
-              join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-              join Color c on sd.color_id = c.color_id
-              join Size si on sd.size_id = si.size_id
-              join Sneaker s on sd.sneaker_id = s.sneaker_id
-              join Brand b on s.brand_id = b.brand_id
-              where o.order_id = 2
-
-select * from SneakerDetail
-select sneaker_detail_id
-from SneakerDetail
-where sneaker_detail_code = 2345533
-
-
-select top 1 full_name
-from Customer
-where phone_number like '%0%'
-
-select * from [Order]
-select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quantity) as total_cost, payment_method, received_cash, [change]
-from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
-join OrderDetail od on o.order_id = od.order_id
-where o.order_id = 12
-group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method, received_cash, [change]
-
-select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quantity) as total_cost, payment_method, received_cash, [change]
-              from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
-              join OrderDetail od on o.order_id = od.order_id
-              where o.order_id = 15 and v.deleted = 1
-              group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method, received_cash, [change]
-
-
-			  select * from Voucher
-
-			  select voucher_name
-              from Voucher
-              where deleted = 1 and start_date < getdate() and getdate() < end_date
-              order by voucher_id asc
-
-			  select * from [Order]
-			  select o.order_id, [user_id], voucher_name, o.created_at, payment_method, received_cash, [change]
-              from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
-              join OrderDetail od on o.order_id = od.order_id
-              where o.order_id = 15 and v.deleted = 1

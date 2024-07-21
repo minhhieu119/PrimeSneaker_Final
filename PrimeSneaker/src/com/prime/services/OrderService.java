@@ -422,6 +422,27 @@ public class OrderService {
         }
         return null;
     }
+    
+    public Integer updateStatusAllOrder(String status) throws SQLException {
+        sql = """
+              update [Order]
+              set [status] = N'Đã hủy'
+              where [status] like ?
+              """;
+
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, status);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
 
     public Integer updateOrderDetailQuantity(int quantity, int orderId, int sdId) throws SQLException {
         sql = """
@@ -466,6 +487,9 @@ public class OrderService {
         }
         return null;
     }
+    
+    
+    
 
     public String getCustomerName(String phoneNumber) throws SQLException {
         String name = "";

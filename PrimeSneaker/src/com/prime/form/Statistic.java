@@ -210,7 +210,7 @@ public class Statistic extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(tblThongKeByYear);
 
-        jButton2.setBackground(new java.awt.Color(51, 153, 0));
+        jButton2.setBackground(new java.awt.Color(39, 80, 150));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Export Excel");
@@ -275,7 +275,7 @@ public class Statistic extends javax.swing.JPanel {
         cboMonthInYear.setForeground(new java.awt.Color(255, 255, 255));
         cboMonthInYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton3.setBackground(new java.awt.Color(51, 153, 0));
+        jButton3.setBackground(new java.awt.Color(39, 80, 150));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Export Excel");
@@ -331,7 +331,7 @@ public class Statistic extends javax.swing.JPanel {
 
         jLabel17.setText("Chọn ngày trong tháng");
 
-        jButton4.setBackground(new java.awt.Color(51, 153, 0));
+        jButton4.setBackground(new java.awt.Color(39, 80, 150));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Export Excel");
@@ -395,7 +395,7 @@ public class Statistic extends javax.swing.JPanel {
 
         jLabel16.setText("Đến ngày");
 
-        jButton5.setBackground(new java.awt.Color(51, 153, 0));
+        jButton5.setBackground(new java.awt.Color(39, 80, 150));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Export Excel");
