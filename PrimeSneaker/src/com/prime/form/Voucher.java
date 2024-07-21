@@ -12,15 +12,6 @@ public class Voucher extends javax.swing.JPanel {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblDeleteVoucher = new javax.swing.JTable();
-        btnRestore = new javax.swing.JButton();
-        btnFirstDeleted = new javax.swing.JButton();
-        btnPrevDeleted = new javax.swing.JButton();
-        lblPageDeleted = new javax.swing.JLabel();
-        btnNextDeleted = new javax.swing.JButton();
-        btnLastDeleted = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         txtVoucherName = new javax.swing.JTextField();
@@ -72,100 +63,17 @@ public class Voucher extends javax.swing.JPanel {
         lblPage = new javax.swing.JLabel();
         btnNext = new javax.swing.JButton();
         btnLast = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblDeleteVoucher = new javax.swing.JTable();
+        btnRestore = new javax.swing.JButton();
+        btnFirstDeleted = new javax.swing.JButton();
+        btnPrevDeleted = new javax.swing.JButton();
+        lblPageDeleted = new javax.swing.JLabel();
+        btnNextDeleted = new javax.swing.JButton();
+        btnLastDeleted = new javax.swing.JButton();
 
         jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        tblDeleteVoucher.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "STT", "Mã voucher", "Tên voucher", "Loại voucher", "Đơn tối thiểu", "Giảm tối đa", "Số lượng", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái", "Khôi phục"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, true
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblDeleteVoucher.setRowHeight(35);
-        jScrollPane2.setViewportView(tblDeleteVoucher);
-
-        btnRestore.setBackground(new java.awt.Color(39, 80, 150));
-        btnRestore.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnRestore.setForeground(new java.awt.Color(255, 255, 255));
-        btnRestore.setText("Khôi phục");
-
-        btnFirstDeleted.setBackground(new java.awt.Color(39, 80, 150));
-        btnFirstDeleted.setForeground(new java.awt.Color(255, 255, 255));
-        btnFirstDeleted.setText("|<");
-
-        btnPrevDeleted.setBackground(new java.awt.Color(39, 80, 150));
-        btnPrevDeleted.setForeground(new java.awt.Color(255, 255, 255));
-        btnPrevDeleted.setText("<<");
-
-        lblPageDeleted.setText("Page");
-
-        btnNextDeleted.setBackground(new java.awt.Color(39, 80, 150));
-        btnNextDeleted.setForeground(new java.awt.Color(255, 255, 255));
-        btnNextDeleted.setText(">>");
-
-        btnLastDeleted.setBackground(new java.awt.Color(39, 80, 150));
-        btnLastDeleted.setForeground(new java.awt.Color(255, 255, 255));
-        btnLastDeleted.setText(">|");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(207, Short.MAX_VALUE)
-                .addComponent(btnFirstDeleted)
-                .addGap(31, 31, 31)
-                .addComponent(btnPrevDeleted)
-                .addGap(18, 18, 18)
-                .addComponent(lblPageDeleted, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnNextDeleted)
-                .addGap(18, 18, 18)
-                .addComponent(btnLastDeleted)
-                .addGap(206, 206, 206)
-                .addComponent(btnRestore, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(156, 156, 156))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFirstDeleted)
-                    .addComponent(btnPrevDeleted)
-                    .addComponent(lblPageDeleted)
-                    .addComponent(btnNextDeleted)
-                    .addComponent(btnLastDeleted)
-                    .addComponent(btnRestore, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(201, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Voucher đã xóa", jPanel3);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -663,6 +571,98 @@ public class Voucher extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("Voucher", jPanel2);
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        tblDeleteVoucher.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "STT", "Mã voucher", "Tên voucher", "Loại voucher", "Đơn tối thiểu", "Giảm tối đa", "Số lượng", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái", "Khôi phục"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDeleteVoucher.setRowHeight(35);
+        jScrollPane2.setViewportView(tblDeleteVoucher);
+
+        btnRestore.setBackground(new java.awt.Color(39, 80, 150));
+        btnRestore.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRestore.setForeground(new java.awt.Color(255, 255, 255));
+        btnRestore.setText("Khôi phục");
+
+        btnFirstDeleted.setBackground(new java.awt.Color(39, 80, 150));
+        btnFirstDeleted.setForeground(new java.awt.Color(255, 255, 255));
+        btnFirstDeleted.setText("|<");
+
+        btnPrevDeleted.setBackground(new java.awt.Color(39, 80, 150));
+        btnPrevDeleted.setForeground(new java.awt.Color(255, 255, 255));
+        btnPrevDeleted.setText("<<");
+
+        lblPageDeleted.setText("Page");
+
+        btnNextDeleted.setBackground(new java.awt.Color(39, 80, 150));
+        btnNextDeleted.setForeground(new java.awt.Color(255, 255, 255));
+        btnNextDeleted.setText(">>");
+
+        btnLastDeleted.setBackground(new java.awt.Color(39, 80, 150));
+        btnLastDeleted.setForeground(new java.awt.Color(255, 255, 255));
+        btnLastDeleted.setText(">|");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(207, Short.MAX_VALUE)
+                .addComponent(btnFirstDeleted)
+                .addGap(31, 31, 31)
+                .addComponent(btnPrevDeleted)
+                .addGap(18, 18, 18)
+                .addComponent(lblPageDeleted, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnNextDeleted)
+                .addGap(18, 18, 18)
+                .addComponent(btnLastDeleted)
+                .addGap(206, 206, 206)
+                .addComponent(btnRestore, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(156, 156, 156))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnFirstDeleted)
+                    .addComponent(btnPrevDeleted)
+                    .addComponent(lblPageDeleted)
+                    .addComponent(btnNextDeleted)
+                    .addComponent(btnLastDeleted)
+                    .addComponent(btnRestore, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(201, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Voucher đã xóa", jPanel3);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -673,7 +673,7 @@ public class Voucher extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
     }// </editor-fold>//GEN-END:initComponents
 

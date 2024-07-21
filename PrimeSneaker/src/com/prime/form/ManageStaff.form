@@ -119,10 +119,7 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="jComboBox5" linkSize="5" min="-2" pref="235" max="-2" attributes="0"/>
-                                          </Group>
+                                          <Component id="jComboBox5" linkSize="5" min="-2" pref="235" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                               <Component id="txtSalary2" linkSize="5" max="32767" attributes="0"/>
@@ -388,7 +385,10 @@
             <Component class="javax.swing.JButton" name="btnUpdateStaff">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="66" green="ff" red="ff" type="rgb"/>
+                  <Color blue="96" green="50" red="27" type="rgb"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="S&#x1eed;a th&#xf4;ng tin NV"/>
               </Properties>
@@ -396,7 +396,10 @@
             <Component class="javax.swing.JButton" name="btnClockAccount">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="ff" type="rgb"/>
+                  <Color blue="96" green="50" red="27" type="rgb"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Kho&#xe1; Nh&#xe2;n Vi&#xea;n"/>
               </Properties>
@@ -415,7 +418,7 @@
             <Component class="javax.swing.JButton" name="btnExportExcel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="99" red="33" type="rgb"/>
+                  <Color blue="96" green="50" red="27" type="rgb"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>

@@ -54,10 +54,11 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/product.png")), " Sản phẩm"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/voucher.png")), "Voucher"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/order.png")), "Bán hàng "));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/order.png")), "Bán hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/invoice.png")), "Hóa đơn"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/voucher.png")), "Voucher"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/product.png")), "Sản phẩm"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/properties.png")), "Thuộc tính"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/staff.png")), "Nhân viên"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/customer.png")), "Khách hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/prime/icon2/chart.png")), "Thống kê"));

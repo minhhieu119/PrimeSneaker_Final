@@ -143,19 +143,6 @@ create table Customer
 )
 go
 
-create table PaymentMethod
-(
-	payment_method_id int identity(1,1) primary key,
-	method_name nvarchar(50),
-	[description] nvarchar(200),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
-)
-go
-
 create table Sneaker
 (
 	sneaker_id int identity(1,1) primary key,
@@ -164,6 +151,7 @@ create table Sneaker
 	sole_id int,
 	material_id int,
 	sneaker_name nvarchar(100),
+	[status] nvarchar(150),
 	[description] nvarchar(200),
 	created_at date default getdate(),
 	updated_at date default getdate(),
@@ -210,7 +198,7 @@ create table [Order]
 	[user_id] int,
 	customer_id int,
 	voucher_id int,
-	payment_method_id int,
+	payment_method nvarchar(40),
 	order_qr_code varchar(50),
 	total_cost money check(total_cost >= 0),
 	received_cash money check(received_cash >= 0),
@@ -239,32 +227,6 @@ create table OrderDetail
 )
 go
 
---create table Collar
---(
---	collar_id int identity(1,1) primary key,
---	type_collar nvarchar(30),
---	created_at date default getdate(),
---	updated_at date default getdate(),
---	created_by int,
---	updated_by int,
---	deleted bit default 1
---)
---go
-
---create table Exchange
---(
---	exchange_id int identity(1,1) primary key,
---	reason nvarchar(100),
---	[status] nvarchar(50),
---	note nvarchar(255),
---	created_at date default getdate(),
---	updated_at date default getdate(),
---	created_by int,
---	updated_by int,
---	deleted bit default 1
---)
---go
-
 alter table [Image] add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
 alter table SneakerDetail add foreign key (sneaker_id) references Sneaker (sneaker_id)
@@ -282,7 +244,6 @@ alter table OrderDetail add foreign key (order_id) references [Order] (order_id)
 alter table [Order] add foreign key ([user_id]) references [User] ([user_id])
 alter table [Order] add foreign key (customer_id) references Customer (customer_id)
 alter table [Order] add foreign key (voucher_id) references Voucher (voucher_id)
-alter table [Order] add foreign key (payment_method_id) references PaymentMethod (payment_method_id)
 
 alter table [User] add foreign key (role_id) references [Role] (role_id)
 
@@ -297,10 +258,10 @@ alter table [User] add foreign key (role_id) references [Role] (role_id)
 --alter table Exchange add foreign key (order_id) references [Order] (order_id)
 --alter table Exchange add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
---drop table OrderDetail
---drop table SneakerDetail
---drop table Sneaker
---drop table [Image]
+drop table OrderDetail
+drop table SneakerDetail
+drop table Sneaker
+drop table [Image]
 --drop table Brand
 --drop table Category
 --drop table Color
@@ -361,11 +322,6 @@ values (1, 'NV001', N'Bùi Minh Hiếu', 1, '1997-09-11', '0975416197', N'Đan P
 (2, 'NV008', N'Hoàng Kim Bảo', 1, '1999-09-21', '0975323447', N'Chí Linh - Hải Dương', 'baokh@gmail.com','0017533787', 'bao2222', 'baohq2222', N'Đã nghỉ việc')
 go
 
---Nhập dữ liệu Payment method
-insert into PaymentMethod (method_name, [description])
-values (N'Tiền mặt', N'Khách hàng trả bằng tiền mặt'),
-(N'Chuyển khoản', N'Chuyển khoản qua ngân hàng')
-
 --Nhập dữ liệu Customer
 insert into Customer(full_name, gender, date_of_birth, [address], phone_number)
 values (N'Nguyễn Văn Hiếu', 1, '1990-05-10', N'123 Trịnh Văn Bô, Nam Từ Liêm, Hà Nội', '0843456789'),
@@ -395,98 +351,101 @@ values ('VOUCHER1', N'Khuyến mãi hè', 0.1, NULL, 100000, 500000, 20, '2024-0
 ('VOUCHER9', N'Khuyến mãi valentine', NULL, 120000, 200000, 700000, 20, '2024-09-01', '2024-04-30'),
 ('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0.35, NULL, 500000, 1000000, 20, '2024-01-01', '2024-03-31');
 
+insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date)
+values ('VOUCHER0', N'Không', 0, NULL, 0, 0, 0,'2022-12-31' , '2100-12-31')
+
 --Nhập dữ liệu bảng Sneaker
-insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name, [description])
+insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name,[status], [description])
 values
 --#den, da, nike
-(1,1,1,2,N'Giày Nike Air Jordan 4', N'Phiên bản đặc biệt của dòng sản phẩm Air Jordan, được thiết kế để tôn vinh và tái hiện lại phiên bản kinh điển “Bred” (Black and Red) của dòng Air Jordan 4'),
+(1,1,1,2,N'Giày Nike Air Jordan 4', N'Đang bán', N'Phiên bản đặc biệt của dòng sản phẩm Air Jordan, được thiết kế để tôn vinh và tái hiện lại phiên bản kinh điển “Bred” (Black and Red) của dòng Air Jordan 4'),
 
 --xám, đế cao su, nike
-(1,1,1,3,N'Nike Jordan 1 Dior', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
+(1,1,1,3,N'Nike Jordan 1 Dior', N'Đang bán', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
 
 --Đen, da, vải, nike
-(1,2,1,5,N'Nike Pegasus 40', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
+(1,2,1,5,N'Nike Pegasus 40', N'Chưa mở bán', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
 
 --trắng, da, nike
-(1,3,5,3,N'Nike Air Force 1', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
+(1,3,5,3,N'Nike Air Force 1', N'Chưa mở bán', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
 
 --trắng, da, adidas
-(2,1,3,1,N'Adidas Superstar', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
+(2,1,3,1,N'Adidas Superstar', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --da suede, trắng, đen, nâu, đế EVA, adidas
-(2,5,2,2,N'Adidas Samba', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
+(2,5,2,2,N'Adidas Samba', N'Đang bán', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
 
 --Xanh, adidas, vải
-(2,2,1,4,N'Adidas Ultraboost', N'Đã được bày bán trên Sneaker Daily Shop'),
+(2,2,1,4,N'Adidas Ultraboost', N'Đang bán', N'Đã được bày bán trên Sneaker Daily Shop'),
 
 -- da, adidas, 5900000
-(2,2,1,5,N'Giày adidas golf wide tour', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
+(2,2,1,5,N'Giày adidas golf wide tour', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --trắng, cao su, converse, 2.200.000₫ -> 1.390.000₫
-(4,5,1,5,N'Giày Converse Chuck 70', N' Là một trong những mẫu giày đang được nhiều bạn trẻ kiếm tìm hiện nay'),
+(4,5,1,5,N'Giày Converse Chuck 70', N'Đang bán', N' Là một trong những mẫu giày đang được nhiều bạn trẻ kiếm tìm hiện nay'),
 
 --converse, trắng, đế cao su, 2.990.000₫ 1.490.000₫
-(4,5,1,5,N'Giày Converse Chuck Taylor All Star', N'Hứa hẹn là một siêu phẩm mà bất cứ sneakerhead nào cũng mong muốn sở hữu trong tủ giày của mình'),
+(4,5,1,5,N'Giày Converse Chuck Taylor All Star', N'Đang bán', N'Hứa hẹn là một siêu phẩm mà bất cứ sneakerhead nào cũng mong muốn sở hữu trong tủ giày của mình'),
 
 --lining, xanh, bóng rổ, 1.490.000₫
-(3,1,3,2,N'Giày Li-Ning bóng rổ', N'Đôi giày chuyên dụng được thiết kế đặc biệt cho các vận động viên nam chơi bóng rổ'),
+(3,1,3,2,N'Giày Li-Ning bóng rổ', N'Đang bán', N'Đôi giày chuyên dụng được thiết kế đặc biệt cho các vận động viên nam chơi bóng rổ'),
 
 --lining, trắng, 2.380.000₫
-(3,5,5,1,N'Giày Li-ning Common 70s', N'Phong cách thời trang, cá tính, trẻ trung, phù hợp cho đi học, đi làm, đi chơi, dạo phố'),
+(3,5,5,1,N'Giày Li-ning Common 70s', N'Đang bán', N'Phong cách thời trang, cá tính, trẻ trung, phù hợp cho đi học, đi làm, đi chơi, dạo phố'),
 
 --lining, vàng, hồng, 2.580.000₫
-(3,2,1,6,N'Giày chạy bộ Chitu 7', N'Năng động, trẻ trung, phù hợp cho chạy bộ'),
+(3,2,1,6,N'Giày chạy bộ Chitu 7', N'Đang bán', N'Năng động, trẻ trung, phù hợp cho chạy bộ'),
 
 --fila, trắng, 1.490.000₫
-(6,5,2,3,N'Giày Fila Ranger', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
+(6,5,2,3,N'Giày Fila Ranger', N'Đang bán', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
 
 --fila, trắng, 2.290.000₫
-(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
+(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Đang bán', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
 
 --mlb, trắng, 2.790.000₫
-(5,3,2,2,N'Giày MLB Chunky Liner', N'No description'),
+(5,3,2,2,N'Giày MLB Chunky Liner', N'Đang bán', N'No description'),
 
 --mlb, trắng, 1.500.000₫
-(5,5,3,2,N'Giày MLB BigBall Chunky', N'Phong cách Chunky'),
+(5,5,3,2,N'Giày MLB BigBall Chunky', N'Đang bán', N'Phong cách Chunky'),
 
 --mlb, trắng, 3.390.000₫
-(5,2,2,4,N'Giày MLB Chunky Runner SD', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
+(5,2,2,4,N'Giày MLB Chunky Runner SD', N'Đang bán', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
 
 --newb, trắng-lục, 3.790.000₫
-(7,5,3,4,N'Giày New Balance 550 ', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
+(7,5,3,4,N'Giày New Balance 550 ', N'Đang bán', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
 
 --newb, trắng, 2.590.000₫
-(7,2,1,5,N'Giày New Balance Fresh Foam X 880v14', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
+(7,2,1,5,N'Giày New Balance Fresh Foam X 880v14', N'Đang bán', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
 
 --newb, xám, 1.690.000₫
-(7,1,2,6,N'Giày New Balance Fresh Foam BB v2', N'Phiên bản thuộc dòng giày thể thao cổ điển của New Balance'),
+(7,1,2,6,N'Giày New Balance Fresh Foam BB v2', N'Đang bán', N'Phiên bản thuộc dòng giày thể thao cổ điển của New Balance'),
 
 --puma, 1.990.000₫, trắng
-(9,1,2,4,N'Giày Puma Basket Heart Patent', N'Giày Puma'),
+(9,1,2,4,N'Giày Puma Basket Heart Patent', N'Đang bán', N'Giày Puma'),
 
 --puma, trắng, 1.980.000₫
-(9,2,2,5,N'Giày Puma Velocity NITRO 3', N'No description'),
+(9,2,2,5,N'Giày Puma Velocity NITRO 3', N'Đang bán', N'No description'),
 
 --puma, trắng-đen, 2.980.000₫
-(9,4,3,2,N'Giày Puma Mayze', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
+(9,4,3,2,N'Giày Puma Mayze', N'Đang bán', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
 
 --puma, xanh, 2.090.000₫
-(9,5,1,5,N'Giày Puma Suede Classic', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
+(9,5,1,5,N'Giày Puma Suede Classic', N'Đang bán', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
 
 --reebok, đen, 1.790.000₫
-(11,5,5,3,N'Giày Reebok Royal Pervader', N'No description'),
+(11,5,5,3,N'Giày Reebok Royal Pervader', N'Đang bán', N'No description'),
 
 --reebok, trắng, 1.790.000₫
-(11,2,5,2,N'Giày Reebok Floatride Energy 5', N'Phù hợp cho những người yêu thích phong cách thể thao và đang tìm kiếm một đôi giày thể thao năng động và trẻ trung'),
+(11,2,5,2,N'Giày Reebok Floatride Energy 5', N'Đang bán', N'Phù hợp cho những người yêu thích phong cách thể thao và đang tìm kiếm một đôi giày thể thao năng động và trẻ trung'),
 
 --vans, trắng, 2.290.000₫
-(10,5,3,4,N'Giày Vans Old Skool', N'No description'),
+(10,5,3,4,N'Giày Vans Old Skool', N'Đang bán', N'No description'),
 
 --vans, trắng, 2.500.000₫
-(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'No description'),
+(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'Đang bán', N'No description'),
 
 --vans, đen-lục, 1.690.000₫
-(10,5,3,4,N'Giày Vans classic', N'No description')
+(10,5,3,4,N'Giày Vans classic', N'Đang bán', N'No description')
 
 --Nhập dữ liệu SneakerDetail
 insert into SneakerDetail  (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
@@ -559,28 +518,28 @@ insert into [Image] (sneaker_detail_id, image_url)
 values (10, 'anh10.jpg')
 
 --Nhập dữ liệu Order
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (2, 2, 1, 1, '09366432', 1620000, 1620000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 1, null, 2, '09366433', 2000000, 2000000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (2, 3, null, 2, '09366434', 1400000, 1500000, 100000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 4, 4, 1, '09366435', 2600000, 26000000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 5, 4, 2, '09366436', 1500000, 1500000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 6, null, 1, '09366427', 1200000, 1200000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (5, 7, null, 1, '09366437', 1800000, 2000000, 200000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 8, 1, 2, '09366438', 2600000, 2600000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 9, 4, 2, '09366439', 1200000, 1200000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (5, 10, null, 1, '09366410', 1400000, 1500000, 50000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method_id, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (6, 11, null, 1, '09366411', 1000000, 1000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (2, 2, 1, N'Tiền mặt', '09366432', 1620000, 1620000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method,  order_qr_code, total_cost, received_cash, [change], [status], note)
+values (3, 1, null, N'Tiền mặt', '09366433', 2000000, 2000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (2, 3, null, N'Chuyển khoản', '09366434', 1400000, 1500000, 100000, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (3, 4, 4, N'Chuyển khoản', '09366435', 2600000, 26000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (4, 5, 4, N'Tiền mặt', '09366436', 1500000, 1500000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (4, 6, null, N'Chuyển khoản', '09366427', 1200000, 1200000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (5, 7, null, N'Tiền mặt', '09366437', 1800000, 2000000, 200000, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (4, 8, 1, N'Tiền mặt', '09366438', 2600000, 2600000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (3, 9, 4, N'Tiền mặt', '09366439', 1200000, 1200000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (5, 10, null, N'Tiền mặt', '09366410', 1400000, 1500000, 50000, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
+values (6, 11, null, N'Chuyển khoản', '09366411', 1000000, 1000000, 0, N'Đã thanh toán', null)
 
 -- Nhập dữ liệu Order Detail
 insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
@@ -622,14 +581,9 @@ select * from Material
 select * from Size
 select * from Sole
 select * from Customer
-select * from PaymentMethod
 select * from [Role]
 select * from [User]
 select * from Voucher
-
-
-
-
 
 
 

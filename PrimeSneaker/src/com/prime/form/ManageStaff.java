@@ -100,17 +100,19 @@ public class ManageStaff extends javax.swing.JPanel {
         btnAddNewStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnAddNewStaff.setText("Thêm Nhân viên");
 
-        btnUpdateStaff.setBackground(new java.awt.Color(255, 255, 102));
+        btnUpdateStaff.setBackground(new java.awt.Color(39, 80, 150));
+        btnUpdateStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdateStaff.setText("Sửa thông tin NV");
 
-        btnClockAccount.setBackground(new java.awt.Color(255, 0, 0));
+        btnClockAccount.setBackground(new java.awt.Color(39, 80, 150));
+        btnClockAccount.setForeground(new java.awt.Color(255, 255, 255));
         btnClockAccount.setText("Khoá Nhân Viên");
 
         btnScanCitizenQR.setBackground(new java.awt.Color(39, 80, 150));
         btnScanCitizenQR.setForeground(new java.awt.Color(255, 255, 255));
         btnScanCitizenQR.setText("Quét CCCD");
 
-        btnExportExcel.setBackground(new java.awt.Color(51, 153, 0));
+        btnExportExcel.setBackground(new java.awt.Color(39, 80, 150));
         btnExportExcel.setForeground(new java.awt.Color(255, 255, 255));
         btnExportExcel.setText("Xuất Excel");
 
@@ -240,9 +242,7 @@ public class ManageStaff extends javax.swing.JPanel {
                                         .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(3, 3, 3)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addGap(18, 18, 18)
                                             .addComponent(txtSalary2)))))
