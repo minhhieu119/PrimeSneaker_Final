@@ -586,4 +586,22 @@ select * from [User]
 select * from Voucher
 
 
+select *
+from OrderDetail
+where order_id = 35
 
+select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 2) as quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+              from Sneaker s join Brand b on s.brand_id = b.brand_id
+              join Category c on s.category_id = c.category_id
+              join Sole so on s.sole_id = so.sole_id
+              join Material m on s.material_id = m.material_id
+              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+              join Size si on sd.size_id = si.size_id
+              join Color co on sd.color_id = co.color_id
+
+			  select sneaker_detail_id, sneaker_detail_code,  price, (quantity - 2) as quantity, color_name, size_number 
+			  from SneakerDetail
+			  where sneaker_detail_code = 2345522
+			  
+
+			  select * from SneakerDetail

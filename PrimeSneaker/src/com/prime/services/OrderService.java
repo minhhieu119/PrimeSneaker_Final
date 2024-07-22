@@ -68,6 +68,27 @@ public class OrderService {
         }
         return listSneaker;
     }
+    
+    public Integer updateQuantitySneaker (String code, int quantity) throws SQLException{
+        sql = """
+              update SneakerDetail
+              set quantity = quantity - ?
+              where sneaker_detail_code = ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, quantity);
+            ps.setString(2, code);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
 
     public List<Voucher> getVoucher() throws SQLException {
         List<Voucher> listVoucher = new ArrayList<>();
@@ -379,7 +400,7 @@ public class OrderService {
         return null;
     }
 
-    public Integer addToCart(SneakerDetail sd, int orderId) throws SQLException {
+    public Integer addToCart(SneakerDetail sd, int orderId, int quantity) throws SQLException {
         sql = """
               insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
               values (?,?,?,?,?)
@@ -390,7 +411,7 @@ public class OrderService {
             ps = c.prepareStatement(sql);
             ps.setInt(1, sd.getSneakerId());
             ps.setInt(2, orderId);
-            ps.setInt(3, 1);
+            ps.setInt(3, quantity);
             ps.setLong(4, sd.getPrice());
             ps.setLong(5, sd.getQuantity() * sd.getPrice());
             return ps.executeUpdate();
@@ -502,7 +523,7 @@ public class OrderService {
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
-            ps.setString(1, "%" + phoneNumber + "%");
+            ps.setString(1, phoneNumber);
             rs = ps.executeQuery();
             if(rs.next()){
                 name = rs.getString("full_name");
@@ -558,4 +579,5 @@ public class OrderService {
         }
         return o;
     }
+    
 }
