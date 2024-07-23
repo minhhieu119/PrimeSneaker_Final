@@ -585,10 +585,14 @@ select * from [Role]
 select * from [User]
 select * from Voucher
 
+<<<<<<< HEAD
 
 select *
 from OrderDetail
 where order_id = 35
+=======
+update [User] set status = N'Đang làm việc' where user_code = 'NV009'
+>>>>>>> 7c8a1d02b0d62cf8e646ebff0ec93e0f9eeecb6d
 
 select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 2) as quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
               from Sneaker s join Brand b on s.brand_id = b.brand_id

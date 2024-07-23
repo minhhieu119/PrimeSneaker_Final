@@ -622,9 +622,9 @@ public class OrderService {
         return null;
     }
     
-    public List<ModelCustomer> getAllPhoneNumber (){
-        sql = """
-              
-              """;
-    }
+//    public List<ModelCustomer> getAllPhoneNumber (){
+//        sql = """
+//              
+//              """;
+//    }
 }

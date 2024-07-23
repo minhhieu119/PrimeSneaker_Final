@@ -11,9 +11,9 @@ public class ManageCustomer extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        txtStaffId = new javax.swing.JTextField();
-        txtStaffName = new javax.swing.JTextField();
-        txtStaffPhone = new javax.swing.JTextField();
+        txtCustomerId = new javax.swing.JTextField();
+        txtCustomerName = new javax.swing.JTextField();
+        txtCustomerPhone = new javax.swing.JTextField();
         rdoMale = new javax.swing.JRadioButton();
         rdoFemale = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
@@ -26,9 +26,9 @@ public class ManageCustomer extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAddress = new javax.swing.JTextArea();
         jPanel17 = new javax.swing.JPanel();
-        btnAddNewStaff = new javax.swing.JButton();
-        btnUpdateStaff = new javax.swing.JButton();
-        btnClearStaff = new javax.swing.JButton();
+        btnAddCustomer = new javax.swing.JButton();
+        btnUpdateCustomer = new javax.swing.JButton();
+        btnClearCustomer = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jTabbedPane4 = new javax.swing.JTabbedPane();
         jPanel9 = new javax.swing.JPanel();
@@ -52,11 +52,11 @@ public class ManageCustomer extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thiết lập thông tin khách hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
-        txtStaffId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        txtStaffName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        txtStaffPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         rdoMale.setSelected(true);
         rdoMale.setText("Nam");
@@ -88,17 +88,17 @@ public class ManageCustomer extends javax.swing.JPanel {
         jPanel17.setBackground(new java.awt.Color(185, 213, 246));
         jPanel17.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        btnAddNewStaff.setBackground(new java.awt.Color(39, 80, 150));
-        btnAddNewStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddNewStaff.setText("Thêm khách hàng");
+        btnAddCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnAddCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        btnAddCustomer.setText("Thêm khách hàng");
 
-        btnUpdateStaff.setBackground(new java.awt.Color(39, 80, 150));
-        btnUpdateStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdateStaff.setText("Sửa khách hàng");
+        btnUpdateCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnUpdateCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdateCustomer.setText("Sửa khách hàng");
 
-        btnClearStaff.setBackground(new java.awt.Color(39, 80, 150));
-        btnClearStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnClearStaff.setText("Reset");
+        btnClearCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnClearCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        btnClearCustomer.setText("Reset");
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -107,23 +107,23 @@ public class ManageCustomer extends javax.swing.JPanel {
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnAddNewStaff)
-                    .addComponent(btnUpdateStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnClearStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAddCustomer)
+                    .addComponent(btnUpdateCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnClearCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddNewStaff, btnClearStaff, btnUpdateStaff});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddCustomer, btnClearCustomer, btnUpdateCustomer});
 
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(btnAddNewStaff)
+                .addComponent(btnAddCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnUpdateStaff)
+                .addComponent(btnUpdateCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnClearStaff)
+                .addComponent(btnClearCustomer)
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -140,8 +140,8 @@ public class ManageCustomer extends javax.swing.JPanel {
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(37, 37, 37)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtStaffPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCustomerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -159,13 +159,13 @@ public class ManageCustomer extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(txtStaffName, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(145, 145, 145))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane2, txtDateOfBirth, txtStaffId, txtStaffName, txtStaffPhone});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane2, txtCustomerId, txtCustomerName, txtCustomerPhone, txtDateOfBirth});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,17 +173,17 @@ public class ManageCustomer extends javax.swing.JPanel {
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtStaffName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtStaffPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtCustomerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -205,7 +205,7 @@ public class ManageCustomer extends javax.swing.JPanel {
                 .addGap(17, 17, 17))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtDateOfBirth, txtStaffId, txtStaffName, txtStaffPhone});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCustomerId, txtCustomerName, txtCustomerPhone, txtDateOfBirth});
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Khách hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -448,8 +448,8 @@ public class ManageCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_tblOrderHistoryMousePressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddNewStaff;
-    private javax.swing.JButton btnClearStaff;
+    private javax.swing.JButton btnAddCustomer;
+    private javax.swing.JButton btnClearCustomer;
     private javax.swing.JButton btnFirst2;
     private javax.swing.JButton btnFirstDeleted;
     private javax.swing.JButton btnLast2;
@@ -458,7 +458,7 @@ public class ManageCustomer extends javax.swing.JPanel {
     private javax.swing.JButton btnNextDeleted;
     private javax.swing.JButton btnPrev2;
     private javax.swing.JButton btnPrevDeleted;
-    private javax.swing.JButton btnUpdateStaff;
+    private javax.swing.JButton btnUpdateCustomer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -482,9 +482,9 @@ public class ManageCustomer extends javax.swing.JPanel {
     private javax.swing.JTable tblListCustomer;
     private javax.swing.JTable tblOrderHistory;
     private javax.swing.JTextArea txtAddress;
+    private javax.swing.JTextField txtCustomerId;
+    private javax.swing.JTextField txtCustomerName;
+    private javax.swing.JTextField txtCustomerPhone;
     private com.toedter.calendar.JDateChooser txtDateOfBirth;
-    private javax.swing.JTextField txtStaffId;
-    private javax.swing.JTextField txtStaffName;
-    private javax.swing.JTextField txtStaffPhone;
     // End of variables declaration//GEN-END:variables
 }
