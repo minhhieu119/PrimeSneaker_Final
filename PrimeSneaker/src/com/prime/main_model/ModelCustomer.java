@@ -27,7 +27,6 @@ public class ModelCustomer {
         this.phoneNumber = phoneNumber;
     }
 
-
     public ModelCustomer(String customerName, boolean gender, String address, String phoneNumber) {
         this.customerName = customerName;
         this.gender = gender;
@@ -35,6 +34,8 @@ public class ModelCustomer {
         this.phoneNumber = phoneNumber;
     }
     
+    
+
     public int getCustomerID() {
         return customerID;
     }
@@ -89,4 +90,3 @@ public class ModelCustomer {
     }
     
 }
-

@@ -7,7 +7,6 @@ package com.prime.form.attributeSneaker;
 import com.prime.services.OrderService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,11 +34,6 @@ public class CustomerJDialog extends javax.swing.JDialog {
         }
         return false;
     }
-    
-//    private boolean checkIsvalid (String pn){
-//        
-////    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -147,18 +141,6 @@ public class CustomerJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
-        fullname = txtCustomerName.getText();
-        phoneNumber = txtCustomerPhone.getText();
-        address = txtCustomerAddress.getText();
-        
-        if (fullname.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Bạn chưa nhập tên!", "Thông báo", 2);
-            return;
-        } else if (phoneNumber.trim().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Bạn chưa nhập số điện thoại!", "Thông báo", 2);
-            return;
-        }
-        
         
     }//GEN-LAST:event_btnAddCustomerActionPerformed
 

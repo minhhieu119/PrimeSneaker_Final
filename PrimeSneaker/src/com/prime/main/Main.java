@@ -72,11 +72,7 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new Properties());
                 }
                 if (menuIndex == 5) {
-                    try {
-                        main.showForm(new ManageStaff());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    main.showForm(new ManageStaff());
                 }
                 if (menuIndex == 6) {
                     main.showForm(new ManageCustomer());
