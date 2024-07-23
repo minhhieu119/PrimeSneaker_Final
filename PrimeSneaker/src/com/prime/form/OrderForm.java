@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import com.prime.model.CartQuantity;
 import com.prime.model.Customer;
+import org.apache.xmlbeans.impl.soap.SOAPFault;
 
 public class OrderForm extends javax.swing.JPanel {
 
@@ -1079,23 +1080,15 @@ public class OrderForm extends javax.swing.JPanel {
                     }
                 }
                 if (!active) {
-//Integer.parseInt((String) tblCart.getValueAt(cartIndex, 4))
-//                    System.out.println(tblCart.getValueAt(cartIndex, 2));
                     sdId = os.getIdSneaker((String) tblCart.getValueAt(cartIndex, 2));
                     orderId = (int) tblCart.getValueAt(cartIndex, 1);
                     quan = (int) tblCart.getValueAt(cartIndex, 4);
                     if (os.deleteOrderDetail(orderId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
-//                        int quantity = Integer.parseInt((String) tblCart.getValueAt(cartIndex, 4));
-//                        System.out.println((String) tblCart.getValueAt(cartIndex, 4));
                         os.updateQuantityDeleteSneaker((String) tblCart.getValueAt(cartIndex, 2), quan);
                         fillToListSneakerDetail(os.getAllSneakerDetail());
                         fillToListInvoice(os.getOrder());
                         tblInvoice.setRowSelectionInterval(id, id);
                         fillToListCart(os.getToCart(invoiceId));
-//                        if (os.updateQuantityDeleteSneaker((String) tblCart.getValueAt(cartIndex, 2), 1) != 0) {
-//                            System.out.println("ok");
-//                        }
-//                        System.out.println(tblCart.getValueAt(tblCart.getSelectedRow(), 2));
 
                         showDetail();
                         JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
@@ -1205,7 +1198,6 @@ public class OrderForm extends javax.swing.JPanel {
             int sdId = 0;
             try {
                 sdId = os.getIdSneaker(sneakerCode);
-//                System.out.println(os.updateOrderDetailQuantity(3, invoiceId, sdId));
             } catch (SQLException ex) {
                 Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1221,28 +1213,29 @@ public class OrderForm extends javax.swing.JPanel {
                         indexSneaker = tblCart.getSelectedRow();
                         String sneakerCode = (String) tblCart.getValueAt(indexSneaker, 2);
                         int sdId = os.getIdSneaker(sneakerCode);
-//                        System.out.println(invoiceId);
-//                        System.out.println(indexSneaker);
-//                        System.out.println(sneakerCode);
-//                        System.out.println(sdId);
-//                        System.out.println(CartQuantity.getQuantity());
-                        if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
-                            fillToListInvoice(os.getOrder());
-                            fillToListCart(os.getToCart(invoiceId));
-                           tblInvoice.setRowSelectionInterval(id, id);
-                           os.updateQuantityAddSneaker(sneakerCode, CartQuantity.getQuantity() - 1);
-                           fillToListSneakerDetail(os.getAllSneakerDetail());
+                        int squantity = os.getQuantity(tblCart.getValueAt(indexSneaker, 2) + "");
+                        System.out.println();
+//                        System.out.println(CartQuantity.getQuantity() - tblCart.getValueAt(indexSneaker, 4);
+                        if ((CartQuantity.getQuantity() - Integer.parseInt(tblCart.getValueAt(indexSneaker, 4) + "")) <= squantity) {
+//                            System.out.println("OK");
+                            if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
+                                fillToListInvoice(os.getOrder());
+                                fillToListCart(os.getToCart(invoiceId));
+                                tblInvoice.setRowSelectionInterval(id, id);
+                                os.updateQuantityAddSneaker(sneakerCode, CartQuantity.getQuantity() - 1);
+                                fillToListSneakerDetail(os.getAllSneakerDetail());
+                            }
+                        } else {
+//                            System.out.println("NOT OK");
+                            return;
                         }
-//                        os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId);
-////                        System.out.println(os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId));
-//                        fillToListInvoice(os.getOrder());
-//                        fillToListCart(os.getToCart(invoiceId));
+
                     } catch (SQLException ex) {
                         Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
-//            JOptionPane.showMessageDialog(this, "Sửa số lượng thành công", "Thông báo", 1);
+            JOptionPane.showMessageDialog(this, "Sửa số lượng thành công", "Thông báo", 1);
 
         } else {
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm trong giỏ", "Thông báo", 1);

@@ -642,4 +642,24 @@ public class OrderService {
         }
         return list;
     }
+    
+    public Integer getQuantity (String code){
+       
+        sql = """
+              select quantity
+              from SneakerDetail
+              where sneaker_detail_code = ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("quantity");
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
 }

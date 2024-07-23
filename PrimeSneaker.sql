@@ -603,8 +603,7 @@ select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 
 			  from SneakerDetail
 			  where sneaker_detail_code = 2345522
 			  
-
-			  select * from SneakerDetail
+select * from Sneaker			  select * from SneakerDetail
 			  select * from Customer
 
 			  insert into Customer (full_name, phone_number, gender, [address])
@@ -621,5 +620,10 @@ select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 
 			  select * from OrderDetail
 
 			  update OrderDetail
-              set quantity = 2
+              set quantity = 3
               where order_id = 125 and sneaker_detail_id = 3
+
+			  select quantity
+			  from SneakerDetail
+			  where sneaker_detail_code = 2345530
+			  select * from SneakerDetail
