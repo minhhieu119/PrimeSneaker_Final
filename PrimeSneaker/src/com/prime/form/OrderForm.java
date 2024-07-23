@@ -1,7 +1,7 @@
 package com.prime.form;
 
 import com.prime.form.attribute.ViewQr;
-import com.prime.form.attributeSneaker.CartQuantity;
+import com.prime.form.attributeSneaker.CartQuantityJDialog;
 import com.prime.main_model.Order;
 import com.prime.main_model.SneakerCart;
 import com.prime.main_model.SneakerDetail;
@@ -10,12 +10,15 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import com.prime.main_model.Voucher;
+import com.prime.model.CartQuantity;
 import com.prime.services.OrderService;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import com.prime.model.CartQuantity;
 
 public class OrderForm extends javax.swing.JPanel {
 
@@ -33,8 +36,10 @@ public class OrderForm extends javax.swing.JPanel {
         setOpaque(false);
         addVoucher();
         fillToListInvoice(os.getOrder());
-        tblInvoice.setRowSelectionInterval(0, 0);
-        invoiceId = (int) tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 1);
+        if (tblInvoice.getRowCount() > 0) {
+            tblInvoice.setRowSelectionInterval(0, 0);
+            invoiceId = (int) tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 1);
+        }
         fillToListCart(os.getToCart(invoiceId));
         fillToListSneakerDetail(os.getAllSneakerDetail());
     }
@@ -117,7 +122,8 @@ public class OrderForm extends javax.swing.JPanel {
         if (o.getOrderId() == 0) {
 //            System.out.println(tblInvoice.getValueAt(indexOrder, 1));
             txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
-            txtStaffId.setText(o.getUserId() + "");
+//            txtStaffId.setText(o.getUserId() + "");
+            txtStaffId.setText("NV004 - Trần Ánh Quỳnh");
             txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
             txtOrderCost.setText(o.getTotalCost() + "");
             if (o.getVoucherName() == null) {
@@ -1003,7 +1009,7 @@ public class OrderForm extends javax.swing.JPanel {
     private void tblSneakerDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSneakerDetailMouseClicked
         try {
             int id = tblInvoice.getSelectedRow();
-            System.out.println(invoiceId);
+            boolean vali = false;
             if (evt.getClickCount() == 2) {
                 if (invoiceId == -1) {
                     JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 1);
@@ -1011,18 +1017,25 @@ public class OrderForm extends javax.swing.JPanel {
                 } else {
                     indexSneaker = tblSneakerDetail.getSelectedRow();
                     String sneakerCode = (String) tblSneakerDetail.getValueAt(indexSneaker, 1);
-                    os.addToCart(os.getSneakerDetail(sneakerCode), invoiceId, 1);
 
-                    fillToListInvoice(os.getOrder());
-                    tblInvoice.setRowSelectionInterval(id, id);
                     for (int i = 0; i < tblCart.getRowCount(); i++) {
                         if (tblCart.getValueAt(i, 2).equals(sneakerCode)) {
-                            JOptionPane.showMessageDialog(this, "Bạn đã thêm loại này", "Thông báo", 1);
+                            vali = true;
+                            break;
                         }
                     }
-                    fillToListCart(os.getToCart(invoiceId));
-                    fillToListSneakerDetail(os.getAllSneakerDetail());
-                    showDetail();
+                    if (!vali) {
+                        os.addToCart(os.getSneakerDetail(sneakerCode), invoiceId, 1);
+                        fillToListInvoice(os.getOrder());
+                        tblInvoice.setRowSelectionInterval(id, id);
+                        fillToListCart(os.getToCart(invoiceId));
+                        os.updateQuantityAddSneaker(sneakerCode, 1);
+                        fillToListSneakerDetail(os.getAllSneakerDetail());
+                        showDetail();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Bạn đã thêm loại này", "Thông báo", 1);
+                    }
+
                 }
 
             }
@@ -1033,11 +1046,13 @@ public class OrderForm extends javax.swing.JPanel {
     private void btnDeleteCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCartActionPerformed
 
         try {
+            cartIndex = tblCart.getSelectedRow();
+            int id = tblInvoice.getSelectedRow();
             int sdId;
             int orderId;
             boolean active = false;
             int index = tblInvoice.getSelectedRow();
-            if (tblCart.getSelectedRow() != -1) {
+            if (cartIndex != -1) {
 
                 int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa khỏi giỏ hàng không?", "Thông báo", 2);
 
@@ -1049,22 +1064,33 @@ public class OrderForm extends javax.swing.JPanel {
                         sdId = os.getIdSneaker((String) tblCart.getValueAt(i, 2));
                         orderId = (int) tblCart.getValueAt(i, 1);
                         os.deleteOrderDetail(orderId, sdId);
+                        os.updateQuantityDeleteSneaker((String) tblCart.getValueAt(i, 2), 1);
                         active = true;
                     }
                 }
                 if (!active) {
-                    cartIndex = tblCart.getSelectedRow();
+
+//                    System.out.println(tblCart.getValueAt(cartIndex, 2));
                     sdId = os.getIdSneaker((String) tblCart.getValueAt(cartIndex, 2));
                     orderId = (int) tblCart.getValueAt(cartIndex, 1);
                     if (os.deleteOrderDetail(orderId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
-                        fillToListCart(os.getToCart(orderId));
+                        os.updateQuantityDeleteSneaker((String) tblCart.getValueAt(cartIndex, 2), 1);
+                        fillToListSneakerDetail(os.getAllSneakerDetail());
                         fillToListInvoice(os.getOrder());
+                        tblInvoice.setRowSelectionInterval(id, id);
+                        fillToListCart(os.getToCart(invoiceId));
+//                        if (os.updateQuantityDeleteSneaker((String) tblCart.getValueAt(cartIndex, 2), 1) != 0) {
+//                            System.out.println("ok");
+//                        }
+//                        System.out.println(tblCart.getValueAt(tblCart.getSelectedRow(), 2));
+
                         showDetail();
                         JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
                     } else {
                         JOptionPane.showMessageDialog(this, "Xóa không thành công", "Thông báo", 1);
                     }
                 } else {
+                    fillToListSneakerDetail(os.getAllSneakerDetail());
                     fillToListInvoice(os.getOrder());
                     tblInvoice.setRowSelectionInterval(index, index);
                     fillToListCart(os.getToCart((int) tblInvoice.getValueAt(index, 1)));
@@ -1095,6 +1121,12 @@ public class OrderForm extends javax.swing.JPanel {
                 }
 
                 if (os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != 0) {
+
+                    for (int i = 0; i < tblCart.getRowCount(); i++) {
+                        String code = (String) tblCart.getValueAt(i, 2);
+                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(i, 4));
+                    }
+                    fillToListSneakerDetail(os.getAllSneakerDetail());
                     fillToListInvoice(os.getOrder());
                     tblInvoice.setRowSelectionInterval(0, 0);
                     JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
@@ -1154,8 +1186,45 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void txtCartQuantityUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCartQuantityUpdateActionPerformed
         if (tblCart.getSelectedRow() != -1) {
-            new CartQuantity().setVisible(true);
-//            System.out.println(getQuantity(SOMEBITS));
+            invoiceId = (int) tblCart.getValueAt(tblCart.getSelectedRow(), 1);
+            indexSneaker = tblCart.getSelectedRow();
+            String sneakerCode = (String) tblSneakerDetail.getValueAt(indexSneaker, 1);
+            int sdId = 0;
+            try {
+                sdId = os.getIdSneaker(sneakerCode);
+                System.out.println(os.updateOrderDetailQuantity(3, invoiceId, sdId));
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+//            CartQuantityJDialog c = new CartQuantityJDialog(null, true);
+//            c.setVisible(true);
+//            c.addWindowListener(new WindowAdapter() {
+//                @Override
+//                public void windowClosed(WindowEvent e) {
+//                    try {
+//                        invoiceId = (int) tblCart.getValueAt(tblCart.getSelectedRow(), 1);
+//                        indexSneaker = tblCart.getSelectedRow();
+//                        String sneakerCode = (String) tblSneakerDetail.getValueAt(indexSneaker, 1);
+//                        int sdId = os.getIdSneaker(sneakerCode);
+//                        System.out.println(invoiceId);
+//                        System.out.println(sdId);
+//                        System.out.println(CartQuantity.getQuantity());
+////                        if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
+////                            fillToListInvoice(os.getOrder());
+////                            fillToListCart(os.getToCart(invoiceId));
+////                        }
+////                        os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId);
+//                        System.out.println(os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId));
+//                        fillToListInvoice(os.getOrder());
+//                        fillToListCart(os.getToCart(invoiceId));
+//                    } catch (SQLException ex) {
+//                        Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//            });
+//            JOptionPane.showMessageDialog(this, "Sửa số lượng thành công", "Thông báo", 1);
+
         } else {
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm trong giỏ", "Thông báo", 1);
         }
@@ -1172,15 +1241,24 @@ public class OrderForm extends javax.swing.JPanel {
                 if (tblInvoice.getValueAt(i, 6) != null) {
                     int orderId = Integer.parseInt(tblInvoice.getValueAt(i, 1) + "");
                     os.updateOrder(orderId);
+                    for (int j = 0; j < tblCart.getRowCount(); j++) {
+                        String code = (String) tblCart.getValueAt(j, 2);
+                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(j, 4));
+                    }
                     active = true;
                 }
 
             }
             if (active) {
                 JOptionPane.showMessageDialog(this, "Hủy thành công", "Thông báo", 1);
+                fillToListSneakerDetail(os.getAllSneakerDetail());
                 fillToListInvoice(os.getOrder());
-                tblInvoice.setRowSelectionInterval(0, 0);
-                fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
+                if (tblInvoice.getRowCount() > 0) {
+                    tblInvoice.setRowSelectionInterval(0, 0);
+                    fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
+                } else {
+                    fillToListCart(new ArrayList<>());
+                }
                 invoiceId = (int) tblInvoice.getValueAt(0, 1);
                 showDetail();
             } else {

@@ -4,6 +4,7 @@
  */
 package com.prime.services;
 
+import com.prime.main_model.ModelCustomer;
 import com.prime.main_model.Order;
 import com.prime.main_model.SneakerCart;
 import com.prime.main_model.SneakerDetail;
@@ -36,6 +37,7 @@ public class OrderService {
               right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
               join Size si on sd.size_id = si.size_id
               join Color co on sd.color_id = co.color_id
+              where quantity > 0
               """;
 
         try {
@@ -68,11 +70,32 @@ public class OrderService {
         }
         return listSneaker;
     }
-    
-    public Integer updateQuantitySneaker (String code, int quantity) throws SQLException{
+
+    public Integer updateQuantityAddSneaker(String code, int quantity) throws SQLException {
         sql = """
               update SneakerDetail
               set quantity = quantity - ?
+              where sneaker_detail_code = ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, quantity);
+            ps.setString(2, code);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
+
+    public Integer updateQuantityDeleteSneaker(String code, int quantity) throws SQLException {
+        sql = """
+              update SneakerDetail
+              set quantity = quantity + ?
               where sneaker_detail_code = ?
               """;
         try {
@@ -117,7 +140,7 @@ public class OrderService {
         }
         return listVoucher;
     }
-    
+
     public Voucher getOneVoucher(String name) throws SQLException {
         Voucher v = new Voucher();
         sql = """
@@ -443,7 +466,7 @@ public class OrderService {
         }
         return null;
     }
-    
+
     public Integer updateStatusAllOrder(String status) throws SQLException {
         sql = """
               update [Order]
@@ -508,9 +531,6 @@ public class OrderService {
         }
         return null;
     }
-    
-    
-    
 
     public String getCustomerName(String phoneNumber) throws SQLException {
         String name = "";
@@ -525,10 +545,10 @@ public class OrderService {
             ps = c.prepareStatement(sql);
             ps.setString(1, phoneNumber);
             rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 name = rs.getString("full_name");
             }
-            
+
 //            while (rs.next()) {                
 //                name = rs.getString("full_name");
 //                break;
@@ -557,7 +577,7 @@ public class OrderService {
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
                 o.setOrderId(rs.getInt("order_id"));
@@ -579,5 +599,32 @@ public class OrderService {
         }
         return o;
     }
+
+    public Integer addCustomer(ModelCustomer mc) throws SQLException {
+        sql = """
+              insert into Customer (full_name, phone_number, gender, [address])
+              values (?, ?, ?, ?)
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, mc.getCustomerName());
+            ps.setString(2, mc.getPhoneNumber());
+            ps.setBoolean(3, mc.isGender());
+            ps.setString(4, mc.getAddress());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
     
+    public List<ModelCustomer> getAllPhoneNumber (){
+        sql = """
+              
+              """;
+    }
 }

@@ -605,3 +605,7 @@ select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 
 			  
 
 			  select * from SneakerDetail
+			  select * from Customer
+
+			  insert into Customer (full_name, phone_number, gender, [address])
+			  values (N'Bùi Huy Hiếu', '0987433234', 1, N'Đan Phượng');
