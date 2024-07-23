@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.prime.main_model;
 
 import java.util.Date;
@@ -18,15 +15,6 @@ public class ModelCustomer {
     public ModelCustomer() {
     }
 
-    public ModelCustomer(int customerID, String customerName, boolean gender, Date dob, String address, String phoneNumber) {
-        this.customerID = customerID;
-        this.customerName = customerName;
-        this.gender = gender;
-        this.dob = dob;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
-
     public ModelCustomer(String customerName, boolean gender, String address, String phoneNumber) {
         this.customerName = customerName;
         this.gender = gender;
@@ -35,6 +23,15 @@ public class ModelCustomer {
     }
     
     
+
+    public ModelCustomer(int customerID, String customerName, boolean gender, Date dob, String address, String phoneNumber) {
+        this.customerID = customerID;
+        this.customerName = customerName;
+        this.gender = gender;
+        this.dob = dob;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
 
     public int getCustomerID() {
         return customerID;

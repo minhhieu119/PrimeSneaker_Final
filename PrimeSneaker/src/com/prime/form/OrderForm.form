@@ -522,6 +522,9 @@
                       <Image iconType="3" name="/com/prime/icon/listCustomer.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnListCustomerActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

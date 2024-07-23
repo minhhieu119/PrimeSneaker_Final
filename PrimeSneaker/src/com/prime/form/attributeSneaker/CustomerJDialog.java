@@ -4,9 +4,13 @@
  */
 package com.prime.form.attributeSneaker;
 
+import com.prime.main_model.ModelCustomer;
+import com.prime.model.Customer;
 import com.prime.services.OrderService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import org.apache.xmlbeans.impl.store.Cur;
 
 /**
  *
@@ -15,14 +19,15 @@ import java.util.regex.Pattern;
 public class CustomerJDialog extends javax.swing.JDialog {
 
     OrderService os = new OrderService();
-    String fullname;
-    String phoneNumber;
-    boolean gender;
-    String address;
+//    String fullname;
+//    String phoneNumber;
+//    boolean gender;
+//    String address;
+
     public CustomerJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     private boolean checkPhone() {
@@ -34,6 +39,16 @@ public class CustomerJDialog extends javax.swing.JDialog {
         }
         return false;
     }
+
+    private boolean doubleCheck(String p) {
+        for (ModelCustomer mc : os.getAllPhoneNumber()) {
+            if (mc.getPhoneNumber().equalsIgnoreCase(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -59,12 +74,24 @@ public class CustomerJDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Họ và tên");
 
+        txtCustomerName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCustomerNameActionPerformed(evt);
+            }
+        });
+
+        txtCustomerPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+
         jLabel3.setText("SĐT");
 
         jLabel4.setText("Giới tính");
 
         jLabel5.setText("Địa chỉ");
 
+        btnAddCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnAddCustomer.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAddCustomer.setForeground(new java.awt.Color(255, 255, 255));
         btnAddCustomer.setText("Thêm");
         btnAddCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,6 +100,7 @@ public class CustomerJDialog extends javax.swing.JDialog {
         });
 
         buttonGroup1.add(rdoCustomerMale);
+        rdoCustomerMale.setSelected(true);
         rdoCustomerMale.setText("Nam");
 
         buttonGroup1.add(rdoCustomerFemale);
@@ -80,6 +108,7 @@ public class CustomerJDialog extends javax.swing.JDialog {
 
         txtCustomerAddress.setColumns(20);
         txtCustomerAddress.setRows(5);
+        txtCustomerAddress.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
         jScrollPane1.setViewportView(txtCustomerAddress);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -89,13 +118,18 @@ public class CustomerJDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(20, 20, 20))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCustomerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -110,15 +144,18 @@ public class CustomerJDialog extends javax.swing.JDialog {
                         .addComponent(jLabel1)))
                 .addContainerGap(61, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtCustomerName, txtCustomerPhone});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -128,21 +165,70 @@ public class CustomerJDialog extends javax.swing.JDialog {
                     .addComponent(jLabel4)
                     .addComponent(rdoCustomerMale)
                     .addComponent(rdoCustomerFemale))
-                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAddCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCustomerName, txtCustomerPhone});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
+       ModelCustomer mc = new ModelCustomer();
+       mc.setCustomerName(txtCustomerName.getText());
+       mc.setPhoneNumber(txtCustomerPhone.getText());
+       mc.setGender(rdoCustomerMale.isSelected() ? true : false);
+       mc.setAddress(txtCustomerAddress.getText());
+
+        if (txtCustomerName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không được để trống tên", "Thông báo", 2);
+            return;
+        }
+        if (txtCustomerPhone.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không được để trống số điện thoại", "Thông báo", 2);
+            return;
+        }
         
+        if (!checkPhone()) {
+            JOptionPane.showMessageDialog(this, "Sai định dạng số điện thoại", "Thông báo", 2);
+            return;
+        }
+
+        if (doubleCheck(txtCustomerPhone.getText())) {
+            JOptionPane.showMessageDialog(this, "Đã tồn tại số điện thoại mời nhập lại");
+            txtCustomerPhone.setText("");
+            return;
+        }
+        System.out.println(mc);
+
+        try {
+            if (os.addCustomer(mc) > 0) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công", "Thông báo", 1);
+                Customer c = new Customer();
+                c.setCustomerName(txtCustomerName.getText());
+                c.setPhoneNumber(txtCustomerPhone.getText());
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại", "Thông báo", 1);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi thêm", "Thông báo", 1);
+        }
     }//GEN-LAST:event_btnAddCustomerActionPerformed
+
+    private void txtCustomerNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCustomerNameActionPerformed
 
     /**
      * @param args the command line arguments

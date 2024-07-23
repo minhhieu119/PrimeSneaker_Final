@@ -609,3 +609,17 @@ select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 
 
 			  insert into Customer (full_name, phone_number, gender, [address])
 			  values (N'Bùi Huy Hiếu', '0987433234', 1, N'Đan Phượng');
+
+			  select full_name, phone_number, gender, [address]
+			  from Customer
+			  where phone_number like '0912345678'
+
+			  select * from Customer
+			  delete from Customer
+			  where address like N'Đan Phượng'
+
+			  select * from OrderDetail
+
+			  update OrderDetail
+              set quantity = 2
+              where order_id = 125 and sneaker_detail_id = 3

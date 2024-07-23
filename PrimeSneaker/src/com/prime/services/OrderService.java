@@ -5,6 +5,7 @@
 package com.prime.services;
 
 import com.prime.main_model.ModelCustomer;
+import com.prime.model.Customer;
 import com.prime.main_model.Order;
 import com.prime.main_model.SneakerCart;
 import com.prime.main_model.SneakerDetail;
@@ -187,8 +188,8 @@ public class OrderService {
               right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
               join Size si on sd.size_id = si.size_id
               join Color co on sd.color_id = co.color_id
-              where sneaker_detail_code like ? or sneaker_name like ? or quantity like ? or brand_name like ?
-              or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?
+              where quantity > 0 and (sneaker_detail_code like ? or sneaker_name like ? or quantity like ? or brand_name like ?
+              or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?)
               """;
 
         try {
@@ -237,7 +238,7 @@ public class OrderService {
               join Size si on sd.size_id = si.size_id
               join Color co on sd.color_id = co.color_id
               group by sneaker_detail_code, sneaker_name, quantity, price, category_name, brand_name, color_name, material_name,sole_name, size_number
-              having price < ?
+              having price < ? and quantity > 0
               order by price desc
               """;
 
@@ -622,9 +623,23 @@ public class OrderService {
         return null;
     }
     
-//    public List<ModelCustomer> getAllPhoneNumber (){
-//        sql = """
-//              
-//              """;
-//    }
+    public List<ModelCustomer> getAllPhoneNumber (){
+        List<ModelCustomer> list = new ArrayList<>();
+        sql = """
+              select full_name, phone_number, gender, [address]
+              from Customer
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {                
+                ModelCustomer mc = new ModelCustomer(rs.getString(1), rs.getBoolean(3), rs.getString(4), rs.getString(2));
+                list.add(mc);
+            }
+            return list;
+        } catch (Exception e) {
+        }
+        return list;
+    }
 }
