@@ -9,13 +9,13 @@ import com.prime.main_model.User;
 import com.prime.services.LoginService;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author MSII
- */
+
 public class Login extends javax.swing.JFrame {
 
     LoginService ls = new LoginService();
@@ -194,8 +194,12 @@ public class Login extends javax.swing.JFrame {
 
             if (checkAccount()) {
                 this.dispose();
-                new Main().setVisible(true);
+                try {
+                    new Main().setVisible(true);
 //                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
             } else {
                 JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
@@ -215,8 +219,12 @@ public class Login extends javax.swing.JFrame {
 
         if (checkAccount()) {
             this.dispose();
-            new Main().setVisible(true);
+            try {
+                new Main().setVisible(true);
 //            JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
         }
