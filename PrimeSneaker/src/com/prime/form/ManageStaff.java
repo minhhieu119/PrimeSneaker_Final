@@ -648,7 +648,7 @@ public class ManageStaff extends javax.swing.JPanel {
         }
         if (!checkIDNumber()) {
             showMess("Số CCCD gồm 12 chữ số");
-            txtStaffPhone.requestFocus();
+            txtIDCardNumber.requestFocus();
             return;
         }
         //check tồn tại
@@ -720,11 +720,12 @@ public class ManageStaff extends javax.swing.JPanel {
         
         try {
           ModelUser user = readForm();
+          ArrayList<ModelUser> list = svc.getAllUsers();
             if (svc.updateUserStatus(user)) {
                 showMess("Khóa tài khoản thành công");
-                fillToTable(svc.getAllUsers());
+                fillToTable(list);
                 index = 0;
-                showDetail(svc.getAllUsers());
+                showDetail(list);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -954,7 +955,7 @@ public class ManageStaff extends javax.swing.JPanel {
 
     private boolean checkIDNumber() {
         String idPattern = "^(\\d{12})$";
-        return validateString(txtStaffId.getText(), idPattern);
+        return validateString(txtIDCardNumber.getText(), idPattern);
     }
 
     private boolean validateString(String text, String regex) {
@@ -1012,6 +1013,5 @@ public class ManageStaff extends javax.swing.JPanel {
         }
         return false;
     }
-
-    
+      
 }
