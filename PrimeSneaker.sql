@@ -585,5 +585,3 @@ select * from [Role]
 select * from [User]
 select * from Voucher
 
-
-

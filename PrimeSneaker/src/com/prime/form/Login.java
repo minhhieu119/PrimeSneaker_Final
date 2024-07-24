@@ -221,16 +221,17 @@ public class Login extends javax.swing.JFrame {
         }
 
         if (checkAccount()) {
-            this.dispose();
             try {
+                this.dispose();
                 new Main().setVisible(true);
-//            JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
+//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
-        }
+                
+            } else {
+                JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
+            }
       
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
