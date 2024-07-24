@@ -292,6 +292,8 @@ public class OrderService {
 
     public Integer removeInvoice(int id) throws SQLException {
         sql = """
+              delete from OrderDetail
+              where order_id = ?
               delete from [Order]
               where order_id = ?
               """;
@@ -299,6 +301,7 @@ public class OrderService {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
             ps.setInt(1, id);
+            ps.setInt(2, id);
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
