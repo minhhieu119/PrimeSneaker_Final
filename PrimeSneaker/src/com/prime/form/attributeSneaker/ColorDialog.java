@@ -1,21 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package com.prime.form.attributeSneaker;
 
-/**
- *
- * @author ADMIN
- */
+import com.prime.main_model.Model_Color;
+import com.prime.responsitory.ColorResponsitory;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
 public class ColorDialog extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ProductAttribute
-     */
+    
+    private final ColorResponsitory colorRS = new ColorResponsitory();
+    int index;
+    DefaultTableModel model = new DefaultTableModel();
     public ColorDialog() {
         initComponents();
         setLocationRelativeTo(null);
+        model = (DefaultTableModel) tblColor.getModel();
+        loadColorToTable();
     }
 
     /**
@@ -67,13 +70,33 @@ public class ColorDialog extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblColor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblColorMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblColor);
 
         btnAddColor.setText("Thêm");
+        btnAddColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddColorActionPerformed(evt);
+            }
+        });
 
         btnEditColor.setText("Sửa");
+        btnEditColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditColorActionPerformed(evt);
+            }
+        });
 
         btnClearColor.setText("Làm mới");
+        btnClearColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearColorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,6 +158,74 @@ public class ColorDialog extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddColorActionPerformed
+        if (txtColorName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập màu sắc");
+            txtColorName.requestFocus();
+            return;
+        }
+        if (txtColorName.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Màu sắc không được nhập số");
+            txtColorName.requestFocus();
+            return;
+        }
+        ArrayList<Model_Color> lst = colorRS.getALl();
+            for (Model_Color co : lst) {
+                if (txtColorName.getText().equals(co.getColor_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+        Model_Color col = readForm();
+        if (colorRS.addColor(col) != null) {
+            JOptionPane.showMessageDialog(this, "Thêm màu sắc thành công");
+            loadColorToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm màu sắc thất bại");
+        }
+    }//GEN-LAST:event_btnAddColorActionPerformed
+
+    private void btnEditColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditColorActionPerformed
+        if (txtColorId.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng Chọn màu sắc cần sửa");            
+            return;
+        }
+        if (txtColorName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập màu sắc");
+            txtColorName.requestFocus();
+            return;
+        }
+        if (txtColorName.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Màu sắc không được nhập số");
+            txtColorName.requestFocus();
+            return;
+        }
+        ArrayList<Model_Color> lst = colorRS.getALl();
+            for (Model_Color co : lst) {
+                if (txtColorName.getText().equals(co.getColor_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+        Model_Color col = readForm1();
+        if (colorRS.upDateColor(col) != null) {
+            JOptionPane.showMessageDialog(this, "Cập nhật màu sắc thành công");
+            loadColorToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật màu sắc thất bại");
+        }
+    }//GEN-LAST:event_btnEditColorActionPerformed
+
+    private void btnClearColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearColorActionPerformed
+        txtColorId.setText("");
+        txtColorName.setText("");
+    }//GEN-LAST:event_btnClearColorActionPerformed
+
+    private void tblColorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblColorMouseClicked
+        index = tblColor.getSelectedRow();
+        showDetail(index);
+    }//GEN-LAST:event_tblColorMouseClicked
 
     /**
      * @param args the command line arguments
@@ -198,4 +289,33 @@ public class ColorDialog extends javax.swing.JFrame {
     private javax.swing.JTextField txtColorId;
     private javax.swing.JTextField txtColorName;
     // End of variables declaration//GEN-END:variables
+    private void loadColorToTable() {
+        model.setRowCount(0);
+        ArrayList<Model_Color> lst = colorRS.getALl();
+        for (Model_Color col : lst) {
+            model.addRow(new Object[]{
+                col.getColor_id(),
+                col.getColor_name()
+            });
+        }
+    }
+    
+    private Model_Color readForm() {
+        Model_Color col = new Model_Color();
+        col.setColor_name(txtColorName.getText());
+        return col;
+    }
+    
+    private Model_Color readForm1() {
+        Model_Color col = new Model_Color();
+        col.setColor_name(txtColorName.getText());
+        col.setColor_id(Integer.parseInt(txtColorId.getText()));
+        return col;
+    }
+    
+    private void showDetail(int index) {
+        txtColorId.setText(tblColor.getValueAt(index, 0).toString());
+        txtColorName.setText(tblColor.getValueAt(index, 1).toString());
+        tblColor.setRowSelectionInterval(index, index);
+    }
 }

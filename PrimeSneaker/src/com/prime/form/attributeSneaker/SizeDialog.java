@@ -1,11 +1,22 @@
 
 package com.prime.form.attributeSneaker;
 
+import com.prime.main_model.SizeModel;
+import com.prime.responsitory.SizeResponsitory;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 public class SizeDialog extends javax.swing.JFrame {
 
+    DefaultTableModel model = new DefaultTableModel();
+    int index;
+    private final SizeResponsitory sizeRS = new SizeResponsitory();
     public SizeDialog() {
         initComponents();
         setLocationRelativeTo(null);
+        model = (DefaultTableModel) tblSize.getModel();
+        loadSizeToTable();
     }
 
     @SuppressWarnings("unchecked")
@@ -52,13 +63,33 @@ public class SizeDialog extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblSize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSizeMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblSize);
 
         btnAddSize.setText("Thêm");
+        btnAddSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddSizeActionPerformed(evt);
+            }
+        });
 
         btnEditSize.setText("Sửa");
+        btnEditSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditSizeActionPerformed(evt);
+            }
+        });
 
         btnClearSize.setText("Làm mới");
+        btnClearSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearSizeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,6 +152,88 @@ public class SizeDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSizeActionPerformed
+        if (txtSize.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Size giày");
+            txtSize.requestFocus();
+            return;
+        }
+        try {
+            double size_Number = Double.parseDouble(txtSize.getText());
+            if (size_Number < 1 || size_Number > 50) {
+                JOptionPane.showMessageDialog(this, "Size giày nằm trong khoảng 1 -50");
+                txtSize.requestFocus();
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Size giày phải là số");
+            txtSize.requestFocus();
+            return;
+        }
+        ArrayList<SizeModel> lst = sizeRS.getAll();
+            for (SizeModel co : lst) {
+                if (Double.parseDouble(txtSize.getText()) == co.getSize_Number()) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+        SizeModel dg = readForm();
+        if (sizeRS.addSize(dg) != null) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            loadSizeToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
+    }//GEN-LAST:event_btnAddSizeActionPerformed
+
+    private void btnEditSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditSizeActionPerformed
+        if (txtSizeId.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn size Giày cần sửa");
+            return;
+        }
+        if (txtSize.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Size giày");
+            txtSize.requestFocus();
+            return;
+        }
+        try {
+            double size_Number = Double.parseDouble(txtSize.getText());
+            if (size_Number < 1 || size_Number > 50) {
+                JOptionPane.showMessageDialog(this, "Size giày nằm trong khoảng 1 -50");
+                txtSize.requestFocus();
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Size giày phải là số");
+            txtSize.requestFocus();
+            return;
+        }
+        ArrayList<SizeModel> lst = sizeRS.getAll();
+            for (SizeModel co : lst) {
+                if (Double.parseDouble(txtSize.getText()) == co.getSize_Number()) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+        SizeModel dg = readForm1();
+        if (sizeRS.updateSize(dg) != null) {
+            JOptionPane.showMessageDialog(this, "Update thành công");
+            loadSizeToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Update thất bại");
+        }
+    }//GEN-LAST:event_btnEditSizeActionPerformed
+
+    private void btnClearSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearSizeActionPerformed
+        txtSize.setText("");
+        txtSizeId.setText("");
+    }//GEN-LAST:event_btnClearSizeActionPerformed
+
+    private void tblSizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSizeMouseClicked
+        index = tblSize.getSelectedRow();
+        showDeTail(index);
+    }//GEN-LAST:event_tblSizeMouseClicked
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -142,4 +255,35 @@ public class SizeDialog extends javax.swing.JFrame {
     private javax.swing.JTextField txtSize;
     private javax.swing.JTextField txtSizeId;
     // End of variables declaration//GEN-END:variables
+    private void loadSizeToTable() {
+        model.setRowCount(0);
+        ArrayList<SizeModel> lstDeGiay = sizeRS.getAll();
+        for (SizeModel sm : lstDeGiay) {
+            //System.out.println(dg);
+            model.addRow(new Object[]{
+                sm.getId_Size(),
+                sm.getSize_Number()
+            });
+        }
+    }
+
+    private void showDeTail(int index) {
+        txtSizeId.setText(tblSize.getValueAt(index, 0).toString());
+        txtSize.setText(tblSize.getValueAt(index, 1).toString());
+        tblSize.setRowSelectionInterval(index, index);
+    }
+
+    private SizeModel readForm() {
+        SizeModel sm = new SizeModel();
+        sm.setSize_Number(Double.parseDouble(txtSizeId.getText()));
+        //sm.setId_Size(Integer.parseInt(txtSizeId.getText()));       
+        return sm;
+    }
+
+    private SizeModel readForm1() {
+        SizeModel sm = new SizeModel();
+        sm.setSize_Number(Double.parseDouble(txtSizeId.getText()));
+        sm.setId_Size(Integer.parseInt(txtSizeId.getText()));
+        return sm;
+    }
 }

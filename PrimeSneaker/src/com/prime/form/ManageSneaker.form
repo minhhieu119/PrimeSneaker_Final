@@ -8,6 +8,8 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="buttonGroup3">
     </Component>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup4">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -173,9 +175,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="btnProductAdd1" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="323" max="-2" attributes="0"/>
+                              <EmptySpace min="323" pref="520" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane2" alignment="1" max="32767" attributes="0"/>
                       </Group>
@@ -189,10 +189,9 @@
                                   <Component id="txtSearchProduct" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel15" alignment="0" min="-2" pref="21" max="-2" attributes="0"/>
-                                  <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnProductAdd1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jPanel3" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -221,13 +220,13 @@
                                 <Column editable="false" title="STT" type="java.lang.Object"/>
                                 <Column editable="false" title="M&#xe3; s&#x1ea3;n ph&#x1ea9;m" type="java.lang.Object"/>
                                 <Column editable="false" title="T&#xea;n s&#x1ea3;n ph&#x1ea9;m" type="java.lang.Object"/>
-                                <Column editable="true" title="H&#xe3;ng" type="java.lang.Object"/>
+                                <Column editable="false" title="H&#xe3;ng" type="java.lang.Object"/>
                                 <Column editable="false" title="Danh m&#x1ee5;c" type="java.lang.Object"/>
-                                <Column editable="true" title="Ch&#x1ea5;t li&#x1ec7;u" type="java.lang.Object"/>
+                                <Column editable="false" title="Ch&#x1ea5;t li&#x1ec7;u" type="java.lang.Object"/>
                                 <Column editable="true" title="&#x110;&#x1ebf; gi&#xe0;y" type="java.lang.Object"/>
                                 <Column editable="false" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>
                                 <Column editable="false" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
-                                <Column editable="false" title="H&#xe0;nh &#x111;&#x1ed9;ng" type="java.lang.Boolean"/>
+                                <Column editable="true" title="H&#xe0;nh &#x111;&#x1ed9;ng" type="java.lang.Boolean"/>
                               </Table>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -394,6 +393,9 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Ng&#x1eeb;ng b&#xe1;n"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnStopSellActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnOnSell">
                       <Properties>
@@ -437,23 +439,7 @@
                       <Events>
                         <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSearchProductFocusGained"/>
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSearchProductFocusLost"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btnProductAdd1">
-                      <Properties>
-                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="96" green="50" red="27" type="rgb"/>
-                        </Property>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="12" style="1"/>
-                        </Property>
-                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Th&#xea;m s&#x1ea3;n ph&#x1ea9;m chi ti&#x1ebf;t"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductAdd1ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSearchProductActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
@@ -484,13 +470,13 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                              <Component id="jRadioButton1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="rdoSell" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jRadioButton2" min="-2" max="-2" attributes="0"/>
+                                              <Component id="rdoEndSell" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                              <Component id="cboColor1" linkSize="16" min="-2" pref="165" max="-2" attributes="0"/>
+                                              <Component id="cboMaterial" linkSize="16" min="-2" pref="165" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Component id="btnAddProdMaterial1" min="-2" max="-2" attributes="0"/>
                                           </Group>
@@ -504,7 +490,7 @@
                                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Component id="txtProductId" linkSize="16" max="32767" attributes="0"/>
-                                          <Component id="cboBrand1" linkSize="16" min="-2" pref="167" max="-2" attributes="0"/>
+                                          <Component id="cboBrand" linkSize="16" min="-2" pref="167" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="btnAddProdBrand1" min="-2" max="-2" attributes="0"/>
@@ -518,8 +504,8 @@
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cboMaterial1" linkSize="16" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
-                                  <Component id="cboCategory1" linkSize="16" alignment="1" pref="222" max="32767" attributes="0"/>
+                                  <Component id="cboSole" linkSize="16" alignment="1" min="-2" pref="160" max="-2" attributes="0"/>
+                                  <Component id="cboCategory" linkSize="16" alignment="1" pref="222" max="32767" attributes="0"/>
                                   <Component id="txtProductName" linkSize="16" alignment="1" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -540,7 +526,7 @@
                                       <Component id="txtProductName" linkSize="17" min="-2" pref="26" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="cboCategory1" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboCategory" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel37" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -552,7 +538,7 @@
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel38" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cboBrand1" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboBrand" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnAddProdBrand1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                           <Component id="btnAddProdCategory1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                       </Group>
@@ -560,12 +546,12 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="103" groupAlignment="3" attributes="0">
                                               <Component id="btnAddProdSole1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                              <Component id="cboMaterial1" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="cboSole" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
                                               <Component id="jLabel40" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                               <Component id="jLabel39" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cboColor1" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="cboMaterial" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
                                               <Component id="btnAddProdMaterial1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
@@ -576,8 +562,8 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel41" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jRadioButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jRadioButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="rdoSell" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="rdoEndSell" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace pref="11" max="32767" attributes="0"/>
@@ -626,7 +612,7 @@
                         <Property name="text" type="java.lang.String" value="Danh m&#x1ee5;c"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="cboCategory1">
+                    <Component class="javax.swing.JComboBox" name="cboCategory">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -666,7 +652,7 @@
                         <Property name="text" type="java.lang.String" value="H&#xe3;ng"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="cboBrand1">
+                    <Component class="javax.swing.JComboBox" name="cboBrand">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -706,7 +692,7 @@
                         <Property name="text" type="java.lang.String" value="Ch&#x1ea5;t li&#x1ec7;u"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="cboColor1">
+                    <Component class="javax.swing.JComboBox" name="cboMaterial">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -721,7 +707,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboColor1ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboMaterialActionPerformed"/>
                       </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -749,7 +735,7 @@
                         <Property name="text" type="java.lang.String" value="&#x110;&#x1ebf; gi&#xe0;y"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="cboMaterial1">
+                    <Component class="javax.swing.JComboBox" name="cboSole">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -789,13 +775,20 @@
                         <Property name="text" type="java.lang.String" value="Tr&#x1ea1;ng th&#xe1;i"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="jRadioButton1">
+                    <Component class="javax.swing.JRadioButton" name="rdoSell">
                       <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="buttonGroup3"/>
+                        </Property>
+                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="&#x110;ang b&#xe1;n"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="jRadioButton2">
+                    <Component class="javax.swing.JRadioButton" name="rdoEndSell">
                       <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="buttonGroup3"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="Ng&#x1eeb;ng b&#xe1;n"/>
                       </Properties>
                     </Component>
@@ -855,6 +848,9 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductClearActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnProductAdd">
                       <Properties>
@@ -869,6 +865,9 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i s&#x1ea3;n ph&#x1ea9;m"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductAddActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnEditProduct">
                       <Properties>
@@ -1008,7 +1007,7 @@
                                               <Component id="btnAddProdColor" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace pref="123" max="32767" attributes="0"/>
+                                      <EmptySpace pref="105" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="1" attributes="0">
                                               <Component id="jLabel34" min="-2" pref="47" max="-2" attributes="0"/>
@@ -1017,42 +1016,41 @@
                                           <Group type="102" attributes="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="102" attributes="0">
-                                                      <Component id="jLabel30" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace max="32767" attributes="0"/>
-                                                      <Component id="lbnCategory" linkSize="7" min="-2" pref="169" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="1" attributes="0">
-                                                      <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace max="32767" attributes="0"/>
-                                                      <Component id="lbnProductName" linkSize="7" min="-2" pref="169" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                  <Component id="jLabel36" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="jLabel29" alignment="0" max="32767" attributes="0"/>
-                                              </Group>
-                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Group type="102" attributes="0">
-                                                      <EmptySpace min="36" pref="36" max="-2" attributes="0"/>
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="txtQuantity" linkSize="7" max="32767" attributes="0"/>
+                                                          <Component id="jLabel26" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="jLabel30" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                      </Group>
+                                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Component id="lbnProductName" linkSize="7" min="-2" pref="169" max="-2" attributes="0"/>
+                                                          <Component id="lbnCategory" linkSize="7" min="-2" pref="169" max="-2" attributes="0"/>
+                                                      </Group>
+                                                  </Group>
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                                          <Component id="jLabel36" alignment="0" max="32767" attributes="0"/>
+                                                          <Component id="jLabel29" alignment="0" max="32767" attributes="0"/>
+                                                      </Group>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" attributes="0">
+                                                              <EmptySpace min="36" pref="36" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="txtQuantity" linkSize="7" max="32767" attributes="0"/>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <Component id="cboSize" linkSize="7" pref="166" max="32767" attributes="0"/>
+                                                                      <EmptySpace max="-2" attributes="0"/>
+                                                                      <Component id="btnAddProdSize" min="-2" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
+                                                          </Group>
                                                           <Group type="102" alignment="0" attributes="0">
-                                                              <Component id="cboSize" linkSize="7" pref="166" max="32767" attributes="0"/>
-                                                              <EmptySpace max="-2" attributes="0"/>
-                                                              <Component id="btnAddProdSize" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                                              <Component id="lbnSole" linkSize="7" min="-2" pref="169" max="-2" attributes="0"/>
                                                           </Group>
                                                       </Group>
-                                                      <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="1" attributes="0">
-                                                      <EmptySpace max="32767" attributes="0"/>
-                                                      <Component id="lbnSole" linkSize="7" min="-2" pref="169" max="-2" attributes="0"/>
-                                                      <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
+                                              <EmptySpace min="101" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
@@ -1073,28 +1071,34 @@
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jLabel25" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtProdDetail" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel26" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbnProductName" linkSize="8" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lbnProductName" linkSize="8" alignment="0" min="-2" pref="22" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="jLabel25" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="txtProdDetail" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel26" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="3" attributes="0">
-                                                  <Component id="jLabel30" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="lbnCategory" linkSize="8" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                                              </Group>
-                                          </Group>
                                           <Group type="102" alignment="1" attributes="0">
                                               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="lbnBrand" linkSize="8" min="-2" pref="22" max="-2" attributes="0"/>
                                                   <Component id="jLabel31" linkSize="6" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="lbnCategory" linkSize="8" min="-2" pref="22" max="-2" attributes="0"/>
+                                                  <Component id="jLabel30" linkSize="6" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -1103,13 +1107,16 @@
                                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="3" attributes="0">
                                                   <Component id="jLabel36" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="lbnSole" linkSize="8" alignment="0" min="-2" pref="22" max="-2" attributes="0"/>
                                                   <Component id="lbnMaterial" linkSize="8" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Component id="jLabel33" linkSize="6" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="lbnSole" linkSize="8" min="-2" pref="22" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -1149,7 +1156,6 @@
                                           </Group>
                                       </Group>
                                   </Group>
-                                  <Component id="jPanel17" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -1382,6 +1388,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddNewProd2ActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="btnUpdateProd2">
                           <Properties>
@@ -1424,6 +1433,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRefresh2ActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="btnExportToExcel2">
                           <Properties>
@@ -1443,6 +1455,10 @@
                     </Container>
                     <Component class="javax.swing.JRadioButton" name="rdoStock">
                       <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="buttonGroup4"/>
+                        </Property>
+                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="C&#xf2;n h&#xe0;ng"/>
                       </Properties>
                       <Events>
@@ -1451,6 +1467,9 @@
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="rdoSoldOut">
                       <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="buttonGroup4"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="H&#x1ebf;t h&#xe0;ng"/>
                       </Properties>
                       <Events>
@@ -1503,13 +1522,10 @@
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                              <Component id="lbnPrice" min="-2" pref="164" max="-2" attributes="0"/>
-                                          </Group>
                                           <Component id="sliderPrice" min="-2" pref="184" max="-2" attributes="0"/>
+                                          <Component id="lbnPrice" min="-2" pref="96" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="0" pref="88" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="89" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane4" alignment="1" max="32767" attributes="0"/>
                               </Group>
@@ -1547,9 +1563,9 @@
                                           <Component id="sliderPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace pref="9" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbnPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbnPrice" min="-2" pref="10" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -1742,6 +1758,9 @@
                         <Property name="minimum" type="int" value="100000"/>
                         <Property name="toolTipText" type="java.lang.String" value="100"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="sliderPriceStateChanged"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSearchProdDetail">
                       <Properties>
@@ -1760,6 +1779,7 @@
                       <Events>
                         <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSearchProdDetailFocusGained"/>
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSearchProdDetailFocusLost"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSearchProdDetailActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel1">

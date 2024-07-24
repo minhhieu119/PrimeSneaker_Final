@@ -119,8 +119,7 @@ public class Main extends javax.swing.JFrame {
 //                menu.setShowMenu(!menu.isShowMenu());
 //                menu.setEnableMenu(true);
 //            }
-            
-             @Override
+            @Override
             public void timingEvent(float fraction) {
                 double width;
                 if (menu.isShowMenu()) {

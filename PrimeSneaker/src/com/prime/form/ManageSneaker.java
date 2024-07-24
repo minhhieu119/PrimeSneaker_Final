@@ -9,22 +9,242 @@ import com.prime.form.attributeSneaker.ProductDialog;
 import com.prime.form.attributeSneaker.SizeDialog;
 import com.prime.form.attributeSneaker.SoleDialog;
 import com.prime.form.attribute.ViewQr;
+import com.prime.form.attributeSneaker.FormAddProductDetail;
+import com.prime.main_model.Material;
+import com.prime.main_model.Model_Brand;
+import com.prime.main_model.Model_Category;
+import com.prime.main_model.Model_Color;
+import com.prime.main_model.Model_DeGiay;
+import com.prime.main_model.Model_Sneaker;
+import com.prime.main_model.Model_SneakerDetail;
+import com.prime.main_model.Model_addNameProduct;
+import com.prime.main_model.SizeModel;
+import com.prime.responsitory.BrandResponsitory;
+import com.prime.responsitory.CategoryResponsitory;
+import com.prime.responsitory.ColorResponsitory;
+import com.prime.responsitory.MaterialResponsitory;
+import com.prime.responsitory.SizeResponsitory;
+import com.prime.responsitory.SneakerDetailResponsitory;
+import com.prime.responsitory.SneakerResponsitory;
+import com.prime.responsitory.SoleResponsitory;
+import com.prime.responsitory.TeSPResponsitory;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.ColorModel;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class ManageSneaker extends javax.swing.JPanel {
-    
+
     public interface QRCallback {
+
         void getQRdata(String qrCode);
     }
+    private final BrandResponsitory brs = new BrandResponsitory();
+    private final CategoryResponsitory cateRS = new CategoryResponsitory();
+    private final ColorResponsitory colorRS = new ColorResponsitory();
+    private final MaterialResponsitory materRS = new MaterialResponsitory();
+    private final SizeResponsitory sizeRS = new SizeResponsitory();
+    private final SoleResponsitory soleRS = new SoleResponsitory();
+    private final TeSPResponsitory trs = new TeSPResponsitory();
+    private final SneakerDetailResponsitory sdetailRS = new SneakerDetailResponsitory();
+    private final SneakerResponsitory sneakerRS = new SneakerResponsitory();
+    DefaultComboBoxModel dcboBrand = new DefaultComboBoxModel();
+    DefaultComboBoxModel dcboCate = new DefaultComboBoxModel();
+    DefaultComboBoxModel dcboMaterial = new DefaultComboBoxModel();
+    DefaultComboBoxModel dcboSole = new DefaultComboBoxModel();
+    DefaultComboBoxModel dcboSize = new DefaultComboBoxModel();
+    DefaultComboBoxModel dcboColor = new DefaultComboBoxModel();
+    DefaultTableModel modelDetail = new DefaultTableModel();
+    DefaultTableModel modelSneaker = new DefaultTableModel();
+    private int index;
+
     public ManageSneaker() {
         initComponents();
         setOpaque(false);
         btnStopSell.setVisible(false);
         btnOnSell.setVisible(false);
+        dcboBrand = (DefaultComboBoxModel) cboBrand.getModel();
+        dcboCate = (DefaultComboBoxModel) cboCategory.getModel();
+        dcboMaterial = (DefaultComboBoxModel) cboMaterial.getModel();
+        dcboSole = (DefaultComboBoxModel) cboSole.getModel();
+        dcboColor = (DefaultComboBoxModel) cboColor.getModel();
+        dcboSize = (DefaultComboBoxModel) cboSize.getModel();
+        modelDetail = (DefaultTableModel) tblProductDetail.getModel();
+        modelSneaker = (DefaultTableModel) tblProducts.getModel();
+        loadDataBrand();
+        loadDataCate();
+        loadDataMaterial();
+        loadDataSole();
+        loadDataColor();
+        loadDataSize();
+        loadSneakerDetailToTable(sdetailRS.getALl());
+        loadSneakerToTable(sneakerRS.getAll());
     }
+
+    private void loadSneakerDetailToTable(ArrayList<Model_SneakerDetail> lst) {
+        modelDetail.setRowCount(0);
+        int x = 1;
+        for (Model_SneakerDetail msd : lst) {
+            modelDetail.addRow(new Object[]{
+                x++,
+                msd.getMaSPCT(),
+                msd.getTenSP().getProduct_name(),
+                msd.getGiaSP(),
+                msd.getSoLuong(),
+                msd.getDanhMuc().getCategory_name(),
+                msd.getHang().getBrand_name(),
+                msd.getMauSac().getColor_name(),
+                msd.getChatLieu().getNameMaterial(),
+                msd.getKichCo().getSize_Number(),
+                msd.getDeGiay().getTenDeGiay(),
+                msd.getTrangThai()
+            });
+        }
+    }
+
+    private void loadSneakerToTable(ArrayList<Model_Sneaker> sn) {
+        modelSneaker.setRowCount(0);
+        int y = 1;
+        for (Model_Sneaker ms : sn) {
+            modelSneaker.addRow(new Object[]{
+                y++,
+                ms.getId_Sneaker(),
+                ms.getTen_SP().getProduct_name(),
+                ms.getHang().getBrand_name(),
+                ms.getDanhMuc().getCategory_name(),
+                ms.getChatLieu().getNameMaterial(),
+                ms.getDeGiay().getTenDeGiay(),
+                ms.getSoLuong(),
+                ms.getTrangThai()
+            });
+        }
+    }
+
+    private void setSelectedIndex(JComboBox cbo, String value) {
+        for (int i = 0; i < cbo.getItemCount(); i++) {
+            if (cbo.getItemAt(i).toString().equals(value)) {
+                cbo.setSelectedIndex(i);
+                return;
+            }
+        }
+    }
+
+    private void showProductDetail(int index) {
+        txtProdDetail.setText(tblProductDetail.getValueAt(index, 1).toString());
+        lbnProductName.setText(tblProductDetail.getValueAt(index, 2).toString());
+        txtPrice.setText(tblProductDetail.getValueAt(index, 3).toString());
+        txtQuantity.setText(tblProductDetail.getValueAt(index, 4).toString());
+        lbnCategory.setText(tblProductDetail.getValueAt(index, 5).toString());
+        lbnBrand.setText(tblProductDetail.getValueAt(index, 6).toString());
+        String color = tblProductDetail.getValueAt(index, 7).toString();
+        setSelectedIndex(cboColor, color);
+        lbnMaterial.setText(tblProductDetail.getValueAt(index, 8).toString());
+        String size = tblProductDetail.getValueAt(index, 9).toString();
+        setSelectedIndex(cboSize, size);
+        lbnSole.setText(tblProductDetail.getValueAt(index, 10).toString());
+        rdoStock.setSelected(tblProductDetail.getValueAt(index, 11).toString().equals("Đang bán") ? true : false);
+        rdoSoldOut.setSelected(tblProductDetail.getValueAt(index, 11).toString().equals("Đã ngừng bán") ? true : false);
+        tblProductDetail.setRowSelectionInterval(index, index);
+    }
+
+    private void showDataProduct(int index) {
+
+        txtProductId.setText(tblProducts.getValueAt(index, 1).toString());
+        txtProductName.setText(tblProducts.getValueAt(index, 2).toString());
+        String brand = tblProducts.getValueAt(index, 3).toString();
+        setSelectedIndex(cboBrand, brand);
+        String cate = tblProducts.getValueAt(index, 4).toString();
+        setSelectedIndex(cboCategory, cate);
+        String material = tblProducts.getValueAt(index, 5).toString();
+        setSelectedIndex(cboMaterial, material);
+        String sole = tblProducts.getValueAt(index, 6).toString();
+        setSelectedIndex(cboSole, sole);
+        rdoSell.setSelected(tblProducts.getValueAt(index, 8).toString().equals("Đang bán") ? true : false);
+        rdoEndSell.setSelected(tblProducts.getValueAt(index, 8).toString().equals("Đã ngừng bán") ? true : false);
+        tblProducts.setRowSelectionInterval(index, index);
+    }
+
+    private void loadDataBrand() {
+        dcboBrand.removeAllElements();
+        for (Model_Brand br : brs.getALl()) {
+            dcboBrand.addElement(br);
+        }
+    }
+
+    private void loadDataCate() {
+        dcboCate.removeAllElements();
+        for (Model_Category cate : cateRS.getALl()) {
+            dcboCate.addElement(cate);
+        }
+    }
+
+    private void loadDataMaterial() {
+        dcboMaterial.removeAllElements();
+        for (Material ma : materRS.getAll()) {
+            dcboMaterial.addElement(ma);
+        }
+    }
+
+    private void loadDataSole() {
+        dcboSole.removeAllElements();
+        for (Model_DeGiay sole : soleRS.getAll()) {
+            dcboSole.addElement(sole);
+        }
+    }
+
+    private void loadDataSize() {
+        dcboSize.removeAllElements();
+        for (SizeModel size : sizeRS.getAll()) {
+            dcboSize.addElement(size);
+        }
+    }
+
+    private void loadDataColor() {
+        dcboColor.removeAllElements();
+        for (Model_Color color : colorRS.getALl()) {
+            dcboColor.addElement(color);
+        }
+    }
+
+    private boolean validateForm() {
+        if (txtProductName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên SP");
+            return false;
+        }
+        for (Model_Sneaker sn : sneakerRS.getAll()) {
+            if (sn.getTen_SP().getProduct_name().equals(txtProductName.getText().toString()) && sn.getChatLieu().getNameMaterial().equals(cboMaterial.getSelectedItem().toString()) 
+                    && sn.getDanhMuc().getCategory_name().equals(cboCategory.getSelectedItem().toString()) && sn.getHang().getBrand_name().equals(cboBrand.getSelectedItem().toString())
+                    )
+            {
+                JOptionPane.showMessageDialog(this,"Sản phẩm này đã tồn tại");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Model_Sneaker readForm() {
+        Model_addNameProduct tenSP = new Model_addNameProduct();
+        tenSP.setProduct_name(txtProductName.getText());
+        Model_Brand br = brs.getBr(cboBrand.getSelectedItem().toString());
+        Model_Category cate = cateRS.getCate(cboCategory.getSelectedItem().toString());
+        Model_DeGiay sole = soleRS.getSole(cboSole.getSelectedItem().toString());
+        Material ms = materRS.getMaterial(cboMaterial.getSelectedItem().toString());
+        Model_Sneaker sn = new Model_Sneaker();
+        sn.setChatLieu(ms);
+        sn.setDanhMuc(cate);
+        sn.setDeGiay(sole);
+        sn.setHang(br);
+        sn.setTen_SP(tenSP);
+        return sn;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -32,6 +252,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
         tabbedPaneProduct = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         tab1 = new javax.swing.JPanel();
@@ -47,27 +268,26 @@ public class ManageSneaker extends javax.swing.JPanel {
         btnOnSell = new javax.swing.JButton();
         jLabel28 = new javax.swing.JLabel();
         txtSearchProduct = new javax.swing.JTextField();
-        btnProductAdd1 = new javax.swing.JButton();
         jPanel13 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         txtProductId = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         txtProductName = new javax.swing.JTextField();
         jLabel37 = new javax.swing.JLabel();
-        cboCategory1 = new javax.swing.JComboBox<>();
+        cboCategory = new javax.swing.JComboBox<>();
         btnAddProdCategory1 = new javax.swing.JButton();
         jLabel38 = new javax.swing.JLabel();
-        cboBrand1 = new javax.swing.JComboBox<>();
+        cboBrand = new javax.swing.JComboBox<>();
         btnAddProdBrand1 = new javax.swing.JButton();
         jLabel39 = new javax.swing.JLabel();
-        cboColor1 = new javax.swing.JComboBox<>();
+        cboMaterial = new javax.swing.JComboBox<>();
         btnAddProdMaterial1 = new javax.swing.JButton();
         jLabel40 = new javax.swing.JLabel();
-        cboMaterial1 = new javax.swing.JComboBox<>();
+        cboSole = new javax.swing.JComboBox<>();
         btnAddProdSole1 = new javax.swing.JButton();
         jLabel41 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        rdoSell = new javax.swing.JRadioButton();
+        rdoEndSell = new javax.swing.JRadioButton();
         jPanel14 = new javax.swing.JPanel();
         btnProductClear = new javax.swing.JButton();
         btnProductAdd = new javax.swing.JButton();
@@ -147,7 +367,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false, true, true, false, false, false
+                false, false, false, false, false, false, true, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -224,6 +444,11 @@ public class ManageSneaker extends javax.swing.JPanel {
         btnStopSell.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnStopSell.setForeground(new java.awt.Color(255, 255, 255));
         btnStopSell.setText("Ngừng bán");
+        btnStopSell.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopSellActionPerformed(evt);
+            }
+        });
 
         btnOnSell.setBackground(new java.awt.Color(39, 80, 150));
         btnOnSell.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -249,14 +474,9 @@ public class ManageSneaker extends javax.swing.JPanel {
                 txtSearchProductFocusLost(evt);
             }
         });
-
-        btnProductAdd1.setBackground(new java.awt.Color(39, 80, 150));
-        btnProductAdd1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnProductAdd1.setForeground(new java.awt.Color(255, 255, 255));
-        btnProductAdd1.setText("Thêm sản phẩm chi tiết");
-        btnProductAdd1.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProductAdd1ActionPerformed(evt);
+                txtSearchProductActionPerformed(evt);
             }
         });
 
@@ -282,9 +502,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                             .addComponent(jLabel15)
                             .addGap(43, 43, 43)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(36, 36, 36)
-                .addComponent(btnProductAdd1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(323, 323, 323))
+                .addGap(323, 520, Short.MAX_VALUE))
             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel6Layout.setVerticalGroup(
@@ -295,10 +513,9 @@ public class ManageSneaker extends javax.swing.JPanel {
                     .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSearchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnProductAdd1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnStopSell, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -322,9 +539,9 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         jLabel37.setText("Danh mục");
 
-        cboCategory1.setBackground(new java.awt.Color(39, 80, 150));
-        cboCategory1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
-        cboCategory1.setBorder(null);
+        cboCategory.setBackground(new java.awt.Color(39, 80, 150));
+        cboCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        cboCategory.setBorder(null);
 
         btnAddProdCategory1.setBackground(new java.awt.Color(39, 80, 150));
         btnAddProdCategory1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -338,9 +555,9 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         jLabel38.setText("Hãng");
 
-        cboBrand1.setBackground(new java.awt.Color(39, 80, 150));
-        cboBrand1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
-        cboBrand1.setBorder(null);
+        cboBrand.setBackground(new java.awt.Color(39, 80, 150));
+        cboBrand.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        cboBrand.setBorder(null);
 
         btnAddProdBrand1.setBackground(new java.awt.Color(39, 80, 150));
         btnAddProdBrand1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -354,12 +571,12 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         jLabel39.setText("Chất liệu");
 
-        cboColor1.setBackground(new java.awt.Color(39, 80, 150));
-        cboColor1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
-        cboColor1.setBorder(null);
-        cboColor1.addActionListener(new java.awt.event.ActionListener() {
+        cboMaterial.setBackground(new java.awt.Color(39, 80, 150));
+        cboMaterial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        cboMaterial.setBorder(null);
+        cboMaterial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboColor1ActionPerformed(evt);
+                cboMaterialActionPerformed(evt);
             }
         });
 
@@ -375,9 +592,9 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         jLabel40.setText("Đế giày");
 
-        cboMaterial1.setBackground(new java.awt.Color(39, 80, 150));
-        cboMaterial1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
-        cboMaterial1.setBorder(null);
+        cboSole.setBackground(new java.awt.Color(39, 80, 150));
+        cboSole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        cboSole.setBorder(null);
 
         btnAddProdSole1.setBackground(new java.awt.Color(39, 80, 150));
         btnAddProdSole1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -391,9 +608,12 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         jLabel41.setText("Trạng thái");
 
-        jRadioButton1.setText("Đang bán");
+        buttonGroup3.add(rdoSell);
+        rdoSell.setSelected(true);
+        rdoSell.setText("Đang bán");
 
-        jRadioButton2.setText("Ngừng bán");
+        buttonGroup3.add(rdoEndSell);
+        rdoEndSell.setText("Ngừng bán");
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -409,12 +629,12 @@ public class ManageSneaker extends javax.swing.JPanel {
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
-                                .addComponent(jRadioButton1)
+                                .addComponent(rdoSell)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jRadioButton2))
+                                .addComponent(rdoEndSell))
                             .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addGap(36, 36, 36)
-                                .addComponent(cboColor1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnAddProdMaterial1))))
                     .addGroup(jPanel13Layout.createSequentialGroup()
@@ -424,7 +644,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtProductId)
-                            .addComponent(cboBrand1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cboBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAddProdBrand1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -434,8 +654,8 @@ public class ManageSneaker extends javax.swing.JPanel {
                     .addComponent(jLabel37))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cboMaterial1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboCategory1, javax.swing.GroupLayout.Alignment.TRAILING, 0, 222, Short.MAX_VALUE)
+                    .addComponent(cboSole, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboCategory, javax.swing.GroupLayout.Alignment.TRAILING, 0, 222, Short.MAX_VALUE)
                     .addComponent(txtProductName, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -444,7 +664,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel13Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cboBrand1, cboCategory1, cboColor1, cboMaterial1, txtProductId, txtProductName});
+        jPanel13Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cboBrand, cboCategory, cboMaterial, cboSole, txtProductId, txtProductName});
 
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,7 +675,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                         .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cboCategory1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel37)))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -464,30 +684,30 @@ public class ManageSneaker extends javax.swing.JPanel {
                         .addGap(12, 12, 12)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel38)
-                            .addComponent(cboBrand1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboBrand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnAddProdBrand1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnAddProdCategory1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(11, 11, 11)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnAddProdSole1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cboMaterial1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboSole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel40))
                             .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel39)
-                                .addComponent(cboColor1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnAddProdMaterial1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel41)
                     .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jRadioButton1)
-                        .addComponent(jRadioButton2)))
+                        .addComponent(rdoSell)
+                        .addComponent(rdoEndSell)))
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
-        jPanel13Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboBrand1, cboCategory1, cboColor1, cboMaterial1, txtProductId, txtProductName});
+        jPanel13Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboBrand, cboCategory, cboMaterial, cboSole, txtProductId, txtProductName});
 
         jPanel14.setBackground(new java.awt.Color(185, 213, 246));
         jPanel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -496,11 +716,21 @@ public class ManageSneaker extends javax.swing.JPanel {
         btnProductClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnProductClear.setForeground(new java.awt.Color(255, 255, 255));
         btnProductClear.setText("Làm mới");
+        btnProductClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductClearActionPerformed(evt);
+            }
+        });
 
         btnProductAdd.setBackground(new java.awt.Color(39, 80, 150));
         btnProductAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnProductAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnProductAdd.setText("Thêm mới sản phẩm");
+        btnProductAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductAddActionPerformed(evt);
+            }
+        });
 
         btnEditProduct.setBackground(new java.awt.Color(39, 80, 150));
         btnEditProduct.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -652,6 +882,11 @@ public class ManageSneaker extends javax.swing.JPanel {
         btnAddNewProd2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAddNewProd2.setForeground(new java.awt.Color(255, 255, 255));
         btnAddNewProd2.setText("Thêm mới");
+        btnAddNewProd2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddNewProd2ActionPerformed(evt);
+            }
+        });
 
         btnUpdateProd2.setBackground(new java.awt.Color(39, 80, 150));
         btnUpdateProd2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -667,6 +902,11 @@ public class ManageSneaker extends javax.swing.JPanel {
         btnRefresh2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRefresh2.setForeground(new java.awt.Color(255, 255, 255));
         btnRefresh2.setText("Làm mới");
+        btnRefresh2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefresh2ActionPerformed(evt);
+            }
+        });
 
         btnExportToExcel2.setBackground(new java.awt.Color(39, 80, 150));
         btnExportToExcel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -708,6 +948,8 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddNewProd2, btnDownloadQR2, btnExportToExcel2, btnRefresh2, btnUpdateProd2});
 
+        buttonGroup4.add(rdoStock);
+        rdoStock.setSelected(true);
         rdoStock.setText("Còn hàng");
         rdoStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -715,6 +957,7 @@ public class ManageSneaker extends javax.swing.JPanel {
             }
         });
 
+        buttonGroup4.add(rdoSoldOut);
         rdoSoldOut.setText("Hết hàng");
         rdoSoldOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -752,7 +995,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                                             .addComponent(lbnMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnAddProdColor)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -760,32 +1003,30 @@ public class ManageSneaker extends javax.swing.JPanel {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(jLabel30)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lbnCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                        .addComponent(jLabel26)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lbnProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(134, 134, 134))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtQuantity)
+                                            .addComponent(jLabel26)
+                                            .addComponent(jLabel30))
+                                        .addGap(12, 12, 12)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lbnProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lbnCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                                .addComponent(cboSize, 0, 166, Short.MAX_VALUE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnAddProdSize)))
-                                        .addGap(101, 101, 101))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lbnSole, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(134, 134, 134)))))
+                                                .addGap(36, 36, 36)
+                                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(txtQuantity)
+                                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                                        .addComponent(cboSize, 0, 166, Short.MAX_VALUE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btnAddProdSize))))
+                                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                                .addGap(38, 38, 38)
+                                                .addComponent(lbnSole, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -802,35 +1043,41 @@ public class ManageSneaker extends javax.swing.JPanel {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel25)
-                            .addComponent(txtProdDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel26)
-                            .addComponent(lbnProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel30)
-                                    .addComponent(lbnCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lbnProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel25)
+                                .addComponent(txtProdDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel26)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbnBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel31))))
+                                    .addComponent(jLabel31)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lbnCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel30))))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel36)
-                                    .addComponent(lbnSole, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lbnMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel33)))
+                                .addComponent(jLabel33))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lbnSole, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(9, 9, 9)
@@ -855,8 +1102,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                                 .addGap(11, 11, 11)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel29)
-                                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel35)
@@ -929,6 +1175,11 @@ public class ManageSneaker extends javax.swing.JPanel {
         sliderPrice.setMaximum(4000000);
         sliderPrice.setMinimum(100000);
         sliderPrice.setToolTipText("100");
+        sliderPrice.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderPriceStateChanged(evt);
+            }
+        });
 
         txtSearchProdDetail.setForeground(new java.awt.Color(153, 153, 153));
         txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
@@ -939,6 +1190,11 @@ public class ManageSneaker extends javax.swing.JPanel {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtSearchProdDetailFocusLost(evt);
+            }
+        });
+        txtSearchProdDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchProdDetailActionPerformed(evt);
             }
         });
 
@@ -964,11 +1220,9 @@ public class ManageSneaker extends javax.swing.JPanel {
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel15Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(lbnPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 88, Short.MAX_VALUE))
+                            .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbnPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 89, Short.MAX_VALUE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
@@ -1001,9 +1255,9 @@ public class ManageSneaker extends javax.swing.JPanel {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(lbnPrice))))
+                            .addComponent(lbnPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1089,18 +1343,26 @@ public class ManageSneaker extends javax.swing.JPanel {
     private void txtSearchProductFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProductFocusLost
         if (txtSearchProduct.getText().equals("")) {
             txtSearchProduct.setText("Tìm kiếm theo mã sản phẩm, tên sản phẩm, danh mục, số lượng");
-            setForeground(new Color(39,80,150));
+            setForeground(new Color(39, 80, 150));
         }
     }//GEN-LAST:event_txtSearchProductFocusLost
 
     private void tblProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductsMouseClicked
-        new InfoProductDialog().setVisible(true);
+
+        int index = tblProducts.getSelectedRow();
+        showDataProduct(index);
+        if (evt.getClickCount() == 2) {
+            tabbedPaneProduct.setSelectedIndex(1);
+            loadSneakerDetailToTable(sdetailRS.getSneakerByID(tblProducts.getValueAt(index, 1).toString()));
+        }
+
     }//GEN-LAST:event_tblProductsMouseClicked
 
     private void rdoAllProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoAllProductActionPerformed
         if (rdoAllProduct.isSelected()) {
             btnStopSell.setVisible(false);
             btnOnSell.setVisible(false);
+            loadSneakerToTable(sneakerRS.getAll());
         }
     }//GEN-LAST:event_rdoAllProductActionPerformed
 
@@ -1108,6 +1370,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         if (rdoOnSell.isSelected()) {
             btnStopSell.setVisible(true);
             btnOnSell.setVisible(false);
+            loadSneakerToTable(sneakerRS.getAllSPOnSell());
         }
     }//GEN-LAST:event_rdoOnSellActionPerformed
 
@@ -1115,11 +1378,13 @@ public class ManageSneaker extends javax.swing.JPanel {
         if (rdoStopSell.isSelected()) {
             btnStopSell.setVisible(false);
             btnOnSell.setVisible(true);
+            loadSneakerToTable(sneakerRS.getAllSPStopSell());
         }
     }//GEN-LAST:event_rdoStopSellActionPerformed
 
     private void tblProductDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductDetailMouseClicked
-
+        int index = tblProductDetail.getSelectedRow();
+        showProductDetail(index);
     }//GEN-LAST:event_tblProductDetailMouseClicked
 
     private void txtSearchProdDetailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusGained
@@ -1141,36 +1406,61 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_btnFirstActionPerformed
 
     private void btnOnSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOnSellActionPerformed
-        // TODO add your handling code here:
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 dòng sản phẩm để ngừng bán");
+            return;
+        }
+        List<Integer> isSelected = new ArrayList<>();
+        for (int i = tblProducts.getRowCount() - 1; i >= 0; i--) {
+            Boolean isChecked = (Boolean) tblProducts.getValueAt(i, 9);
+            if (isChecked != null && isChecked) {
+                int id = (int) tblProducts.getValueAt(i, 1);
+                isSelected.add(id);
+            }
+        }
+        if (!isSelected.isEmpty() && JOptionPane.showConfirmDialog(this, "Bạn có muốn khôi phục sản phẩm này không ?") == 0) {
+            boolean stopsell = false;
+            for (Integer id : isSelected) {
+                if (sdetailRS.updateStatusOnSell(id) != null) {
+                    stopsell = true;
+                } else {
+                    JOptionPane.showMessageDialog(this, "Chuyển đang bán thất bại");
+                }
+            }
+            if (stopsell) {
+                JOptionPane.showMessageDialog(this, "Chuyển đang bán thành công");
+            }
+            loadSneakerToTable(sneakerRS.getAllSPStopSell());
+        }
     }//GEN-LAST:event_btnOnSellActionPerformed
 
     private void btnEditProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProductActionPerformed
-        // TODO add your handling code here:
+        if (txtProductId.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this,"Vui lòng chọn 1 dòng cần sửa");
+            return ;
+        }
+        
     }//GEN-LAST:event_btnEditProductActionPerformed
 
     private void btnAddProdCategory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProdCategory1ActionPerformed
-        // TODO add your handling code here:
+        new CategoryDialog().setVisible(true);
     }//GEN-LAST:event_btnAddProdCategory1ActionPerformed
 
     private void btnAddProdBrand1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProdBrand1ActionPerformed
-        // TODO add your handling code here:
+        new BrandDialog().setVisible(true);
     }//GEN-LAST:event_btnAddProdBrand1ActionPerformed
 
-    private void cboColor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboColor1ActionPerformed
+    private void cboMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMaterialActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cboColor1ActionPerformed
+    }//GEN-LAST:event_cboMaterialActionPerformed
 
     private void btnAddProdMaterial1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProdMaterial1ActionPerformed
-        // TODO add your handling code here:
+        new MaterialDialog().setVisible(true);
     }//GEN-LAST:event_btnAddProdMaterial1ActionPerformed
 
     private void btnAddProdSole1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProdSole1ActionPerformed
-        // TODO add your handling code here:
+        new SoleDialog().setVisible(true);
     }//GEN-LAST:event_btnAddProdSole1ActionPerformed
-
-    private void btnProductAdd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductAdd1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProductAdd1ActionPerformed
 
     private void rdoStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoStockActionPerformed
         // TODO add your handling code here:
@@ -1179,6 +1469,94 @@ public class ManageSneaker extends javax.swing.JPanel {
     private void rdoSoldOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSoldOutActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rdoSoldOutActionPerformed
+
+    private void sliderPriceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderPriceStateChanged
+        lbnPrice.setText(sliderPrice.getValue() + "");
+        loadSneakerDetailToTable(sdetailRS.getSneakerByGia(Double.parseDouble(sliderPrice.getValue() + "")));
+    }//GEN-LAST:event_sliderPriceStateChanged
+
+    private void btnAddNewProd2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewProd2ActionPerformed
+        new FormAddProductDetail().setVisible(true);
+    }//GEN-LAST:event_btnAddNewProd2ActionPerformed
+
+    private void btnRefresh2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresh2ActionPerformed
+        txtProdDetail.setText("");
+        txtPrice.setText("");
+        txtQuantity.setText("");
+        lbnProductName.setText("");
+        lbnMaterial.setText("");
+        cboColor.setSelectedIndex(0);
+        lbnProductName.setText("");
+        lbnBrand.setText("");
+        lbnSole.setText("");
+        lbnCategory.setText("");
+        cboSize.setSelectedIndex(0);
+        loadSneakerDetailToTable(sdetailRS.getALl());
+    }//GEN-LAST:event_btnRefresh2ActionPerformed
+
+    private void btnStopSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopSellActionPerformed
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 dòng sản phẩm để ngừng bán");
+            return;
+        }
+        List<Integer> isSelected = new ArrayList<>();
+        for (int i = tblProducts.getRowCount() - 1; i >= 0; i--) {
+            Boolean isChecked = (Boolean) tblProducts.getValueAt(i, 9);
+            if (isChecked != null && isChecked) {
+                int id = (int) tblProducts.getValueAt(i, 1);
+                System.out.println(id);
+                isSelected.add(id);
+            }
+        }
+        if (!isSelected.isEmpty() && JOptionPane.showConfirmDialog(this, "Bạn có muốn ngừng bán sản phẩm này không ?") == 0) {
+            boolean stopsell = false;
+            for (Integer id : isSelected) {
+                if (sdetailRS.updateStatus(id) != null) {
+                    stopsell = true;
+                } else {
+                    JOptionPane.showMessageDialog(this, "Chuyển ngừng bán thất bại");
+                }
+            }
+            if (stopsell) {
+                JOptionPane.showMessageDialog(this, "Chuyển ngừng bán thành công");
+            }
+            loadSneakerToTable(sneakerRS.getAllSPOnSell());
+        }
+    }//GEN-LAST:event_btnStopSellActionPerformed
+
+    private void btnProductClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductClearActionPerformed
+        rdoAllProduct.setSelected(true);
+        txtProductId.setText("");
+        txtProductName.setText("");
+        rdoSell.setSelected(true);
+        cboBrand.setSelectedIndex(0);
+        cboCategory.setSelectedIndex(0);
+        cboMaterial.setSelectedIndex(0);
+        cboSole.setSelectedIndex(0);
+        loadSneakerToTable(sneakerRS.getAll());
+    }//GEN-LAST:event_btnProductClearActionPerformed
+
+    private void txtSearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchProductActionPerformed
+        loadSneakerToTable(sneakerRS.foundByText(txtSearchProduct.getText()));
+    }//GEN-LAST:event_txtSearchProductActionPerformed
+
+    private void txtSearchProdDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchProdDetailActionPerformed
+        loadSneakerDetailToTable(sdetailRS.foundSneakerDetailByText(txtSearchProdDetail.getText()));
+    }//GEN-LAST:event_txtSearchProdDetailActionPerformed
+
+    private void btnProductAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductAddActionPerformed
+        if (validateForm()) {
+            Model_Sneaker sn = readForm();
+            System.out.println(sn);
+            if (sneakerRS.addSneaker(sn) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
+                loadSneakerToTable(sneakerRS.getAll());
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại");
+                return;
+            }
+        }
+    }//GEN-LAST:event_btnProductAddActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNewProd2;
@@ -1197,7 +1575,6 @@ public class ManageSneaker extends javax.swing.JPanel {
     private javax.swing.JButton btnOnSell;
     private javax.swing.JButton btnPre;
     private javax.swing.JButton btnProductAdd;
-    private javax.swing.JButton btnProductAdd1;
     private javax.swing.JButton btnProductClear;
     private javax.swing.JButton btnRefresh2;
     private javax.swing.JButton btnStopSell;
@@ -1205,12 +1582,13 @@ public class ManageSneaker extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
-    private javax.swing.JComboBox<String> cboBrand1;
-    private javax.swing.JComboBox<String> cboCategory1;
+    private javax.swing.ButtonGroup buttonGroup4;
+    private javax.swing.JComboBox<String> cboBrand;
+    private javax.swing.JComboBox<String> cboCategory;
     private javax.swing.JComboBox<String> cboColor;
-    private javax.swing.JComboBox<String> cboColor1;
-    private javax.swing.JComboBox<String> cboMaterial1;
+    private javax.swing.JComboBox<String> cboMaterial;
     private javax.swing.JComboBox<String> cboSize;
+    private javax.swing.JComboBox<String> cboSole;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
@@ -1245,8 +1623,6 @@ public class ManageSneaker extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lbnBrand;
@@ -1256,7 +1632,9 @@ public class ManageSneaker extends javax.swing.JPanel {
     private javax.swing.JLabel lbnProductName;
     private javax.swing.JLabel lbnSole;
     private javax.swing.JRadioButton rdoAllProduct;
+    private javax.swing.JRadioButton rdoEndSell;
     private javax.swing.JRadioButton rdoOnSell;
+    private javax.swing.JRadioButton rdoSell;
     private javax.swing.JRadioButton rdoSoldOut;
     private javax.swing.JRadioButton rdoStock;
     private javax.swing.JRadioButton rdoStopSell;
