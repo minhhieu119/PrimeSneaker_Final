@@ -604,7 +604,7 @@ select sneaker_detail_id, sneaker_detail_code, sneaker_name, price, (quantity - 
 			  where sneaker_detail_code = 2345522
 			  
 select * from Sneaker			  select * from SneakerDetail
-			  select * from Customer
+			  
 
 			  insert into Customer (full_name, phone_number, gender, [address])
 			  values (N'Bùi Huy Hiếu', '0987433234', 1, N'Đan Phượng');
@@ -617,13 +617,20 @@ select * from Sneaker			  select * from SneakerDetail
 			  delete from Customer
 			  where address like N'Đan Phượng'
 
-			  select * from OrderDetail
+			  select * from [Order]
 
-			  update OrderDetail
-              set quantity = 3
-              where order_id = 125 and sneaker_detail_id = 3
+			  
+			  select * from Customer
+			  select customer_id
+			  from Customer
+			  where phone_number like '0999888777'
 
-			  select quantity
-			  from SneakerDetail
-			  where sneaker_detail_code = 2345530
-			  select * from SneakerDetail
+			  select * from [User]
+
+			  select [user_id]
+			  from [User]
+			  where user_code like 'NV005'
+
+			  update [Order]
+			  set [user_id] = 2, customer_id = 3, voucher_id = 4, payment_method = N'Tiền mặt', total_cost = 4000000, [status] = N'Đã thanh toán', updated_at = GETDATE()
+			  where order_id = 35

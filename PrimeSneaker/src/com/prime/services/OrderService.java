@@ -287,6 +287,25 @@ public class OrderService {
             return null;
         }
     }
+    
+    public Integer removeInvoice (int id) throws SQLException{
+        sql = """
+              delete from [Order]
+              where order_id = ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
 
     public List<Order> getOrder() throws SQLException {
         List<Order> listOder = new ArrayList<>();
@@ -317,6 +336,31 @@ public class OrderService {
             c.close();
         }
         return listOder;
+    }
+    
+    public Integer updateOrder (Order o) throws SQLException{
+        sql = """
+              update [Order]
+              set [user_id] = ?, customer_id = ?, voucher_id = ?, payment_method = ?, total_cost = ?, [status] = N'Đã thanh toán', updated_at = GETDATE()
+              where order_id = ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, o.getUserId());
+            ps.setInt(2, o.getCustomerId());
+            ps.setInt(3, o.getVoucherId());
+            ps.setString(4, o.getPaymentMethod());
+            ps.setLong(5, o.getTotalCost());
+            ps.setInt(6, o.getOrderId());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
     }
 
     public List<SneakerCart> getToCart(int orderId) throws SQLException {
@@ -641,6 +685,54 @@ public class OrderService {
         } catch (Exception e) {
         }
         return list;
+    }
+    
+    public Integer getIdByPhoneNumber (String p) throws SQLException{
+        sql = """
+              select customer_id
+              from Customer
+              where phone_number like ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, p);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("customer_id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return null;
+    }
+    
+    public Integer getIdUserByUserCode (String code) throws SQLException{
+        sql ="""
+             select [user_id]
+             from [User]
+             where user_code like ?
+             """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return null;
     }
     
     public Integer getQuantity (String code){

@@ -15,7 +15,9 @@ public class Order {
     private int userId;
     private String orderQrCode;
     private String userName;
-    private String customerName;    
+    private int customerId;
+    private String customerName; 
+    private int voucherId;
     private String voucherName;
     private String paymentMethod;
     private long totalCost, receivedCash, change;
@@ -35,22 +37,42 @@ public class Order {
         this.status = status;
         this.created_at = created_at;
     }
-    
-    
 
-    public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, String status, String note) {
+    public Order(int orderId, int userId, int customerId, int voucherId, String paymentMethod, long totalCost, String status) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.customerId = customerId;
+        this.voucherId = voucherId;
+        this.paymentMethod = paymentMethod;
+        this.totalCost = totalCost;
+        this.status = status;
+    }
+
+    public Order(int orderId, int userId, String orderQrCode, String userName, int customerId, String customerName, int voucherId, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, int quantity, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
+        this.orderId = orderId;
         this.userId = userId;
         this.orderQrCode = orderQrCode;
         this.userName = userName;
+        this.customerId = customerId;
         this.customerName = customerName;
+        this.voucherId = voucherId;
         this.voucherName = voucherName;
         this.paymentMethod = paymentMethod;
         this.totalCost = totalCost;
         this.receivedCash = receivedCash;
         this.change = change;
+        this.quantity = quantity;
         this.status = status;
         this.note = note;
+        this.created_at = created_at;
+        this.update_at = update_at;
+        this.created_by = created_by;
+        this.updated_by = updated_by;
     }
+    
+    
+
+    
 
     public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
         this.userId = userId;
@@ -77,6 +99,24 @@ public class Order {
     public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public int getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(int voucherId) {
+        this.voucherId = voucherId;
+    }
+    
+    
 
     public int getUserId() {
         return userId;
