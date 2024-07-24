@@ -1,19 +1,51 @@
 package com.prime.form;
 
+import com.prime.main_model.ModelCustomer;
+import com.prime.services.CustomerService;
+import java.awt.Color;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 public class ManageCustomer extends javax.swing.JPanel {
 
-    public ManageCustomer() {
+    DefaultTableModel model = new DefaultTableModel();
+    CustomerService svc = new CustomerService();
+    int index = -1;
+    int confirm;
+
+    public ManageCustomer() throws SQLException {
         initComponents();
         setOpaque(false);
+        model = (DefaultTableModel) tblListCustomer.getModel();
+        ArrayList<ModelCustomer> list = svc.getAllCustomer();
+        fillToTable(list);
+        if (tblListCustomer.getRowCount() > 0) {
+            index = 0;
+            showDetail(list);
+        }
+
+        txtCustomerId.setEditable(false);
+        txtCustomerId.setBackground(Color.lightGray);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        txtStaffId = new javax.swing.JTextField();
-        txtStaffName = new javax.swing.JTextField();
-        txtStaffPhone = new javax.swing.JTextField();
+        txtCustomerId = new javax.swing.JTextField();
+        txtCustomerName = new javax.swing.JTextField();
+        txtCustomerPhone = new javax.swing.JTextField();
         rdoMale = new javax.swing.JRadioButton();
         rdoFemale = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
@@ -22,13 +54,13 @@ public class ManageCustomer extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        txtDateOfBirth = new com.toedter.calendar.JDateChooser();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAddress = new javax.swing.JTextArea();
         jPanel17 = new javax.swing.JPanel();
-        btnAddNewStaff = new javax.swing.JButton();
-        btnUpdateStaff = new javax.swing.JButton();
-        btnClearStaff = new javax.swing.JButton();
+        btnAddCustomer = new javax.swing.JButton();
+        btnUpdateCustomer = new javax.swing.JButton();
+        btnClearCustomer = new javax.swing.JButton();
+        txtDob = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jTabbedPane4 = new javax.swing.JTabbedPane();
         jPanel9 = new javax.swing.JPanel();
@@ -52,15 +84,17 @@ public class ManageCustomer extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thiết lập thông tin khách hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
-        txtStaffId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        txtStaffName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        txtStaffPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtCustomerPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
+        buttonGroup1.add(rdoMale);
         rdoMale.setSelected(true);
         rdoMale.setText("Nam");
 
+        buttonGroup1.add(rdoFemale);
         rdoFemale.setText("Nữ");
 
         jLabel1.setText("Mã khách hàng");
@@ -75,9 +109,6 @@ public class ManageCustomer extends javax.swing.JPanel {
 
         jLabel11.setText("Ngày sinh");
 
-        txtDateOfBirth.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
-        txtDateOfBirth.setDateFormatString("yyyy-MM-dd");
-
         jScrollPane2.setBackground(new java.awt.Color(39, 80, 150));
 
         txtAddress.setColumns(20);
@@ -88,17 +119,32 @@ public class ManageCustomer extends javax.swing.JPanel {
         jPanel17.setBackground(new java.awt.Color(185, 213, 246));
         jPanel17.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        btnAddNewStaff.setBackground(new java.awt.Color(39, 80, 150));
-        btnAddNewStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddNewStaff.setText("Thêm khách hàng");
+        btnAddCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnAddCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        btnAddCustomer.setText("Thêm khách hàng");
+        btnAddCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddCustomerActionPerformed(evt);
+            }
+        });
 
-        btnUpdateStaff.setBackground(new java.awt.Color(39, 80, 150));
-        btnUpdateStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdateStaff.setText("Sửa khách hàng");
+        btnUpdateCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnUpdateCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdateCustomer.setText("Sửa khách hàng");
+        btnUpdateCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateCustomerActionPerformed(evt);
+            }
+        });
 
-        btnClearStaff.setBackground(new java.awt.Color(39, 80, 150));
-        btnClearStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnClearStaff.setText("Reset");
+        btnClearCustomer.setBackground(new java.awt.Color(39, 80, 150));
+        btnClearCustomer.setForeground(new java.awt.Color(255, 255, 255));
+        btnClearCustomer.setText("Reset");
+        btnClearCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearCustomerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -107,23 +153,23 @@ public class ManageCustomer extends javax.swing.JPanel {
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnAddNewStaff)
-                    .addComponent(btnUpdateStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnClearStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAddCustomer)
+                    .addComponent(btnUpdateCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnClearCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddNewStaff, btnClearStaff, btnUpdateStaff});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddCustomer, btnClearCustomer, btnUpdateCustomer});
 
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(btnAddNewStaff)
+                .addComponent(btnAddCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnUpdateStaff)
+                .addComponent(btnUpdateCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnClearStaff)
+                .addComponent(btnClearCustomer)
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -140,8 +186,8 @@ public class ManageCustomer extends javax.swing.JPanel {
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(37, 37, 37)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtStaffPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCustomerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -149,7 +195,7 @@ public class ManageCustomer extends javax.swing.JPanel {
                         .addGap(34, 34, 34)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
-                            .addComponent(txtDateOfBirth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(txtDob)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
@@ -159,13 +205,13 @@ public class ManageCustomer extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(txtStaffName, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(145, 145, 145))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane2, txtDateOfBirth, txtStaffId, txtStaffName, txtStaffPhone});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane2, txtCustomerId, txtCustomerName, txtCustomerPhone});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,17 +219,17 @@ public class ManageCustomer extends javax.swing.JPanel {
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtStaffName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtStaffPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtCustomerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -199,13 +245,13 @@ public class ManageCustomer extends javax.swing.JPanel {
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDateOfBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17))
+                    .addComponent(txtDob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtDateOfBirth, txtStaffId, txtStaffName, txtStaffPhone});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCustomerId, txtCustomerName, txtCustomerPhone});
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Khách hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -233,6 +279,11 @@ public class ManageCustomer extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblListCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblListCustomerMouseClicked(evt);
             }
         });
         jScrollPane5.setViewportView(tblListCustomer);
@@ -439,7 +490,7 @@ public class ManageCustomer extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -447,9 +498,103 @@ public class ManageCustomer extends javax.swing.JPanel {
 
     }//GEN-LAST:event_tblOrderHistoryMousePressed
 
+    private void tblListCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblListCustomerMouseClicked
+        // TODO add your handling code here:
+        index = tblListCustomer.getSelectedRow();
+        try {
+            showDetail(svc.getAllCustomer());
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageCustomer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tblListCustomerMouseClicked
+
+    private void btnClearCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearCustomerActionPerformed
+        // TODO add your handling code here:
+        clearForm();
+    }//GEN-LAST:event_btnClearCustomerActionPerformed
+
+    private void btnUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateCustomerActionPerformed
+        // TODO add your handling code here:
+        checkNull();
+        if (!checkPhone()) {
+            showMess("Số điện thoại không đúng định dạng");
+            txtCustomerPhone.requestFocus();
+            return;
+        }
+        if (!checkDate()) {
+            showMess("Ngày sinh không đúng định dạng");
+            txtDob.requestFocus();
+            return;
+        }
+        try {
+            ModelCustomer cus = readForm();
+            System.out.println(cus.getCustomerID());
+            System.out.println(txtCustomerId.getText());
+            if (checkExistID()) {
+                confirm = JOptionPane.showConfirmDialog(this, "Xác nhận sửa khách hàng?");
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+                if (svc.updateCustomer(cus)) {
+                    ArrayList<ModelCustomer> list = svc.getAllCustomer();
+                    fillToTable(list);
+                    showMess("Cập nhật thông tin khách hàng thành công");
+                    index = 0;
+                    showDetail(list);
+                }
+            } else {
+                showMess("Không tồn tại mã khách hàng này");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_btnUpdateCustomerActionPerformed
+
+    private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
+     
+        checkNull();
+        if (!checkPhone()) {
+            showMess("Số điện thoại không đúng định dạng");
+            txtCustomerPhone.requestFocus();
+            return;
+        }
+        if (!checkDate()) {
+            showMess("Ngày sinh không đúng định dạng");
+            txtDob.requestFocus();
+            return;
+        }
+        
+        try {
+            if (checkExistName() && checkExistPhone()) {
+                showMess("Đã tồn tại khách hàng và số ĐT này");
+                txtCustomerName.requestFocus();
+                return;
+            }
+        try {
+            ModelCustomer cus = readForm();
+            confirm = JOptionPane.showConfirmDialog(this, "Xác nhận thêm khách hàng?");
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+            if (svc.addCustomer(cus)) {
+                ArrayList<ModelCustomer> list = svc.getAllCustomer();
+                fillToTable(list);
+                showMess("Thêm khách hàng thành công");
+                index = 0;
+                showDetail(list);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageCustomer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddCustomerActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddNewStaff;
-    private javax.swing.JButton btnClearStaff;
+    private javax.swing.JButton btnAddCustomer;
+    private javax.swing.JButton btnClearCustomer;
     private javax.swing.JButton btnFirst2;
     private javax.swing.JButton btnFirstDeleted;
     private javax.swing.JButton btnLast2;
@@ -458,7 +603,8 @@ public class ManageCustomer extends javax.swing.JPanel {
     private javax.swing.JButton btnNextDeleted;
     private javax.swing.JButton btnPrev2;
     private javax.swing.JButton btnPrevDeleted;
-    private javax.swing.JButton btnUpdateStaff;
+    private javax.swing.JButton btnUpdateCustomer;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -482,9 +628,123 @@ public class ManageCustomer extends javax.swing.JPanel {
     private javax.swing.JTable tblListCustomer;
     private javax.swing.JTable tblOrderHistory;
     private javax.swing.JTextArea txtAddress;
-    private com.toedter.calendar.JDateChooser txtDateOfBirth;
-    private javax.swing.JTextField txtStaffId;
-    private javax.swing.JTextField txtStaffName;
-    private javax.swing.JTextField txtStaffPhone;
+    private javax.swing.JTextField txtCustomerId;
+    private javax.swing.JTextField txtCustomerName;
+    private javax.swing.JTextField txtCustomerPhone;
+    private javax.swing.JTextField txtDob;
     // End of variables declaration//GEN-END:variables
+
+    private void fillToTable(ArrayList<ModelCustomer> list) {
+        model.setRowCount(0);
+        int i = 1;
+        for (ModelCustomer customer : list) {
+            model.addRow(new Object[]{
+                i++,
+                customer.getCustomerID(),
+                customer.getCustomerName(),
+                customer.getPhoneNumber(),
+                customer.isGender() ? "Nam" : "Nữ",
+                customer.getAddress(),
+                customer.getDob()
+            });
+        }
+    }
+
+    private void showDetail(ArrayList<ModelCustomer> list) {
+        ModelCustomer customer = list.get(index);
+        txtCustomerId.setText(customer.getCustomerID() + "");
+        txtCustomerName.setText(customer.getCustomerName());
+        txtCustomerPhone.setText(customer.getPhoneNumber());
+        rdoMale.setSelected(customer.isGender());
+        rdoFemale.setSelected(!customer.isGender());
+        txtAddress.setText(customer.getAddress());
+        txtDob.setText(customer.getDob() + "");
+        tblListCustomer.setRowSelectionInterval(index, index);
+    }
+
+    private void clearForm() {
+        txtCustomerId.setText("");
+        txtCustomerName.setText("");
+        txtCustomerPhone.setText("");
+        txtAddress.setText("");
+        txtDob.setText("");
+        rdoMale.setSelected(true);
+    }
+
+    private void checkNull() {
+        if (txtCustomerName.getText().trim().equals("")) {
+            showMess("Không bỏ trống tên khách hàng");
+            txtCustomerName.requestFocus();
+            return;
+        }
+        if (txtCustomerPhone.getText().trim().equals("")) {
+            showMess("Không bỏ trống số ĐT");
+            txtCustomerPhone.requestFocus();
+            return;
+        }
+    }
+
+    private boolean checkPhone() {
+        String phonePattern = "^(\\+84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$";
+        return validateString(txtCustomerPhone.getText(), phonePattern);
+    }
+
+    private void showMess(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    private boolean checkDate() {
+        String datePattern = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
+        return validateString(txtDob.getText(), datePattern);
+    }
+
+    private boolean validateString(String text, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches();
+    }
+
+    private boolean checkExistName() throws SQLException {
+        ArrayList<ModelCustomer> list = svc.getAllCustomer();
+        for (int i = 0; i < list.size(); i++) {
+            if (txtCustomerName.getText().trim().equalsIgnoreCase(list.get(i).getCustomerName().trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkExistPhone() throws SQLException {
+        ArrayList<ModelCustomer> list = svc.getAllCustomer();
+        for (int i = 0; i < list.size(); i++) {
+            if (txtCustomerPhone.getText().trim().equals(list.get(i).getPhoneNumber())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ModelCustomer readForm() throws ParseException {
+        ModelCustomer cus = new ModelCustomer();
+        cus.setCustomerID(Integer.valueOf(txtCustomerId.getText()));
+        cus.setCustomerName(txtCustomerName.getText());
+        cus.setPhoneNumber(txtCustomerPhone.getText());
+        cus.setGender(rdoMale.isSelected());
+        cus.setAddress(txtAddress.getText());
+        String string = txtDob.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(string);
+        cus.setDob(date);
+        return cus;
+    }
+
+    private boolean checkExistID() throws SQLException {
+        ArrayList<ModelCustomer> list = svc.getAllCustomer();
+        for (int i = 0; i < list.size(); i++) {
+            if (Integer.valueOf(txtCustomerId.getText()).equals(list.get(i).getCustomerID())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
