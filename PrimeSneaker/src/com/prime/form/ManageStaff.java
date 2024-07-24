@@ -1,49 +1,11 @@
 package com.prime.form;
 
-import com.prime.main_model.ModelUser;
-import com.prime.services.UserService;
-import java.awt.Color;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
 public class ManageStaff extends javax.swing.JPanel {
 
-    DefaultTableModel model = new DefaultTableModel();
-    UserService svc = new UserService();
-    int index;
-
-    public ManageStaff() throws SQLException {
+    public ManageStaff() {
         initComponents();
         setOpaque(false);
-        model = (DefaultTableModel) tblStaff.getModel();
-        fillToTable(svc.getAllUsers());
-        if (tblStaff.getRowCount() > 0) {
-            index = 0;
-            showDetail(svc.getAllUsers());
-        }
-        addPlaceHolder(txtSearchStaff, "Mã NV - Tên NV - SĐT - CCCD - Địa chỉ");
-        
-        index = tblStaff.getSelectedRow();
-        if (index >= 0) {
-            txtStaffId.setEditable(false);
-            txtStaffId.setBackground(Color.lightGray);
-            txtUserAccount.setEditable(false);
-            txtUserAccount.setBackground(Color.lightGray);
-        }
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -66,36 +28,36 @@ public class ManageStaff extends javax.swing.JPanel {
         jPanel17 = new javax.swing.JPanel();
         btnAddNewStaff = new javax.swing.JButton();
         btnUpdateStaff = new javax.swing.JButton();
-        btnBlockAccount = new javax.swing.JButton();
+        btnClockAccount = new javax.swing.JButton();
         btnScanCitizenQR = new javax.swing.JButton();
         btnExportExcel = new javax.swing.JButton();
         btnClearStaff = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
-        txtUserAccount = new javax.swing.JTextField();
+        txtSalary1 = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        txtPsw = new javax.swing.JTextField();
+        txtEmail1 = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
+        txtStaffName1 = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
-        txtIDCardNumber = new javax.swing.JTextField();
+        txtStaffPhone1 = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        txtDob = new javax.swing.JTextField();
+        txtSalary2 = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        txtAddress = new javax.swing.JTextArea();
-        cboStatusForm = new javax.swing.JComboBox<>();
+        jTextArea1 = new javax.swing.JTextArea();
+        jComboBox5 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         txtSearchStaff = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblStaff = new javax.swing.JTable();
-        cboGenderFilter = new javax.swing.JComboBox<>();
+        tblNhanVien = new javax.swing.JTable();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        cboRoleFilter = new javax.swing.JComboBox<>();
-        cboStatusFilter = new javax.swing.JComboBox<>();
+        jComboBox3 = new javax.swing.JComboBox<>();
+        jComboBox4 = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -137,29 +99,14 @@ public class ManageStaff extends javax.swing.JPanel {
         btnAddNewStaff.setBackground(new java.awt.Color(39, 80, 150));
         btnAddNewStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnAddNewStaff.setText("Thêm Nhân viên");
-        btnAddNewStaff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddNewStaffActionPerformed(evt);
-            }
-        });
 
         btnUpdateStaff.setBackground(new java.awt.Color(39, 80, 150));
         btnUpdateStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdateStaff.setText("Sửa thông tin NV");
-        btnUpdateStaff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateStaffActionPerformed(evt);
-            }
-        });
 
-        btnBlockAccount.setBackground(new java.awt.Color(39, 80, 150));
-        btnBlockAccount.setForeground(new java.awt.Color(255, 255, 255));
-        btnBlockAccount.setText("Khoá Nhân Viên");
-        btnBlockAccount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBlockAccountActionPerformed(evt);
-            }
-        });
+        btnClockAccount.setBackground(new java.awt.Color(39, 80, 150));
+        btnClockAccount.setForeground(new java.awt.Color(255, 255, 255));
+        btnClockAccount.setText("Khoá Nhân Viên");
 
         btnScanCitizenQR.setBackground(new java.awt.Color(39, 80, 150));
         btnScanCitizenQR.setForeground(new java.awt.Color(255, 255, 255));
@@ -172,11 +119,6 @@ public class ManageStaff extends javax.swing.JPanel {
         btnClearStaff.setBackground(new java.awt.Color(39, 80, 150));
         btnClearStaff.setForeground(new java.awt.Color(255, 255, 255));
         btnClearStaff.setText("Reset");
-        btnClearStaff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearStaffActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -188,7 +130,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addGap(43, 43, 43)
                 .addComponent(btnUpdateStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(44, 44, 44)
-                .addComponent(btnBlockAccount)
+                .addComponent(btnClockAccount)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 194, Short.MAX_VALUE)
                 .addComponent(btnClearStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(41, 41, 41)
@@ -198,7 +140,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addGap(27, 27, 27))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddNewStaff, btnBlockAccount, btnClearStaff, btnExportExcel, btnScanCitizenQR, btnUpdateStaff});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddNewStaff, btnClearStaff, btnClockAccount, btnExportExcel, btnScanCitizenQR, btnUpdateStaff});
 
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +148,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUpdateStaff)
-                    .addComponent(btnBlockAccount)
+                    .addComponent(btnClockAccount)
                     .addComponent(btnClearStaff)
                     .addComponent(btnScanCitizenQR)
                     .addComponent(btnExportExcel)
@@ -214,40 +156,40 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddNewStaff, btnBlockAccount, btnClearStaff, btnExportExcel, btnScanCitizenQR, btnUpdateStaff});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddNewStaff, btnClearStaff, btnClockAccount, btnExportExcel, btnScanCitizenQR, btnUpdateStaff});
 
         jLabel17.setText("Tài khoản");
 
-        txtUserAccount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtSalary1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel18.setText("Mật khẩu");
 
-        txtPsw.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtEmail1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel19.setText("Địa chỉ");
 
         jLabel20.setText("Email");
 
-        txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtStaffName1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel21.setText("CCCD");
 
-        txtIDCardNumber.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtStaffPhone1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel22.setText("Ngày sinh");
 
         jLabel23.setText("Trạng thái");
 
-        txtDob.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtSalary2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        txtAddress.setColumns(20);
-        txtAddress.setRows(5);
-        txtAddress.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
-        jScrollPane3.setViewportView(txtAddress);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        jScrollPane3.setViewportView(jTextArea1);
 
-        cboStatusForm.setBackground(new java.awt.Color(39, 80, 150));
-        cboStatusForm.setForeground(new java.awt.Color(255, 255, 255));
-        cboStatusForm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm việc", "Đã nghỉ việc" }));
+        jComboBox5.setBackground(new java.awt.Color(39, 80, 150));
+        jComboBox5.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm", "Nghỉ việc" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -274,8 +216,8 @@ public class ManageStaff extends javax.swing.JPanel {
                                         .addComponent(rdoMale)
                                         .addGap(18, 18, 18)
                                         .addComponent(rdoFemale))
-                                    .addComponent(txtUserAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                                    .addComponent(txtPsw)
+                                    .addComponent(txtSalary1, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                                    .addComponent(txtEmail1)
                                     .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(134, 134, 134)
@@ -293,26 +235,28 @@ public class ManageStaff extends javax.swing.JPanel {
                                     .addGap(18, 18, 18)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-                                        .addComponent(txtEmail)))
+                                        .addComponent(txtStaffName1)))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(21, 21, 21)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtDob)
-                                        .addComponent(cboStatusForm, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addGap(3, 3, 3)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGap(18, 18, 18)
+                                            .addComponent(txtSalary2)))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(21, 21, 21)
-                                .addComponent(txtIDCardNumber))))
+                                .addComponent(txtStaffPhone1))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(19, 19, 19))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane3, txtDob, txtEmail, txtIDCardNumber, txtPsw, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jComboBox5, jScrollPane3, txtEmail1, txtSalary1, txtSalary2, txtStaffId, txtStaffName, txtStaffName1, txtStaffPhone, txtStaffPhone1});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,11 +285,11 @@ public class ManageStaff extends javax.swing.JPanel {
                             .addComponent(rdoFemale))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSalary1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPsw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmail1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,19 +304,19 @@ public class ManageStaff extends javax.swing.JPanel {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStaffName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtIDCardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtStaffPhone1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtSalary2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cboStatusForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(23, 23, 23)))
                 .addGap(8, 8, 8)
@@ -380,7 +324,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboStatusForm, txtDob, txtEmail, txtIDCardNumber, txtPsw, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jComboBox5, txtEmail1, txtSalary1, txtSalary2, txtStaffId, txtStaffName, txtStaffName1, txtStaffPhone, txtStaffPhone1});
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -391,16 +335,6 @@ public class ManageStaff extends javax.swing.JPanel {
         txtSearchStaff.setForeground(new java.awt.Color(153, 153, 153));
         txtSearchStaff.setText("Mã NV - Tên NV - SĐT - CCCD - Địa chỉ");
         txtSearchStaff.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
-        txtSearchStaff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSearchStaffActionPerformed(evt);
-            }
-        });
-        txtSearchStaff.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSearchStaffKeyReleased(evt);
-            }
-        });
 
         jLabel3.setText("Tìm kiếm :");
 
@@ -425,7 +359,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addGap(8, 8, 8))
         );
 
-        tblStaff.setModel(new javax.swing.table.DefaultTableModel(
+        tblNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null, null, null, null, null, null}
@@ -449,28 +383,23 @@ public class ManageStaff extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        tblStaff.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblStaffMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tblStaff);
+        jScrollPane1.setViewportView(tblNhanVien);
 
-        cboGenderFilter.setBackground(new java.awt.Color(39, 80, 150));
-        cboGenderFilter.setForeground(new java.awt.Color(255, 255, 255));
-        cboGenderFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ" }));
+        jComboBox2.setBackground(new java.awt.Color(39, 80, 150));
+        jComboBox2.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ" }));
 
         jLabel4.setText("Giới tính: ");
 
         jLabel13.setText("Vai trò: ");
 
-        cboRoleFilter.setBackground(new java.awt.Color(39, 80, 150));
-        cboRoleFilter.setForeground(new java.awt.Color(255, 255, 255));
-        cboRoleFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Nhân Viên" }));
+        jComboBox3.setBackground(new java.awt.Color(39, 80, 150));
+        jComboBox3.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Nhân Viên" }));
 
-        cboStatusFilter.setBackground(new java.awt.Color(39, 80, 150));
-        cboStatusFilter.setForeground(new java.awt.Color(255, 255, 255));
-        cboStatusFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm", "Nghỉ việc" }));
+        jComboBox4.setBackground(new java.awt.Color(39, 80, 150));
+        jComboBox4.setForeground(new java.awt.Color(255, 255, 255));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm", "Nghỉ việc" }));
 
         jLabel16.setText("Trạng thái");
 
@@ -486,15 +415,15 @@ public class ManageStaff extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
-                            .addComponent(cboGenderFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(108, 108, 108)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboRoleFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13))
                         .addGap(105, 105, 105)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel16)
-                            .addComponent(cboStatusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(139, 139, 139))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jScrollPane1)
@@ -515,9 +444,9 @@ public class ManageStaff extends javax.swing.JPanel {
                                     .addComponent(jLabel16))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cboGenderFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboRoleFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboStatusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -548,214 +477,19 @@ public class ManageStaff extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnClearStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearStaffActionPerformed
-        // TODO add your handling code here:
-        clearForm();
-        txtStaffId.setEditable(true);
-        txtStaffId.setBackground(Color.white);
-        txtUserAccount.setEditable(true);
-        txtUserAccount.setBackground(Color.white);
-    }//GEN-LAST:event_btnClearStaffActionPerformed
-
-    private void btnAddNewStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewStaffActionPerformed
-        // TODO add your handling code here:
-        checkNull();
-        if (!checkEmail()) {
-            showMess("Email không đúng định dạng");
-            txtEmail.requestFocus();
-            return;
-        }
-        if (!checkDate()) {
-            showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
-            txtDob.requestFocus();
-            return;
-        }
-        if (!checkPhone()) {
-            showMess("Số điện thoại không đúng định dạng");
-            txtStaffPhone.requestFocus();
-            return;
-        }
-        if (!checkIDNumber()) {
-            showMess("Số CCCD gồm 12 chữ số");
-            txtStaffPhone.requestFocus();
-            return;
-        }
-        try {
-            if (checkExistID()) {
-                showMess("Đã tồn tại mã Nhân viên này");
-                txtStaffId.requestFocus();
-                return;
-            }
-            if (checkExistAccount()) {
-                showMess("Đã tồn tại tên tài khoản này");
-                txtUserAccount.requestFocus();
-                return;
-            }
-            if (checkExistIDNumber()) {
-                showMess("Đã tồn tại số căn cước công dân này");
-                txtIDCardNumber.requestFocus();
-                return;
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            ModelUser user = readForm();
-            try {
-                int confirm = JOptionPane.showConfirmDialog(this, "Xác nhận thêm tài khoản?");
-                if (confirm != JOptionPane.YES_OPTION) {
-                    return;
-                }
-                if (svc.addUser(user)) {
-                    fillToTable(svc.getAllUsers());
-                    showMess("Thêm Nhân viên thành công");
-                }
-            } catch (SQLException ex) {
-                showMess("Thêm lỗi");
-            }
-        } catch (ParseException ex) {
-            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnAddNewStaffActionPerformed
-
-    private void btnUpdateStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateStaffActionPerformed
-        // TODO add your handling code here:
-        index = tblStaff.getSelectedRow();
-        if (index < 0) {
-            showMess("Bạn chưa chọn nhân viên trong bảng");
-            return;
-        }
-        
-        checkNull();
-        //check định dạng
-        if (!checkEmail()) {
-            showMess("Email không đúng định dạng");
-            txtEmail.requestFocus();
-            return;
-        }
-        if (!checkDate()) {
-            showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
-            txtDob.requestFocus();
-            return;
-        }
-        if (!checkPhone()) {
-            showMess("Số điện thoại không đúng định dạng");
-            txtStaffPhone.requestFocus();
-            return;
-        }
-        if (!checkIDNumber()) {
-            showMess("Số CCCD gồm 12 chữ số");
-            txtStaffPhone.requestFocus();
-            return;
-        }
-        //check tồn tại
-//        try {
-//
-//            if (checkExistAccount()) {
-//                showMess("Đã tồn tại tên tài khoản này");
-//                txtUserAccount.requestFocus();
-//                return;
-//            }
-//            if (checkExistIDNumber()) {
-//                showMess("Đã tồn tại số căn cước công dân này");
-//                txtIDCardNumber.requestFocus();
-//                return;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        //sửa
-        try {
-            ModelUser user = readForm();
-            if (checkExistAccount() && checkExistID()) {
-                int confirm = JOptionPane.showConfirmDialog(this, "Xác nhận cập nhật tài khoản này?");
-                if (confirm != JOptionPane.YES_OPTION) {
-                    return;
-                }
-                if (svc.updateUser(user)) {
-                    fillToTable(svc.getAllUsers());
-                    showMess("Sửa thông tin Nhân viên thành công");
-                    index = 0;
-                    showDetail(svc.getAllUsers());
-                }
-            }
-        } catch (Exception e) {
-            showMess("Lỗi sửa");
-        }
-    }//GEN-LAST:event_btnUpdateStaffActionPerformed
-
-    private void txtSearchStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchStaffActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSearchStaffActionPerformed
-
-    private void tblStaffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblStaffMouseClicked
-        // TODO add your handling code here:
-        index = tblStaff.getSelectedRow();
-//        System.out.println(index);
-
-        if (index >= 0) {
-            txtStaffId.setEditable(false);
-            txtStaffId.setBackground(Color.lightGray);
-            txtUserAccount.setEditable(false);
-            txtUserAccount.setBackground(Color.lightGray);
-        }
-        
-        try {
-            showDetail(svc.getAllUsers());
-        } catch (SQLException ex) {
-            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_tblStaffMouseClicked
-
-    private void btnBlockAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockAccountActionPerformed
-        // TODO add your handling code here:
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn khóa tài khoản này?");
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
-        
-        try {
-          ModelUser user = readForm();
-            if (svc.updateUserStatus(user)) {
-                showMess("Khóa tài khoản thành công");
-                fillToTable(svc.getAllUsers());
-                index = 0;
-                showDetail(svc.getAllUsers());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_btnBlockAccountActionPerformed
-
-    private void txtSearchStaffKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchStaffKeyReleased
-        // TODO add your handling code here:
-        try {
-            // TODO add your handling code here:
-            fillToTable(svc.getUsersByKey(txtSearchStaff.getText()));
-            if (tblStaff.getRowCount() > 0) {
-                index = 0;
-                showDetail(svc.getUsersByKey(txtSearchStaff.getText()));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_txtSearchStaffKeyReleased
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNewStaff;
-    private javax.swing.JButton btnBlockAccount;
     private javax.swing.JButton btnClearStaff;
+    private javax.swing.JButton btnClockAccount;
     private javax.swing.JButton btnExportExcel;
     private javax.swing.JButton btnScanCitizenQR;
     private javax.swing.JButton btnUpdateStaff;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JComboBox<String> cboGenderFilter;
-    private javax.swing.JComboBox<String> cboRoleFilter;
-    private javax.swing.JComboBox<String> cboStatusFilter;
-    private javax.swing.JComboBox<String> cboStatusForm;
+    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
+    private javax.swing.JComboBox<String> jComboBox4;
+    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
@@ -778,248 +512,20 @@ public class ManageStaff extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JRadioButton rdoAdmin;
     private javax.swing.JRadioButton rdoFemale;
     private javax.swing.JRadioButton rdoMale;
     private javax.swing.JRadioButton rdoStaff;
-    private javax.swing.JTable tblStaff;
-    private javax.swing.JTextArea txtAddress;
-    private javax.swing.JTextField txtDob;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtIDCardNumber;
-    private javax.swing.JTextField txtPsw;
+    private javax.swing.JTable tblNhanVien;
+    private javax.swing.JTextField txtEmail1;
+    private javax.swing.JTextField txtSalary1;
+    private javax.swing.JTextField txtSalary2;
     private javax.swing.JTextField txtSearchStaff;
     private javax.swing.JTextField txtStaffId;
     private javax.swing.JTextField txtStaffName;
+    private javax.swing.JTextField txtStaffName1;
     private javax.swing.JTextField txtStaffPhone;
-    private javax.swing.JTextField txtUserAccount;
+    private javax.swing.JTextField txtStaffPhone1;
     // End of variables declaration//GEN-END:variables
-
-    private void fillToTable(ArrayList<ModelUser> list) throws SQLException {
-        model.setRowCount(0);
-        int i = 1;
-        for (ModelUser user : list) {
-            model.addRow(new Object[]{
-                i++,
-                user.getUserCode(),
-                user.getStaffName(),
-                user.getPhone(),
-                user.isGender() ? "Nam" : "Nữ",
-                user.getAccountName(),
-                user.getPsw(),
-                user.getRole(),
-                user.getAddress(),
-                user.getEmail(),
-                user.getIdCardNumber(),
-                user.getDob(),
-                user.getStatus()
-            });
-        }
-    }
-
-    private void showDetail(ArrayList<ModelUser> list) throws SQLException {
-        ModelUser user = list.get(index);
-        txtStaffId.setText(user.getUserCode());
-        txtStaffName.setText(user.getStaffName());
-        txtStaffPhone.setText(user.getPhone());
-        rdoMale.setSelected(user.isGender() ? true : false);
-        if (user.getRole().contains("Quản lý")) {
-            rdoAdmin.setSelected(true);
-        } else {
-            rdoStaff.setSelected(true);
-        }
-        txtUserAccount.setText(user.getAccountName());
-        txtPsw.setText(user.getPsw());
-        txtAddress.setText(user.getAddress());
-        txtEmail.setText(user.getEmail());
-        txtIDCardNumber.setText(user.getIdCardNumber());
-        txtDob.setText(user.getDob() + "");
-        cboStatusForm.setSelectedItem(user.getStatus());
-
-//        System.out.println(user);
-        tblStaff.setRowSelectionInterval(index, index);
-    }
-
-    private void addPlaceHolder(JTextField tf, String placeHolder) {
-        tf.setText(placeHolder);
-        tf.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (tf.getText().equals(placeHolder)) {
-                    txtSearchStaff.setText("");
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (tf.getText().isEmpty()) {
-                    tf.setText(placeHolder);
-                    try {
-                        fillToTable(svc.getAllUsers());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if (tblStaff.getRowCount() > 0) {
-                        index = 0;
-                        try {
-                            showDetail(svc.getAllUsers());
-                        } catch (SQLException ex) {
-                            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-
-        });
-    }
-
-    private void clearForm() {
-        txtStaffId.setText("");
-        txtStaffName.setText("");
-        txtUserAccount.setText("");
-        txtPsw.setText("");
-        txtAddress.setText("");
-        txtEmail.setText("");
-        txtIDCardNumber.setText("");
-        txtDob.setText("");
-        txtStaffPhone.setText("");
-        tblStaff.clearSelection();
-    }
-
-    private void checkNull() {
-        if (txtStaffId.getText().trim().equals("")) {
-            showMess("Mã Nhân viên không được để trống");
-            txtStaffId.requestFocus();
-            return;
-        }
-        if (txtStaffName.getText().trim().equals("")) {
-            showMess("Tên Nhân viên không được để trống");
-            txtStaffName.requestFocus();
-            return;
-        }
-        if (txtStaffPhone.getText().trim().equals("")) {
-            showMess("Số điện thoại không được để trống");
-            txtStaffPhone.requestFocus();
-            return;
-        }
-        if (txtUserAccount.getText().trim().equals("")) {
-            showMess("Tên tài khoản không được để trống");
-            txtUserAccount.requestFocus();
-            return;
-        }
-        if (txtPsw.getText().trim().equals("")) {
-            showMess("Mật khẩu không được để trống");
-            txtPsw.requestFocus();
-            return;
-        }
-        if (txtAddress.getText().trim().equals("")) {
-            showMess("Địa chỉ không được để trống");
-            txtAddress.requestFocus();
-            return;
-        }
-        if (txtIDCardNumber.getText().trim().equals("")) {
-            showMess("CCCD không được để trống");
-            txtIDCardNumber.requestFocus();
-            return;
-        }
-        if (txtDob.getText().trim().equals("")) {
-            showMess("Ngày sinh không được để trống");
-            txtDob.requestFocus();
-            return;
-        }
-    }
-
-    private void showMess(String message) {
-        JOptionPane.showMessageDialog(this, message);
-    }
-
-    private boolean checkEmail() {
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtEmail.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkDate() {
-        String regex = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtDob.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkPhone() {
-        String regex = "^(\\+84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtStaffPhone.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkIDNumber() {
-        String regex = "^(\\d{12})$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtIDCardNumber.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
-    }
-
-    private ModelUser readForm() throws ParseException {
-        ModelUser user = new ModelUser();
-        user.setUserCode(txtStaffId.getText());
-        user.setStaffName(txtStaffName.getText());
-        user.setPhone(txtStaffPhone.getText());
-        user.setGender(rdoMale.isSelected() ? true : false);
-        user.setAccountName(txtUserAccount.getText());
-        user.setPsw(txtPsw.getText());
-        user.setRoleId(rdoAdmin.isSelected() ? 1 : 2);
-        user.setAddress(txtAddress.getText());
-        user.setEmail(txtEmail.getText());
-        user.setIdCardNumber(txtIDCardNumber.getText());
-        String string = txtDob.getText();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse(string);
-        user.setDob(date);
-        user.setStatus((String) cboStatusForm.getSelectedItem());
-        return user;
-    }
-
-    private boolean checkExistIDNumber() throws SQLException {
-        ArrayList<ModelUser> list = svc.getAllUsers();
-        for (ModelUser user : list) {
-            if (txtIDCardNumber.getText().trim().equals(user.getIdCardNumber())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkExistAccount() throws SQLException {
-        ArrayList<ModelUser> list = svc.getAllUsers();
-        for (ModelUser user : list) {
-            if (txtUserAccount.getText().trim().equals(user.getAccountName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkExistID() throws SQLException {
-        ArrayList<ModelUser> list = svc.getAllUsers();
-        for (ModelUser user : list) {
-            if (txtStaffId.getText().trim().equals(user.getUserCode())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

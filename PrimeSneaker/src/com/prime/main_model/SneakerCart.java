@@ -99,6 +99,11 @@ public class SneakerCart {
     public void setSize(float size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "SneakerCart{" + "order_id=" + order_id + ", sneakerCode=" + sneakerCode + ", sneakerName=" + sneakerName + ", quantity=" + quantity + ", price=" + price + ", brand=" + brand + ", color=" + color + ", size=" + size + '}';
+    }
     
     
     
