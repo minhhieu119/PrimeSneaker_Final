@@ -11,13 +11,13 @@ import java.util.Date;
  * @author MSII
  */
 public class Order {
-    private int orderId;
-    private int userId;
+    private Integer orderId;
+    private Integer userId;
     private String orderQrCode;
     private String userName;
-    private int customerId;
+    private Integer customerId;
     private String customerName; 
-    private int voucherId;
+    private Integer voucherId;
     private String voucherName;
     private String paymentMethod;
     private long totalCost, receivedCash, change;
@@ -30,7 +30,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int orderId, int userId, int quantity, String status, Date created_at) {
+    public Order(Integer orderId, Integer userId, int quantity, String status, Date created_at) {
         this.orderId = orderId;
         this.userId = userId;
         this.quantity = quantity;
@@ -38,17 +38,16 @@ public class Order {
         this.created_at = created_at;
     }
 
-    public Order(int orderId, int userId, int customerId, int voucherId, String paymentMethod, long totalCost, String status) {
+    public Order(Integer orderId, Integer userId, Integer customerId, Integer voucherId, String paymentMethod, long totalCost) {
         this.orderId = orderId;
         this.userId = userId;
         this.customerId = customerId;
         this.voucherId = voucherId;
         this.paymentMethod = paymentMethod;
         this.totalCost = totalCost;
-        this.status = status;
     }
 
-    public Order(int orderId, int userId, String orderQrCode, String userName, int customerId, String customerName, int voucherId, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, int quantity, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
+    public Order(Integer orderId, Integer userId, String orderQrCode, String userName, Integer customerId, String customerName, Integer voucherId, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, int quantity, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
         this.orderId = orderId;
         this.userId = userId;
         this.orderQrCode = orderQrCode;
@@ -69,60 +68,20 @@ public class Order {
         this.created_by = created_by;
         this.updated_by = updated_by;
     }
-    
-    
 
-    
-
-    public Order(int userId, String orderQrCode, String userName, String customerName, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
-        this.userId = userId;
-        this.orderQrCode = orderQrCode;
-        this.userName = userName;
-        this.customerName = customerName;
-        this.voucherName = voucherName;
-        this.paymentMethod = paymentMethod;
-        this.totalCost = totalCost;
-        this.receivedCash = receivedCash;
-        this.change = change;
-        this.status = status;
-        this.note = note;
-        this.created_at = created_at;
-        this.update_at = update_at;
-        this.created_by = created_by;
-        this.updated_by = updated_by;
-    }
-
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public int getVoucherId() {
-        return voucherId;
-    }
-
-    public void setVoucherId(int voucherId) {
-        this.voucherId = voucherId;
-    }
-    
-    
-
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -142,12 +101,28 @@ public class Order {
         this.userName = userName;
     }
 
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public Integer getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(Integer voucherId) {
+        this.voucherId = voucherId;
     }
 
     public String getVoucherName() {
@@ -248,10 +223,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + orderId + ", userId=" + userId + ", orderQrCode=" + orderQrCode + ", userName=" + userName + ", customerName=" + customerName + ", voucherName=" + voucherName + ", paymentMethod=" + paymentMethod + ", totalCost=" + totalCost + ", receivedCash=" + receivedCash + ", change=" + change + ", quantity=" + quantity + ", status=" + status + ", note=" + note + ", created_at=" + created_at + ", update_at=" + update_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
+        return "Order{" + "orderId=" + orderId + ", userId=" + userId + ", orderQrCode=" + orderQrCode + ", userName=" + userName + ", customerId=" + customerId + ", customerName=" + customerName + ", voucherId=" + voucherId + ", voucherName=" + voucherName + ", paymentMethod=" + paymentMethod + ", totalCost=" + totalCost + ", receivedCash=" + receivedCash + ", change=" + change + ", quantity=" + quantity + ", status=" + status + ", note=" + note + ", created_at=" + created_at + ", update_at=" + update_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
     }
-    
-    
-    
     
 }

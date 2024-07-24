@@ -5,10 +5,12 @@
 package com.prime.services;
 
 import com.prime.main_model.ModelCustomer;
+import com.prime.main_model.ModelUser;
 import com.prime.model.Customer;
 import com.prime.main_model.Order;
 import com.prime.main_model.SneakerCart;
 import com.prime.main_model.SneakerDetail;
+import com.prime.main_model.User;
 import com.prime.main_model.Voucher;
 import com.prime.untilities.ConnectionJDBC;
 import java.sql.Connection;
@@ -287,8 +289,8 @@ public class OrderService {
             return null;
         }
     }
-    
-    public Integer removeInvoice (int id) throws SQLException{
+
+    public Integer removeInvoice(int id) throws SQLException {
         sql = """
               delete from [Order]
               where order_id = ?
@@ -337,8 +339,8 @@ public class OrderService {
         }
         return listOder;
     }
-    
-    public Integer updateOrder (Order o) throws SQLException{
+
+    public Integer updateOrderPayment(Order o) throws SQLException {
         sql = """
               update [Order]
               set [user_id] = ?, customer_id = ?, voucher_id = ?, payment_method = ?, total_cost = ?, [status] = N'Đã thanh toán', updated_at = GETDATE()
@@ -347,12 +349,12 @@ public class OrderService {
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
-            ps.setInt(1, o.getUserId());
-            ps.setInt(2, o.getCustomerId());
-            ps.setInt(3, o.getVoucherId());
+            ps.setObject(1, o.getUserId());
+            ps.setObject(2, o.getCustomerId());
+            ps.setObject(3, o.getVoucherId());
             ps.setString(4, o.getPaymentMethod());
             ps.setLong(5, o.getTotalCost());
-            ps.setInt(6, o.getOrderId());
+            ps.setObject(6, o.getOrderId());
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -666,8 +668,8 @@ public class OrderService {
         }
         return null;
     }
-    
-    public List<ModelCustomer> getAllPhoneNumber (){
+
+    public List<ModelCustomer> getAllPhoneNumber() {
         List<ModelCustomer> list = new ArrayList<>();
         sql = """
               select full_name, phone_number, gender, [address]
@@ -677,7 +679,7 @@ public class OrderService {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
             rs = ps.executeQuery();
-            while (rs.next()) {                
+            while (rs.next()) {
                 ModelCustomer mc = new ModelCustomer(rs.getString(1), rs.getBoolean(3), rs.getString(4), rs.getString(2));
                 list.add(mc);
             }
@@ -686,8 +688,8 @@ public class OrderService {
         }
         return list;
     }
-    
-    public Integer getIdByPhoneNumber (String p) throws SQLException{
+
+    public Integer getIdByPhoneNumber(String p) throws SQLException {
         sql = """
               select customer_id
               from Customer
@@ -710,9 +712,9 @@ public class OrderService {
         }
         return null;
     }
-    
-    public Integer getIdUserByUserCode (String code) throws SQLException{
-        sql ="""
+
+    public Integer getIdUserByUserCode(String code) throws SQLException {
+        sql = """
              select [user_id]
              from [User]
              where user_code like ?
@@ -734,9 +736,36 @@ public class OrderService {
         }
         return null;
     }
-    
-    public Integer getQuantity (String code){
-       
+
+    public ModelUser getOneUser(int userId) throws SQLException {
+        ModelUser mu = new ModelUser();
+        
+        sql = """
+              select user_code, full_name
+              from [User]
+              where [user_id] = ?
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                mu.setUserCode(rs.getString("user_code"));
+                mu.setStaffName(rs.getString("full_name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return mu;
+    }
+
+    public Integer getQuantity(String code) {
+
         sql = """
               select quantity
               from SneakerDetail

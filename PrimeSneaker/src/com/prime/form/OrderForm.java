@@ -11,7 +11,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import com.prime.main_model.Voucher;
-import com.prime.model.CartQuantity;
 import com.prime.services.OrderService;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import com.prime.model.CartQuantity;
 import com.prime.model.Customer;
-import org.apache.xmlbeans.impl.soap.SOAPFault;
 
 public class OrderForm extends javax.swing.JPanel {
 
@@ -72,7 +70,6 @@ public class OrderForm extends javax.swing.JPanel {
                 sd.getColor(),
                 sd.getSize()
             });
-//System.out.println(sd);
         }
     }
 
@@ -89,7 +86,6 @@ public class OrderForm extends javax.swing.JPanel {
                 o.getStatus(),
                 o.getCreated_at()
             });
-//System.out.println(sd);
         }
 
     }
@@ -112,7 +108,6 @@ public class OrderForm extends javax.swing.JPanel {
                 sc.getSize()
 
             });
-//System.out.println(sd);
         }
     }
 
@@ -123,10 +118,9 @@ public class OrderForm extends javax.swing.JPanel {
     private void showDetail() throws SQLException {
         Order o = os.getOneOrder(invoiceId);
         indexOrder = tblInvoice.getSelectedRow();
-        if (o.getOrderId() == 0) {
-//            System.out.println(tblInvoice.getValueAt(indexOrder, 1));
+        int userId = (int) tblInvoice.getValueAt(indexOrder, 2);
+        if (o.getOrderId() == null) {
             txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
-//            txtStaffId.setText(o.getUserId() + "");
             txtStaffId.setText("NV004 - Trần Ánh Quỳnh");
             txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
             txtOrderCost.setText(o.getTotalCost() + "");
@@ -143,7 +137,7 @@ public class OrderForm extends javax.swing.JPanel {
             voucherProcess();
         } else {
             txtInvoiceId.setText(o.getOrderId() + "");
-            txtStaffId.setText(o.getUserId() + "");
+            txtStaffId.setText(os.getOneUser(userId).getUserCode() + " - " + os.getOneUser(userId).getStaffName());
             txtStartDateCreated.setText(o.getCreated_at() + "");
             txtOrderCost.setText(o.getTotalCost() + "");
             if (o.getVoucherName() == null) {
@@ -162,6 +156,7 @@ public class OrderForm extends javax.swing.JPanel {
     }
 
     private void clearForm() {
+        txtPhoneNumber.setText("");
         txtInvoiceId.setText("");
         txtStaffId.setText("");
         cboVoucher.setSelectedIndex(0);
@@ -203,22 +198,17 @@ public class OrderForm extends javax.swing.JPanel {
             if (discountRate == 0) {
                 if (orderCost >= minOrderValue) {
                     txtDiscoutCost.setText(discountAmount + "");
-//                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                     txtTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 } else {
                     txtDiscoutCost.setText("0");
-//                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                     txtTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 }
             } else {
                 if (orderCost >= minOrderValue) {
-//                    txtDiscoutCost.setText((orderCost * discountRate) + "");
                     txtDiscoutCost.setText((long)(orderCost * discountRate) + "");
-//                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                     txtTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 } else {
                     txtDiscoutCost.setText("0");
-//                    txtTotalCost.setText((orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                     txtTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 }
             }
@@ -228,15 +218,35 @@ public class OrderForm extends javax.swing.JPanel {
     private int checkProductQuantity() {
         int count = 0;
         String index = "";
-//        System.out.println(tblInvoice.getRowCount());
         for (int i = 0; i < tblInvoice.getRowCount(); i++) {
             if (tblInvoice.getValueAt(i, 3).equals(0)) {
                 count++;
             }
         }
-//        System.out.println(count);
         return count;
     }
+    
+//    private void saveInvoicePDF (){
+//        String path = "";
+//        JFileChooser j = new JFileChooser();
+//        j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//        int x = j.showSaveDialog(this);
+//        if (x == JFileChooser.APPROVE_OPTION) {
+//            path = j.getSelectedFile().getPath();
+//        }
+//        Document doc = new Document();
+//        try {
+//            PdfWriter.getInstance(doc, new FileOutputStream(path + "hoadon.pdf"));
+//            doc.open();
+//            
+//            
+//            
+//        } catch (FileNotFoundException ex) {
+//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (DocumentException ex) {
+//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -994,7 +1004,6 @@ public class OrderForm extends javax.swing.JPanel {
             if (key.isBlank()) {
                 fillToListSneakerDetail(os.getAllSneakerDetail());
             } else {
-//                System.out.println(key);
                 fillToListSneakerDetail(os.searchSD(key));
             }
         } catch (Exception e) {
@@ -1014,7 +1023,6 @@ public class OrderForm extends javax.swing.JPanel {
         int index = tblInvoice.getSelectedRow();
         String id = String.valueOf(tblInvoice.getValueAt(index, 1));
         invoiceId = Integer.parseInt(id);
-//        System.out.println(invoiceId);
         try {
             showDetail();
             fillToListCart(os.getToCart(invoiceId));
@@ -1164,23 +1172,6 @@ public class OrderForm extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
                     }
                 }
-
-//                if (os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != 0) {
-//
-//                    for (int i = 0; i < tblCart.getRowCount(); i++) {
-//                        String code = (String) tblCart.getValueAt(i, 2);
-//                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(i, 4));
-//                    }
-//                    fillToListSneakerDetail(os.getAllSneakerDetail());
-//                    fillToListInvoice(os.getOrder());
-//                    tblInvoice.setRowSelectionInterval(0, 0);
-//                    JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
-//                    fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
-//                    invoiceId = (int) tblInvoice.getValueAt(0, 1);
-//                    showDetail();
-//                } else {
-//                    JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
-//                }
             } else {
                 JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn cần hủy", "Thông báo", 1);
             }
@@ -1341,51 +1332,50 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnListCustomerActionPerformed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
-//        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán không?", "Thông báo", 2);
-//        if (confirm != 0) {
-//            return;
-//        }
-//        
-//        int orderId = Integer.parseInt(txtInvoiceId.getText());
-//        System.out.println(orderId);
-//        Integer customerId = null;
-//        int userId;
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán không?", "Thông báo", 2);
+        if (confirm != 0) {
+            return;
+        }
+        Integer orderId = Integer.parseInt(txtInvoiceId.getText());
+        Integer customerId = null;
+        Integer userId = null;
         Integer voucherId = null;
-//        
-//        String userCode = txtStaffId.getText().substring(0, txtStaffId.getText().indexOf(" "));
-//        try {
-//            userId = os.getIdUserByUserCode(userCode);
-//            System.out.println(userId);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        if(!(txtPhoneNumber.getText().trim().isEmpty())){
-//            try {
-//                customerId = os.getIdByPhoneNumber(txtPhoneNumber.getText());
-//            } catch (SQLException ex) {
-//                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        System.out.println(customerId);
-//        if (!(cboVoucher.getSelectedIndex() == 0)) {
-//            try {
-//                voucherId = os.getOneVoucher((String) cboPaymentMethod.getSelectedItem()).getVoucherId();
-//                
-//            } catch (SQLException ex) {
-//                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        
+        String userCode = txtStaffId.getText().substring(0, txtStaffId.getText().indexOf(" "));
         try {
-            System.out.println(cboVoucher.getSelectedItem());
-            System.out.println(os.getOneVoucher((String) cboVoucher.getSelectedItem()).getVoucherId());
+            userId = os.getIdUserByUserCode(userCode);
+           
         } catch (SQLException ex) {
             Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        String paymentMethod = (String) cboPaymentMethod.getSelectedItem();
-//        System.out.println(paymentMethod);
-
-//        long totalCost = Long.parseLong(txtTotalCost.getText());
-//        System.out.println(totalCost);
+        if(!(txtPhoneNumber.getText().trim().isEmpty())){
+            try {
+                customerId = os.getIdByPhoneNumber(txtPhoneNumber.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (!(cboVoucher.getSelectedIndex() == 0)) {
+            try {
+                voucherId = os.getOneVoucher((String) cboVoucher.getSelectedItem()).getVoucherId();
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        String paymentMethod = (String) cboPaymentMethod.getSelectedItem();
+        long totalCost = Long.parseLong(txtTotalCost.getText());
+        Order o = new Order(orderId, userId, customerId, voucherId, paymentMethod, totalCost);
+        try {
+            if (os.updateOrderPayment(o) > 0) {
+                JOptionPane.showMessageDialog(this, "Thanh toán thành công", "Thông báo", 1);
+                clearForm();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }//GEN-LAST:event_btnPayActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
