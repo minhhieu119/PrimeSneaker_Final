@@ -1,5 +1,6 @@
 package com.prime.form;
 
+import com.prime.constant.Role;
 import com.prime.main_model.ModelUser;
 import com.prime.services.UserService;
 import java.awt.Color;
@@ -28,10 +29,11 @@ public class ManageStaff extends javax.swing.JPanel {
         initComponents();
         setOpaque(false);
         model = (DefaultTableModel) tblStaff.getModel();
-        fillToTable(svc.getAllUsers());
+        ArrayList<ModelUser> listUser = svc.getAllUsers();
+        fillToTable(listUser);
         if (tblStaff.getRowCount() > 0) {
             index = 0;
-            showDetail(svc.getAllUsers());
+            showDetail(listUser);
         }
         addPlaceHolder(txtSearchStaff, "Mã NV - Tên NV - SĐT - CCCD - Địa chỉ");
         
@@ -674,10 +676,11 @@ public class ManageStaff extends javax.swing.JPanel {
                     return;
                 }
                 if (svc.updateUser(user)) {
-                    fillToTable(svc.getAllUsers());
+                    ArrayList<ModelUser> listUser = svc.getAllUsers();
+                    fillToTable(listUser);
                     showMess("Sửa thông tin Nhân viên thành công");
                     index = 0;
-                    showDetail(svc.getAllUsers());
+                    showDetail(listUser);
                 }
             }
         } catch (Exception e) {
@@ -732,11 +735,11 @@ public class ManageStaff extends javax.swing.JPanel {
     private void txtSearchStaffKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchStaffKeyReleased
         // TODO add your handling code here:
         try {
-            // TODO add your handling code here:
-            fillToTable(svc.getUsersByKey(txtSearchStaff.getText()));
+            ArrayList<ModelUser> listUser = svc.getUsersByKey(txtSearchStaff.getText());
+            fillToTable(listUser);
             if (tblStaff.getRowCount() > 0) {
                 index = 0;
-                showDetail(svc.getUsersByKey(txtSearchStaff.getText()));
+                showDetail(listUser);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
@@ -822,7 +825,8 @@ public class ManageStaff extends javax.swing.JPanel {
         txtStaffId.setText(user.getUserCode());
         txtStaffName.setText(user.getStaffName());
         txtStaffPhone.setText(user.getPhone());
-        rdoMale.setSelected(user.isGender() ? true : false);
+        rdoMale.setSelected(user.isGender());
+        rdoFemale.setSelected(!user.isGender());
         if (user.getRole().contains("Quản lý")) {
             rdoAdmin.setSelected(true);
         } else {
@@ -934,45 +938,31 @@ public class ManageStaff extends javax.swing.JPanel {
     }
 
     private boolean checkEmail() {
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtEmail.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
+        String emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return validateString(txtEmail.getText(), emailPattern);
     }
 
     private boolean checkDate() {
-        String regex = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtDob.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
+        String datePattern = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
+        return validateString(txtDob.getText(), datePattern);
     }
 
     private boolean checkPhone() {
-        String regex = "^(\\+84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtStaffPhone.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
+        String phonePattern = "^(\\+84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$";
+        return validateString(txtStaffPhone.getText(), phonePattern);
     }
 
     private boolean checkIDNumber() {
-        String regex = "^(\\d{12})$";
-        Pattern pat = Pattern.compile(regex);
-        Matcher matcher = pat.matcher(txtIDCardNumber.getText());
-        if (matcher.matches()) {
-            return true;
-        }
-        return false;
+        String idPattern = "^(\\d{12})$";
+        return validateString(txtStaffId.getText(), idPattern);
     }
 
+    private boolean validateString(String text, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches();
+    }
+    
     private ModelUser readForm() throws ParseException {
         ModelUser user = new ModelUser();
         user.setUserCode(txtStaffId.getText());
@@ -981,7 +971,7 @@ public class ManageStaff extends javax.swing.JPanel {
         user.setGender(rdoMale.isSelected() ? true : false);
         user.setAccountName(txtUserAccount.getText());
         user.setPsw(txtPsw.getText());
-        user.setRoleId(rdoAdmin.isSelected() ? 1 : 2);
+        user.setRoleId(rdoAdmin.isSelected() ? Role.ADMIN : Role.STAFF);
         user.setAddress(txtAddress.getText());
         user.setEmail(txtEmail.getText());
         user.setIdCardNumber(txtIDCardNumber.getText());
@@ -1022,4 +1012,6 @@ public class ManageStaff extends javax.swing.JPanel {
         }
         return false;
     }
+
+    
 }
