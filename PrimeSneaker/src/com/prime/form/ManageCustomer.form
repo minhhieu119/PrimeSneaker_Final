@@ -70,8 +70,8 @@
                           </Group>
                           <EmptySpace min="37" pref="37" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtCustomerId" linkSize="1" alignment="0" min="-2" pref="378" max="-2" attributes="0"/>
-                              <Component id="txtCustomerPhone" linkSize="1" alignment="0" min="-2" pref="378" max="-2" attributes="0"/>
+                              <Component id="txtStaffId" linkSize="1" alignment="0" min="-2" pref="378" max="-2" attributes="0"/>
+                              <Component id="txtStaffPhone" linkSize="1" alignment="0" min="-2" pref="378" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -95,7 +95,7 @@
                       <Group type="102" attributes="0">
                           <Component id="jLabel2" min="-2" pref="97" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                          <Component id="txtCustomerName" linkSize="1" min="-2" pref="378" max="-2" attributes="0"/>
+                          <Component id="txtStaffName" linkSize="1" min="-2" pref="378" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -110,18 +110,18 @@
                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="txtCustomerId" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtStaffId" linkSize="5" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel2" alignment="0" min="-2" pref="22" max="-2" attributes="0"/>
-                                      <Component id="txtCustomerName" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtStaffName" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel8" alignment="0" min="-2" pref="22" max="-2" attributes="0"/>
-                                      <Component id="txtCustomerPhone" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtStaffPhone" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -156,7 +156,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="txtCustomerId">
+        <Component class="javax.swing.JTextField" name="txtStaffId">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -167,7 +167,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtCustomerName">
+        <Component class="javax.swing.JTextField" name="txtStaffName">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -178,7 +178,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtCustomerPhone">
+        <Component class="javax.swing.JTextField" name="txtStaffPhone">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -281,9 +281,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnAddCustomer" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnUpdateCustomer" linkSize="4" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnClearCustomer" linkSize="4" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnAddNewStaff" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnUpdateStaff" linkSize="4" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnClearStaff" linkSize="4" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
@@ -293,18 +293,18 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                      <Component id="btnAddCustomer" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnAddNewStaff" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="btnUpdateCustomer" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUpdateStaff" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="btnClearCustomer" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnClearStaff" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="17" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btnAddCustomer">
+            <Component class="javax.swing.JButton" name="btnAddNewStaff">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="96" green="50" red="27" type="rgb"/>
@@ -318,7 +318,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddCustomerActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnUpdateCustomer">
+            <Component class="javax.swing.JButton" name="btnUpdateStaff">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="96" green="50" red="27" type="rgb"/>
@@ -332,7 +332,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateCustomerActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnClearCustomer">
+            <Component class="javax.swing.JButton" name="btnClearStaff">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="96" green="50" red="27" type="rgb"/>

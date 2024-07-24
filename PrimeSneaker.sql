@@ -585,5 +585,3 @@ select * from [Role]
 select * from [User]
 select * from Voucher
 
-update [User] set status = N'Đang làm việc' where user_code = 'NV009'
-
