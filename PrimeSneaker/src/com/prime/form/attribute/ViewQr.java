@@ -15,6 +15,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.prime.form.ManageSneaker;
+import com.prime.model.qrCode;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -39,8 +40,6 @@ public class ViewQr extends javax.swing.JDialog implements Runnable, ThreadFacto
     private Executor executor = Executors.newSingleThreadExecutor(this);
     private DefaultTableModel dtmsp = new DefaultTableModel();
     public int row;
-    private ManageSneaker.QRCallback qRCallback;
-    public static String imeiiii;
 
     public ViewQr(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -54,9 +53,6 @@ public class ViewQr extends javax.swing.JDialog implements Runnable, ThreadFacto
         });
     }
 
-    public void setCallBackQR(ManageSneaker.QRCallback qRCallback) {
-        this.qRCallback = qRCallback;
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -169,19 +165,20 @@ public class ViewQr extends javax.swing.JDialog implements Runnable, ThreadFacto
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                 try {
                     result = new MultiFormatReader().decode(bitmap);
-                    System.out.println(result+"------------------");
+//                    System.out.println(result+"------------------");
                     System.out.flush();
                 } catch (NotFoundException ex) {
 //                    Logger.getLogger(BanHang.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
             }else{
-                System.out.println("Kiên óc chó");
                 return;
                 
             }
             if (result != null) {
-                imeiiii = result.getText();
+//                System.out.println(result.getText());
+                qrCode qr = new qrCode();
+                qr.setQr(result.getText());
                 closeWebcam();
                 dispose();
             } else {

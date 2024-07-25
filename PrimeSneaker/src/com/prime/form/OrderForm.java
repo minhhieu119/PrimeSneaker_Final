@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import com.prime.model.CartQuantity;
 import com.prime.model.Customer;
+import com.prime.model.qrCode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -134,10 +135,16 @@ public class OrderForm extends javax.swing.JPanel {
     private void showDetail() throws SQLException {
         Order o = os.getOneOrder(invoiceId);
         indexOrder = tblInvoice.getSelectedRow();
-        int userId = (int) tblInvoice.getValueAt(indexOrder, 2);
-        if (o.getOrderId() == null) {
+        Integer userId = (Integer) tblInvoice.getValueAt(indexOrder, 2);
+        System.out.println(tblInvoice.getValueAt(indexOrder, 2));
+        if (userId == 0) {
+            txtStaffId.setText("NV004 - Tran Anh Quynh");
+        }
+        if (userId == 0) {
             txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
-            txtStaffId.setText("NV004 - Trần Ánh Quỳnh");
+//            if (userId == 0) {
+//                txtStaffId.setText("NV004 - Tran Anh Quynh");
+//            }
             txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
             txtOrderCost.setText(o.getTotalCost() + "");
             if (o.getVoucherName() == null) {
@@ -242,27 +249,6 @@ public class OrderForm extends javax.swing.JPanel {
         return count;
     }
 
-//    private void saveInvoicePDF (){
-//        String path = "";
-//        JFileChooser j = new JFileChooser();
-//        j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//        int x = j.showSaveDialog(this);
-//        if (x == JFileChooser.APPROVE_OPTION) {
-//            path = j.getSelectedFile().getPath();
-//        }
-//        Document doc = new Document();
-//        try {
-//            PdfWriter.getInstance(doc, new FileOutputStream(path + "hoadon.pdf"));
-//            doc.open();
-//            
-//            
-//            
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (DocumentException ex) {
-//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -970,9 +956,31 @@ public class OrderForm extends javax.swing.JPanel {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     int index = tblInvoice.getSelectedRow();
-                    int maHD = Integer.parseInt(tblInvoice.getValueAt(index, 1).toString());
+                    boolean vali = false;
+                    String sneakerCode = qrCode.getQr();
+
+                    for (int i = 0; i < tblCart.getRowCount(); i++) {
+                        if (tblCart.getValueAt(i, 2).equals(sneakerCode)) {
+                            vali = true;
+                            break;
+                        }
+                    }
+                    if (!vali) {
+                        try {
+                            os.addToCart(os.getSneakerDetail(sneakerCode), invoiceId, 1);
+                            fillToListInvoice(os.getOrder());
+                            tblInvoice.setRowSelectionInterval(index, index);
+                            fillToListCart(os.getToCart(invoiceId));
+                            os.updateQuantityAddSneaker(sneakerCode, 1);
+                            fillToListSneakerDetail(os.getAllSneakerDetail());
+                            showDetail();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
             });
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn để thêm sản phẩm");
             return;
@@ -1283,6 +1291,7 @@ public class OrderForm extends javax.swing.JPanel {
                                     tblInvoice.setRowSelectionInterval(id, id);
                                     os.updateQuantityAddSneaker(sneakerCode, CartQuantity.getQuantity() - 1);
                                     fillToListSneakerDetail(os.getAllSneakerDetail());
+                                    showDetail();
                                 }
                             } else {
                                 return;
@@ -1294,6 +1303,7 @@ public class OrderForm extends javax.swing.JPanel {
                                 tblInvoice.setRowSelectionInterval(id, id);
                                 os.updateQuantityDeleteSneaker(sneakerCode, cartQuantity - CartQuantity.getQuantity());
                                 fillToListSneakerDetail(os.getAllSneakerDetail());
+                                showDetail();
                             }
                         }
                     } catch (SQLException ex) {
@@ -1397,120 +1407,135 @@ public class OrderForm extends javax.swing.JPanel {
         Integer userId = null;
         Integer voucherId = null;
 
-//        String userCode = txtStaffId.getText().substring(0, txtStaffId.getText().indexOf(" "));
-//        try {
-//            userId = os.getIdUserByUserCode(userCode);
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        if (!(txtPhoneNumber.getText().trim().isEmpty())) {
-//            try {
-//                customerId = os.getIdByPhoneNumber(txtPhoneNumber.getText());
-//            } catch (SQLException ex) {
-//                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        if (!(cboVoucher.getSelectedIndex() == 0)) {
-//            try {
-//                voucherId = os.getOneVoucher((String) cboVoucher.getSelectedItem()).getVoucherId();
-//
-//            } catch (SQLException ex) {
-//                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        String paymentMethod = (String) cboPaymentMethod.getSelectedItem();
-//        long totalCost = Long.parseLong(txtTotalCost.getText());
-//        Order o = new Order(orderId, userId, customerId, voucherId, paymentMethod, totalCost);
-//        try {
-//            if (os.updateOrderPayment(o) > 0) {
-//                JOptionPane.showMessageDialog(this, "Thanh toán thành công", "Thông báo", 1);
-//                clearForm();
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        String path = "C:/Users/MSII/Desktop/PDF/";
-        String name = "hoa_don.pdf";
-        Document document = new Document();
-        float threeCol = 190f;
-        float twoCol = 285f;
-        float twoCol150 = twoCol + 150f;
-        float twoColWidth[] = {twoCol150, twoCol};
-        float threeColWidth[] = {threeCol, threeCol, threeCol};
-        float fullWidth[] = {threeCol * 3};
+        String userCode = txtStaffId.getText().substring(0, txtStaffId.getText().indexOf(" "));
         try {
-            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(new File(path + name)));
+            userId = os.getIdUserByUserCode(userCode);
 
-            document.open();
-
-            Font font1 = FontFactory.getFont(FontFactory.TIMES_BOLD, 16, BaseColor.BLACK);
-            Font font2 = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, BaseColor.BLACK);
-            Font font3 = FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK);
-
-            Paragraph p = new Paragraph("PRIME SNEAKER STORE", font1);
-            p.setAlignment(Element.ALIGN_CENTER);
-            Paragraph p2 = new Paragraph("Website: Primesneaker.vn", font2);
-            p2.setAlignment(Element.ALIGN_CENTER);
-            Paragraph p3 = new Paragraph("Fanpage: Prime Sneaker", font2);
-            p3.setAlignment(Element.ALIGN_CENTER);
-            Paragraph p4 = new Paragraph("Lien he: 0987654321", font2);
-            p4.setAlignment(Element.ALIGN_CENTER);
-            LineSeparator ls = new LineSeparator();
-            ls.setLineWidth(2f);
-            ls.setPercentage(40);
-            ls.setAlignment(Element.ALIGN_CENTER);
-            Paragraph p5 = new Paragraph("HOA DON BAN HANG", font1);
-            p5.setAlignment(Element.ALIGN_CENTER);
-            Paragraph ngayBan = new Paragraph("Ngày bán: ", font3);
-            ngayBan.add(new Chunk(txtStartDateCreated.getText(), font2));
-            Paragraph thuNgan = new Paragraph("Thu ngan: ", font3);
-            thuNgan.add(new Chunk(txtStaffId.getText(), font2));
-            Paragraph khachHang = new Paragraph("Khách hàng: ", font3);
-            khachHang.add(new Chunk("Anh " + txtNameCustomer.getText(), font2));
-            Paragraph sdt = new Paragraph("Dien thoai: ", font3);
-            sdt.add(new Chunk(txtPhoneNumber.getText(), font2));
-
-            document.add(p);
-            document.add(Chunk.NEWLINE);
-            document.add(p2);
-            document.add(p3);
-            document.add(p4);
-            document.add(Chunk.NEWLINE);
-            document.add(ls);
-            document.add(p5);
-            document.add(Chunk.NEWLINE);
-            document.add(ngayBan);
-            document.add(thuNgan);
-            document.add(Chunk.NEWLINE);
-            document.add(khachHang);
-            document.add(sdt);
-            document.add(Chunk.NEWLINE);
-
-            PdfPTable table = new PdfPTable(threeColWidth);
-            PdfPCell cell1 = new PdfPCell();
-            cell1.setPhrase(new Phrase("Ten san pham",font3));
-            table.addCell(cell1);
-            PdfPCell cell2 = new PdfPCell();
-            cell2.setPhrase(new Phrase("So luong",font3));
-            table.addCell(cell2);
-            PdfPCell cell3 = new PdfPCell();
-            cell3.setPhrase(new Phrase("Gia",font3));
-            table.addCell(cell3);
-            for (int i = 0; i < tblCart.getRowCount(); i++) {
-                String nameTable = (String) tblCart.getValueAt(i, 3);
-                String brand = (String) tblCart.getValueAt(i, 7);
-                String size = String.valueOf(tblCart.getValueAt(i, 8));
-                String quantityTable = String.valueOf(tblCart.getValueAt(i, 4));
-                String price = String.valueOf(tblCart.getValueAt(i, 5));
-                table.addCell(new PdfPCell(new Paragraph(nameTable + " - " + brand + " - " + size, font2)));
-                table.addCell(new PdfPCell(new Paragraph(quantityTable, font2)));
-                table.addCell(new PdfPCell(new Paragraph(price, font2)));
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (!(txtPhoneNumber.getText().trim().isEmpty())) {
+            try {
+                customerId = os.getIdByPhoneNumber(txtPhoneNumber.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
             }
-            document.add(table);
-            
-            document.close();
-            System.out.println("Created pdf");
+        }
+        if (!(cboVoucher.getSelectedIndex() == 0)) {
+            try {
+                voucherId = os.getOneVoucher((String) cboVoucher.getSelectedItem()).getVoucherId();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        String paymentMethod = (String) cboPaymentMethod.getSelectedItem();
+        long totalCost = Long.parseLong(txtTotalCost.getText());
+        Order o = new Order(orderId, userId, customerId, voucherId, paymentMethod, totalCost);
+        try {
+            if (os.updateOrderPayment(o) > 0) {
+                JOptionPane.showMessageDialog(this, "Thanh toán thành công", "Thông báo", 1);
+
+                String path = "C:/Users/MSII/Desktop/PDF/";
+                String name = "hoa_don.pdf";
+                Document document = new Document();
+                float threeCol = 190f;
+                float threeColWidth[] = {threeCol, threeCol, threeCol};
+                PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(new File(path + name)));
+
+                document.open();
+
+                Font font1 = FontFactory.getFont(FontFactory.TIMES_BOLD, 16, BaseColor.BLACK);
+                Font font2 = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, BaseColor.BLACK);
+                Font font3 = FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK);
+
+                Paragraph p = new Paragraph("PRIME SNEAKER STORE", font1);
+                p.setAlignment(Element.ALIGN_CENTER);
+                Paragraph p2 = new Paragraph("Website: Primesneaker.vn", font2);
+                p2.setAlignment(Element.ALIGN_CENTER);
+                Paragraph p3 = new Paragraph("Fanpage: Prime Sneaker", font2);
+                p3.setAlignment(Element.ALIGN_CENTER);
+                Paragraph p4 = new Paragraph("Lien he: 0987654321", font2);
+                p4.setAlignment(Element.ALIGN_CENTER);
+                LineSeparator ls = new LineSeparator();
+                ls.setLineWidth(2f);
+                ls.setPercentage(40);
+                ls.setAlignment(Element.ALIGN_CENTER);
+                Paragraph p5 = new Paragraph("HOA DON BAN HANG", font1);
+                p5.setAlignment(Element.ALIGN_CENTER);
+                Paragraph maHoaDon = new Paragraph("Ma hoa don: ", font3);
+                maHoaDon.add(new Chunk(txtInvoiceId.getText(), font2));
+                Paragraph ngayBan = new Paragraph("Ngay ban: ", font3);
+                ngayBan.add(new Chunk(txtStartDateCreated.getText(), font2));
+                Paragraph thuNgan = new Paragraph("Thu ngan: ", font3);
+                thuNgan.add(new Chunk(txtStaffId.getText(), font2));
+                Paragraph khachHang = new Paragraph("Khach hang: ", font3);
+                khachHang.add(new Chunk(txtNameCustomer.getText(), font2));
+                Paragraph sdt = new Paragraph("Dien thoai: ", font3);
+                sdt.add(new Chunk(txtPhoneNumber.getText(), font2));
+
+                document.add(p);
+                document.add(Chunk.NEWLINE);
+                document.add(p2);
+                document.add(p3);
+                document.add(p4);
+                document.add(Chunk.NEWLINE);
+                document.add(ls);
+                document.add(p5);
+                document.add(Chunk.NEWLINE);
+                document.add(maHoaDon);
+                document.add(ngayBan);
+                document.add(thuNgan);
+                document.add(Chunk.NEWLINE);
+                document.add(khachHang);
+                document.add(sdt);
+                document.add(Chunk.NEWLINE);
+
+                PdfPTable table = new PdfPTable(threeColWidth);
+                PdfPCell cell1 = new PdfPCell();
+                cell1.setPhrase(new Phrase("Ten san pham", font3));
+                table.addCell(cell1);
+                PdfPCell cell2 = new PdfPCell();
+                cell2.setPhrase(new Phrase("So luong", font3));
+                table.addCell(cell2);
+                PdfPCell cell3 = new PdfPCell();
+                cell3.setPhrase(new Phrase("Gia", font3));
+                table.addCell(cell3);
+                for (int i = 0; i < tblCart.getRowCount(); i++) {
+                    String nameTable = (String) tblCart.getValueAt(i, 3);
+                    String brand = (String) tblCart.getValueAt(i, 7);
+                    String size = String.valueOf(tblCart.getValueAt(i, 8));
+                    String quantityTable = String.valueOf(tblCart.getValueAt(i, 4));
+                    String price = String.valueOf(tblCart.getValueAt(i, 5));
+                    table.addCell(new PdfPCell(new Paragraph(nameTable + " - " + brand + " - " + size, font2)));
+                    table.addCell(new PdfPCell(new Paragraph(quantityTable, font2)));
+                    table.addCell(new PdfPCell(new Paragraph(price, font2)));
+                }
+                document.add(table);
+                document.add(Chunk.NEWLINE);
+                Paragraph tongCong = new Paragraph("Tong cong:          ", font3);
+                tongCong.add(new Chunk(txtOrderCost.getText(), font3));
+                Paragraph chietKhau = new Paragraph("Chiet khau:          ", font3);
+                chietKhau.add(new Chunk(txtDiscoutCost.getText(), font2));
+                Paragraph tienThanhToan = new Paragraph("Tien phai thanh toan:          ", font3);
+                tienThanhToan.add(new Chunk(txtTotalCost.getText(), font3));
+                document.add(tongCong);
+                document.add(chietKhau);
+                document.add(tienThanhToan);
+                document.add(Chunk.NEWLINE);
+                document.add(Chunk.NEWLINE);
+                document.add(Chunk.NEWLINE);
+                document.add(ls);
+                Paragraph camOn = new Paragraph("CAM ON QUY KHACH DA LUA CHON\nPRIME SNEAKER", font2);
+                camOn.setAlignment(Element.ALIGN_CENTER);
+                document.add(camOn);
+                document.close();
+                System.out.println("Created pdf");
+
+                clearForm();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
