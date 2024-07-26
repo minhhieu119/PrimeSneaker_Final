@@ -133,18 +133,19 @@ public class OrderForm extends javax.swing.JPanel {
     }
 
     private void showDetail() throws SQLException {
-        Order o = os.getOneOrder(invoiceId);
         indexOrder = tblInvoice.getSelectedRow();
+        invoiceId = (int) tblInvoice.getValueAt(indexOrder, 1);
+        Order o = os.getOneOrder(invoiceId);
         Integer userId = (Integer) tblInvoice.getValueAt(indexOrder, 2);
-        System.out.println(tblInvoice.getValueAt(indexOrder, 2));
         if (userId == 0) {
             txtStaffId.setText("NV004 - Tran Anh Quynh");
         }
+        if ((Integer) tblInvoice.getValueAt(indexOrder, 3) == 0) {
+            txtOrderCost.setText("0");
+            txtTotalCost.setText("0");
+        }
         if (userId == 0) {
             txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
-//            if (userId == 0) {
-//                txtStaffId.setText("NV004 - Tran Anh Quynh");
-//            }
             txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
             txtOrderCost.setText(o.getTotalCost() + "");
             if (o.getVoucherName() == null) {
@@ -292,7 +293,6 @@ public class OrderForm extends javax.swing.JPanel {
         txtDiscoutCost = new javax.swing.JTextField();
         txtTotalCost = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        btnDeleteOrder = new javax.swing.JButton();
         btnAddInvoice = new javax.swing.JButton();
         jPanel15 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
@@ -304,6 +304,7 @@ public class OrderForm extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         lbnGia = new javax.swing.JLabel();
         btnScanQR = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         btnDeleteMuch = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -533,6 +534,7 @@ public class OrderForm extends javax.swing.JPanel {
 
         jLabel17.setText("Tên nhân viên");
 
+        txtStaffId.setEditable(false);
         txtStaffId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel18.setText("Giảm giá:");
@@ -591,25 +593,17 @@ public class OrderForm extends javax.swing.JPanel {
 
         jLabel26.setText("Tiền giảm");
 
+        txtDiscoutCost.setEditable(false);
         txtDiscoutCost.setBackground(new java.awt.Color(242, 242, 242));
         txtDiscoutCost.setText("0");
         txtDiscoutCost.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
+        txtTotalCost.setEditable(false);
         txtTotalCost.setBackground(new java.awt.Color(242, 242, 242));
         txtTotalCost.setText("0");
         txtTotalCost.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         jLabel1.setText("Tiền TT");
-
-        btnDeleteOrder.setBackground(new java.awt.Color(39, 80, 150));
-        btnDeleteOrder.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnDeleteOrder.setForeground(new java.awt.Color(255, 255, 255));
-        btnDeleteOrder.setText("Huỷ hoá đơn");
-        btnDeleteOrder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteOrderActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -619,51 +613,46 @@ public class OrderForm extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(btnDeleteOrder)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnPay))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel22)
+                            .addComponent(jLabel21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtMoneyTransfer, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtMoneyCash, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cboPaymentMethod, 0, 142, Short.MAX_VALUE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel24)
-                                    .addComponent(jLabel22)
-                                    .addComponent(jLabel21))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtMoneyTransfer, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtMoneyCash, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboPaymentMethod, 0, 142, Short.MAX_VALUE)))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtStartDateCreated, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboVoucher, javax.swing.GroupLayout.Alignment.LEADING, 0, 142, Short.MAX_VALUE)
-                                    .addComponent(txtStaffId, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtInvoiceId, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtOrderCost)))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
-                                .addGap(21, 21, 21)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtDiscoutCost, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtStartDateCreated, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cboVoucher, javax.swing.GroupLayout.Alignment.LEADING, 0, 142, Short.MAX_VALUE)
+                            .addComponent(txtStaffId, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtInvoiceId, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtOrderCost)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDiscoutCost, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24});
-
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDeleteOrder, btnPay});
 
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -709,15 +698,11 @@ public class OrderForm extends javax.swing.JPanel {
                     .addComponent(txtMoneyTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDeleteOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
         );
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboPaymentMethod, cboVoucher, txtDiscoutCost, txtInvoiceId, txtMoneyCash, txtMoneyTransfer, txtOrderCost, txtStaffId, txtStartDateCreated, txtTotalCost});
-
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDeleteOrder, btnPay});
 
         jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel16, jLabel17, jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, jLabel24});
 
@@ -762,7 +747,6 @@ public class OrderForm extends javax.swing.JPanel {
 
         sliderPrice.setBackground(new java.awt.Color(39, 80, 150));
         sliderPrice.setMaximum(6000000);
-        sliderPrice.setMinimum(100000);
         sliderPrice.setToolTipText("100");
         sliderPrice.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -834,6 +818,15 @@ public class OrderForm extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(39, 80, 150));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/prime/icon2/reload.png"))); // NOI18N
+        jButton1.setBorder(null);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
@@ -855,27 +848,32 @@ public class OrderForm extends javax.swing.JPanel {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbnGia, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnScanQR)
                 .addGap(15, 15, 15))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbnGia, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnScanQR, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel15Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(lbnGia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel15Layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
                             .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtSearchProdDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2))))
-                    .addComponent(btnScanQR, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -914,23 +912,24 @@ public class OrderForm extends javax.swing.JPanel {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
+                        .addGap(8, 8, 8)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnAddInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(2, 2, 2)
                                 .addComponent(btnDeleteMuch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(10, 10, 10)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(98, Short.MAX_VALUE))
+                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         jPanel4.getAccessibleContext().setAccessibleName("Hóa đơn chờ");
@@ -958,6 +957,10 @@ public class OrderForm extends javax.swing.JPanel {
                     int index = tblInvoice.getSelectedRow();
                     boolean vali = false;
                     String sneakerCode = qrCode.getQr();
+                    if (sneakerCode == null) {
+                        return;
+                    }
+                    
 
                     for (int i = 0; i < tblCart.getRowCount(); i++) {
                         if (tblCart.getValueAt(i, 2).equals(sneakerCode)) {
@@ -968,6 +971,7 @@ public class OrderForm extends javax.swing.JPanel {
                     if (!vali) {
                         try {
                             os.addToCart(os.getSneakerDetail(sneakerCode), invoiceId, 1);
+                            JOptionPane.showMessageDialog(null, "Thêm thành công", "Thông báo", 1);
                             fillToListInvoice(os.getOrder());
                             tblInvoice.setRowSelectionInterval(index, index);
                             fillToListCart(os.getToCart(invoiceId));
@@ -977,10 +981,14 @@ public class OrderForm extends javax.swing.JPanel {
                         } catch (SQLException ex) {
                             Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Bạn đã thêm sản phẩm này");
+                        return;
                     }
                 }
+                
             });
-            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn để thêm sản phẩm");
             return;
@@ -988,6 +996,7 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnScanQRActionPerformed
 
     private void txtSearchProdDetailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusGained
+        sliderPrice.setValue(0);
         if (txtSearchProdDetail.getText().equals("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm")) {
             txtSearchProdDetail.setText("");
             setForeground(Color.BLACK);
@@ -1012,9 +1021,16 @@ public class OrderForm extends javax.swing.JPanel {
             if (os.addInvoice() > 0) {
                 fillToListInvoice(os.getOrder());
                 tblInvoice.setRowSelectionInterval(0, 0);
-                fillToListCart(os.getToCart((int) tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 1)));
+                fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
                 showDetail();
-                invoiceId = (int) tblInvoice.getValueAt(0, 1);
+//                txtInvoiceId.setText((String) tblInvoice.getValueAt(0, 1));
+//                txtStaffId.setText("NV004 - Tran Anh Quynh");
+//                txtStartDateCreated.setText((String) tblInvoice.getValueAt(0, 5));
+//                txtOrderCost.setText("0");
+//                txtTotalCost.setText("0");
+//                cboVoucher.setSelectedIndex(0);
+//                cboPaymentMethod.setSelectedIndex(0);
+//                invoiceId = (int) tblInvoice.getValueAt(0, 1);
             }
 
         } catch (Exception e) {
@@ -1022,6 +1038,7 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddInvoiceActionPerformed
 
     private void txtSearchProdDetailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProdDetailKeyReleased
+        
         String key = txtSearchProdDetail.getText().trim();
         try {
             if (key.isBlank()) {
@@ -1034,6 +1051,7 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSearchProdDetailKeyReleased
 
     private void sliderPriceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderPriceStateChanged
+        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
         int price = sliderPrice.getValue();
         try {
             lbnGia.setText("" + price);
@@ -1158,68 +1176,6 @@ public class OrderForm extends javax.swing.JPanel {
 
     }//GEN-LAST:event_tblCartMouseClicked
 
-    private void btnDeleteOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOrderActionPerformed
-        indexOrder = tblInvoice.getSelectedRow();
-        try {
-            if (indexOrder != -1) {
-                int orderId = (int) tblInvoice.getValueAt(indexOrder, 1);
-                int orderQuantity = (int) tblInvoice.getValueAt(indexOrder, 3);
-                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn không ?", "Thông báo", 1);
-                if (confirm != 0) {
-                    return;
-                }
-                if (os.removeInvoice(orderId) > 0) {
-                    for (int i = 0; i < tblCart.getRowCount(); i++) {
-                        String code = (String) tblCart.getValueAt(i, 2);
-                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(i, 4));
-                    }
-                    fillToListSneakerDetail(os.getAllSneakerDetail());
-                    fillToListInvoice(os.getOrder());
-                    tblInvoice.setRowSelectionInterval(0, 0);
-                    JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
-                    fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
-                    invoiceId = (int) tblInvoice.getValueAt(0, 1);
-                    showDetail();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
-                }
-
-//                if (orderQuantity == 0) {
-//                    os.removeInvoice(orderId);
-//                    fillToListInvoice(os.getOrder());
-//                    tblInvoice.setRowSelectionInterval(0, 0);
-//                    JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
-//                    fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
-//                    invoiceId = (int) tblInvoice.getValueAt(0, 1);
-//                    showDetail();
-//                } else {
-//                    if (os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != null || os.updateOrder((int) tblInvoice.getValueAt(indexOrder, 1)) != 0) {
-//
-//                        for (int i = 0; i < tblCart.getRowCount(); i++) {
-//                            String code = (String) tblCart.getValueAt(i, 2);
-//                            os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(i, 4));
-//                        }
-//                        fillToListSneakerDetail(os.getAllSneakerDetail());
-//                        fillToListInvoice(os.getOrder());
-//                        tblInvoice.setRowSelectionInterval(0, 0);
-//                        JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
-//                        fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
-//                        invoiceId = (int) tblInvoice.getValueAt(0, 1);
-//                        showDetail();
-//                    } else {
-//                        JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
-//                    }
-//                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn cần hủy", "Thông báo", 1);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Lỗi hủy hóa đơn", "Thông báo", 2);
-        }
-
-
-    }//GEN-LAST:event_btnDeleteOrderActionPerformed
-
     private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
         String name;
         try {
@@ -1276,6 +1232,7 @@ public class OrderForm extends javax.swing.JPanel {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     try {
+
                         int id = tblInvoice.getSelectedRow();
                         invoiceId = (int) tblCart.getValueAt(tblCart.getSelectedRow(), 1);
                         indexSneaker = tblCart.getSelectedRow();
@@ -1286,6 +1243,7 @@ public class OrderForm extends javax.swing.JPanel {
                         if (CartQuantity.getQuantity() > cartQuantity) {
                             if ((CartQuantity.getQuantity() - Integer.parseInt(tblCart.getValueAt(indexSneaker, 4) + "")) <= squantity) {
                                 if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
+                                    JOptionPane.showMessageDialog(null, "Sửa số lượng thành công");
                                     fillToListInvoice(os.getOrder());
                                     fillToListCart(os.getToCart(invoiceId));
                                     tblInvoice.setRowSelectionInterval(id, id);
@@ -1294,10 +1252,12 @@ public class OrderForm extends javax.swing.JPanel {
                                     showDetail();
                                 }
                             } else {
+                                JOptionPane.showMessageDialog(null, "Số lượng không được lớn hơn số lượng tồn", "Thông báo", 1);
                                 return;
                             }
                         } else {
                             if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
+                                JOptionPane.showMessageDialog(null, "Sửa số lượng thành công");
                                 fillToListInvoice(os.getOrder());
                                 fillToListCart(os.getToCart(invoiceId));
                                 tblInvoice.setRowSelectionInterval(id, id);
@@ -1317,7 +1277,7 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCartQuantityUpdateActionPerformed
 
     private void btnDeleteMuchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteMuchActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy các hóa đơn này không?", "Thông báo", 1);
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn này không?", "Thông báo", 1);
         boolean active = false;
         if (confirm != 0) {
             return;
@@ -1398,16 +1358,29 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnListCustomerActionPerformed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán không?", "Thông báo", 2);
-        if (confirm != 0) {
-            return;
-        }
         Integer orderId = Integer.parseInt(txtInvoiceId.getText());
         Integer customerId = null;
         Integer userId = null;
         Integer voucherId = null;
 
         String userCode = txtStaffId.getText().substring(0, txtStaffId.getText().indexOf(" "));
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán không?", "Thông báo", 2);
+        if (tblInvoice.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Không còn hóa đơn để thanh toán");
+            return;
+        }
+        if (tblInvoice.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn cần thanh toán");
+            return;
+        }
+        if ((int) tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 3) == 0) {
+            JOptionPane.showMessageDialog(this, "Hóa đơn trống không thể thanh toán", "Thông báo", 0);
+            return;
+        }
+        if (confirm != 0) {
+            return;
+        }
+
         try {
             userId = os.getIdUserByUserCode(userCode);
 
@@ -1429,6 +1402,24 @@ public class OrderForm extends javax.swing.JPanel {
                 Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        if (cboPaymentMethod.getSelectedIndex() == 0) {
+            if (txtMoneyCash.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Bạn chưa nhập tiền mặt");
+                return;
+            } else {
+                int cash = Integer.parseInt(txtMoneyCash.getText());
+                int totalCash = Integer.parseInt(txtTotalCost.getText());
+                int change = cash - totalCash;
+                if (change > 0) {
+                    JOptionPane.showMessageDialog(this, "Số tiền cần trả lại khách: " + change, "Thông báo", 1);
+                } else if (change == 0) {
+                } else {
+                    JOptionPane.showMessageDialog(this, "Số tiền mặt nhập vào chưa đủ!", "Thông báo", 2);
+                    return;
+                }
+            }
+        }
+
         String paymentMethod = (String) cboPaymentMethod.getSelectedItem();
         long totalCost = Long.parseLong(txtTotalCost.getText());
         Order o = new Order(orderId, userId, customerId, voucherId, paymentMethod, totalCost);
@@ -1531,8 +1522,28 @@ public class OrderForm extends javax.swing.JPanel {
                 document.add(camOn);
                 document.close();
                 System.out.println("Created pdf");
+//                fillToListSneakerDetail(os.getAllSneakerDetail());
+                fillToListInvoice(os.getOrder());
+                if (tblInvoice.getRowCount() <= 0) {
+                    fillToListInvoice(new ArrayList<>());
+                    fillToListCart(new ArrayList<>());
+                } else {
+                    tblInvoice.setRowSelectionInterval(0, 0);
+                    fillToListInvoice(os.getOrder());
+                    fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
+                }
 
+//                invoiceId = (int) tblInvoice.getValueAt(0, 1);
                 clearForm();
+//                fillToListInvoice(os.getOrder());
+//                if (tblInvoice.getRowCount() > 0) {
+//                    tblInvoice.setRowSelectionInterval(0, 0);
+//                    fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
+//                } else {
+//                    fillToListCart(new ArrayList<>());
+//                }
+//                invoiceId = (int) tblInvoice.getValueAt(0, 1);
+//                clearForm();
             }
         } catch (SQLException ex) {
             Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -1544,16 +1555,26 @@ public class OrderForm extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnPayActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        sliderPrice.setValue(0);
+        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+        try {
+            fillToListSneakerDetail(os.getAllSneakerDetail());
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;
     private javax.swing.JButton btnDeleteCart;
     private javax.swing.JButton btnDeleteMuch;
-    private javax.swing.JButton btnDeleteOrder;
     private javax.swing.JButton btnListCustomer;
     private javax.swing.JButton btnPay;
     private javax.swing.JButton btnScanQR;
     private javax.swing.JComboBox<String> cboPaymentMethod;
     private javax.swing.JComboBox<String> cboVoucher;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;

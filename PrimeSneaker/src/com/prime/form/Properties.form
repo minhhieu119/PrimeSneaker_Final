@@ -162,8 +162,8 @@
                               </Group>
                               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtProductId" linkSize="19" min="-2" pref="239" max="-2" attributes="0"/>
-                                  <Component id="txtProductName" linkSize="19" min="-2" pref="197" max="-2" attributes="0"/>
+                                  <Component id="txtBrandID" linkSize="19" min="-2" pref="239" max="-2" attributes="0"/>
+                                  <Component id="txtBrandName" linkSize="19" min="-2" pref="197" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="32" max="32767" attributes="0"/>
                           </Group>
@@ -175,12 +175,12 @@
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel16" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="txtProductId" linkSize="20" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Component id="txtBrandID" linkSize="20" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel17" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="txtProductName" linkSize="20" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Component id="txtBrandName" linkSize="20" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -193,7 +193,7 @@
                         <Property name="text" type="java.lang.String" value="M&#xe3;"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtProductId">
+                    <Component class="javax.swing.JTextField" name="txtBrandID">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -212,7 +212,7 @@
                         <Property name="text" type="java.lang.String" value="T&#xea;n h&#xe3;ng"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtProductName">
+                    <Component class="javax.swing.JTextField" name="txtBrandName">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -243,12 +243,10 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="btnProductClear" linkSize="21" max="32767" attributes="0"/>
-                                      <Component id="btnProductClear2" linkSize="21" alignment="0" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Component id="btnProductAdd" linkSize="21" pref="174" max="32767" attributes="0"/>
-                                  <Component id="btnProductClear1" linkSize="21" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnBrandClear" linkSize="21" max="32767" attributes="0"/>
+                                  <Component id="btnDeleteBrand" linkSize="21" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnAddBrand" linkSize="21" pref="174" max="32767" attributes="0"/>
+                                  <Component id="btnUpdateBrand" linkSize="21" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace pref="20" max="32767" attributes="0"/>
                           </Group>
@@ -258,20 +256,20 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                              <Component id="btnProductAdd" linkSize="18" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnAddBrand" linkSize="18" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnProductClear1" linkSize="18" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btnUpdateBrand" linkSize="18" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace pref="8" max="32767" attributes="0"/>
-                              <Component id="btnProductClear2" linkSize="18" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btnDeleteBrand" linkSize="18" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnProductClear" linkSize="18" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btnBrandClear" linkSize="18" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JButton" name="btnProductClear">
+                    <Component class="javax.swing.JButton" name="btnBrandClear">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -284,8 +282,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBrandClearActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnProductAdd">
+                    <Component class="javax.swing.JButton" name="btnAddBrand">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -298,8 +299,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddBrandActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnProductClear1">
+                    <Component class="javax.swing.JButton" name="btnUpdateBrand">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -312,8 +316,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateBrandActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnProductClear2">
+                    <Component class="javax.swing.JButton" name="btnDeleteBrand">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -336,7 +343,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tblProducts">
+                    <Component class="javax.swing.JTable" name="tblBrand">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="3" rowCount="0">
@@ -473,8 +480,8 @@
                               </Group>
                               <EmptySpace pref="26" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtProductName6" pref="233" max="32767" attributes="0"/>
-                                  <Component id="txtProductId1" max="32767" attributes="0"/>
+                                  <Component id="txtCategory" pref="233" max="32767" attributes="0"/>
+                                  <Component id="txtIdCategory" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           </Group>
@@ -486,12 +493,12 @@
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel19" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="txtProductId1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Component id="txtIdCategory" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel20" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="txtProductName6" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Component id="txtCategory" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -504,7 +511,7 @@
                         <Property name="text" type="java.lang.String" value="M&#xe3;"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtProductId1">
+                    <Component class="javax.swing.JTextField" name="txtIdCategory">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -523,7 +530,7 @@
                         <Property name="text" type="java.lang.String" value="T&#xea;n danh m&#x1ee5;c"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtProductName6">
+                    <Component class="javax.swing.JTextField" name="txtCategory">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -554,10 +561,10 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="btnProductClear18" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnProductClear20" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnProductAdd6" alignment="0" pref="174" max="32767" attributes="0"/>
-                                  <Component id="btnProductClear19" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnClearCate" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnDeleteCate" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnAddCate" alignment="0" pref="174" max="32767" attributes="0"/>
+                                  <Component id="btnUpdateCate" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace pref="20" max="32767" attributes="0"/>
                           </Group>
@@ -567,20 +574,20 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                              <Component id="btnProductAdd6" linkSize="39" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnAddCate" linkSize="39" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnProductClear19" linkSize="39" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btnUpdateCate" linkSize="39" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace pref="8" max="32767" attributes="0"/>
-                              <Component id="btnProductClear20" linkSize="39" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btnDeleteCate" linkSize="39" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnProductClear18" linkSize="39" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btnClearCate" linkSize="39" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JButton" name="btnProductClear18">
+                    <Component class="javax.swing.JButton" name="btnClearCate">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -593,8 +600,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearCateActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnProductAdd6">
+                    <Component class="javax.swing.JButton" name="btnAddCate">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -607,8 +617,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddCateActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnProductClear19">
+                    <Component class="javax.swing.JButton" name="btnUpdateCate">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -621,8 +634,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateCateActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnProductClear20">
+                    <Component class="javax.swing.JButton" name="btnDeleteCate">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="96" green="50" red="27" type="rgb"/>
@@ -645,7 +661,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tblProducts6">
+                    <Component class="javax.swing.JTable" name="tblCategory">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="3" rowCount="0">
@@ -762,8 +778,8 @@
                           </Group>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtProductId5" linkSize="33" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
-                              <Component id="txtProductName5" linkSize="33" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
+                              <Component id="txtMaterialID" linkSize="33" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
+                              <Component id="txtMaterial" linkSize="33" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="32" max="32767" attributes="0"/>
                       </Group>
@@ -775,12 +791,12 @@
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel42" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductId5" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtMaterialID" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel43" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductName5" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtMaterial" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -793,7 +809,7 @@
                     <Property name="text" type="java.lang.String" value="M&#xe3;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductId5">
+                <Component class="javax.swing.JTextField" name="txtMaterialID">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -812,7 +828,7 @@
                     <Property name="text" type="java.lang.String" value="T&#xea;n ch&#x1ea5;t li&#x1ec7;u"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductName5">
+                <Component class="javax.swing.JTextField" name="txtMaterial">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -843,10 +859,10 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btnProductClear15" linkSize="22" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductClear17" linkSize="22" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductAdd5" linkSize="22" alignment="0" pref="174" max="32767" attributes="0"/>
-                              <Component id="btnProductClear16" linkSize="22" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnClearMaterial" linkSize="22" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnDeleteMaterial" linkSize="22" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnAddMaterial" linkSize="22" alignment="0" pref="174" max="32767" attributes="0"/>
+                              <Component id="btnUpdateMaterial" linkSize="22" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="20" max="32767" attributes="0"/>
                       </Group>
@@ -856,20 +872,20 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                          <Component id="btnProductAdd5" linkSize="23" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnAddMaterial" linkSize="23" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear16" linkSize="23" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnUpdateMaterial" linkSize="23" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace pref="8" max="32767" attributes="0"/>
-                          <Component id="btnProductClear17" linkSize="23" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnDeleteMaterial" linkSize="23" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear15" linkSize="23" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnClearMaterial" linkSize="23" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="btnProductClear15">
+                <Component class="javax.swing.JButton" name="btnClearMaterial">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -882,8 +898,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearMaterialActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductAdd5">
+                <Component class="javax.swing.JButton" name="btnAddMaterial">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -896,8 +915,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddMaterialActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear16">
+                <Component class="javax.swing.JButton" name="btnUpdateMaterial">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -910,8 +932,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateMaterialActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear17">
+                <Component class="javax.swing.JButton" name="btnDeleteMaterial">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -934,7 +959,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tblProducts5">
+                <Component class="javax.swing.JTable" name="tblMaterial">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="3" rowCount="0">
@@ -1046,8 +1071,8 @@
                           </Group>
                           <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtProductId4" linkSize="34" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
-                              <Component id="txtProductName4" linkSize="34" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
+                              <Component id="txtSoleID" linkSize="34" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
+                              <Component id="txtSoleName" linkSize="34" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="32" max="32767" attributes="0"/>
                       </Group>
@@ -1059,12 +1084,12 @@
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel40" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductId4" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtSoleID" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel41" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductName4" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtSoleName" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -1077,7 +1102,7 @@
                     <Property name="text" type="java.lang.String" value="M&#xe3;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductId4">
+                <Component class="javax.swing.JTextField" name="txtSoleID">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -1096,7 +1121,7 @@
                     <Property name="text" type="java.lang.String" value="T&#xea;n &#x111;&#x1ebf;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductName4">
+                <Component class="javax.swing.JTextField" name="txtSoleName">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -1127,10 +1152,10 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btnProductClear12" linkSize="26" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductClear14" linkSize="26" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductAdd4" linkSize="26" alignment="0" pref="174" max="32767" attributes="0"/>
-                              <Component id="btnProductClear13" linkSize="26" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnSoleClear" linkSize="26" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnSoleDelete" linkSize="26" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnSoleAdd" linkSize="26" alignment="0" pref="174" max="32767" attributes="0"/>
+                              <Component id="btnSoleUpdate" linkSize="26" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="20" max="32767" attributes="0"/>
                       </Group>
@@ -1140,20 +1165,20 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                          <Component id="btnProductAdd4" linkSize="27" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSoleAdd" linkSize="27" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear13" linkSize="27" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnSoleUpdate" linkSize="27" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace pref="8" max="32767" attributes="0"/>
-                          <Component id="btnProductClear14" linkSize="27" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnSoleDelete" linkSize="27" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear12" linkSize="27" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnSoleClear" linkSize="27" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="btnProductClear12">
+                <Component class="javax.swing.JButton" name="btnSoleClear">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1166,8 +1191,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSoleClearActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductAdd4">
+                <Component class="javax.swing.JButton" name="btnSoleAdd">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1180,8 +1208,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSoleAddActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear13">
+                <Component class="javax.swing.JButton" name="btnSoleUpdate">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1194,8 +1225,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSoleUpdateActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear14">
+                <Component class="javax.swing.JButton" name="btnSoleDelete">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1218,7 +1252,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tblProducts4">
+                <Component class="javax.swing.JTable" name="tblSole">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="3" rowCount="0">
@@ -1330,8 +1364,8 @@
                           </Group>
                           <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtProductId3" linkSize="35" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
-                              <Component id="txtProductName3" linkSize="35" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
+                              <Component id="txtColorID" linkSize="35" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
+                              <Component id="txtColor" linkSize="35" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="32" max="32767" attributes="0"/>
                       </Group>
@@ -1343,12 +1377,12 @@
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel38" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductId3" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtColorID" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel39" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductName3" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtColor" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -1361,7 +1395,7 @@
                     <Property name="text" type="java.lang.String" value="M&#xe3;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductId3">
+                <Component class="javax.swing.JTextField" name="txtColorID">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -1380,7 +1414,7 @@
                     <Property name="text" type="java.lang.String" value="T&#xea;n m&#xe0;u"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductName3">
+                <Component class="javax.swing.JTextField" name="txtColor">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -1411,10 +1445,10 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btnProductClear9" linkSize="28" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductClear11" linkSize="28" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductAdd3" linkSize="28" alignment="0" pref="174" max="32767" attributes="0"/>
-                              <Component id="btnProductClear10" linkSize="28" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnColorClear" linkSize="28" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnColorDelete" linkSize="28" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnColorAdd" linkSize="28" alignment="0" pref="174" max="32767" attributes="0"/>
+                              <Component id="btnColorUpdate" linkSize="28" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="20" max="32767" attributes="0"/>
                       </Group>
@@ -1424,20 +1458,20 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                          <Component id="btnProductAdd3" linkSize="29" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnColorAdd" linkSize="29" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear10" linkSize="29" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnColorUpdate" linkSize="29" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace pref="8" max="32767" attributes="0"/>
-                          <Component id="btnProductClear11" linkSize="29" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnColorDelete" linkSize="29" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear9" linkSize="29" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnColorClear" linkSize="29" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="btnProductClear9">
+                <Component class="javax.swing.JButton" name="btnColorClear">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1451,7 +1485,7 @@
                     <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductAdd3">
+                <Component class="javax.swing.JButton" name="btnColorAdd">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1464,8 +1498,11 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnColorAddActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear10">
+                <Component class="javax.swing.JButton" name="btnColorUpdate">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1479,7 +1516,7 @@
                     <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear11">
+                <Component class="javax.swing.JButton" name="btnColorDelete">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1502,7 +1539,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tblProducts3">
+                <Component class="javax.swing.JTable" name="tblColor">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="3" rowCount="0">
@@ -1614,8 +1651,8 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtProductId2" linkSize="36" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
-                              <Component id="txtProductName2" linkSize="36" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
+                              <Component id="txtSizeID" linkSize="36" alignment="0" min="-2" pref="239" max="-2" attributes="0"/>
+                              <Component id="txtSize" linkSize="36" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="32" max="32767" attributes="0"/>
                       </Group>
@@ -1627,12 +1664,12 @@
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel28" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductId2" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtSizeID" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel37" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtProductName2" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtSize" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -1645,7 +1682,7 @@
                     <Property name="text" type="java.lang.String" value="M&#xe3;"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductId2">
+                <Component class="javax.swing.JTextField" name="txtSizeID">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -1664,7 +1701,7 @@
                     <Property name="text" type="java.lang.String" value="K&#xed;ch th&#x1b0;&#x1edb;c"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtProductName2">
+                <Component class="javax.swing.JTextField" name="txtSize">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -1695,10 +1732,10 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btnProductClear6" linkSize="30" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductClear8" linkSize="30" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnProductAdd2" linkSize="30" alignment="0" pref="174" max="32767" attributes="0"/>
-                              <Component id="btnProductClear7" linkSize="30" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnSizeClear" linkSize="30" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnSizeDelete" linkSize="30" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnSizeAdd" linkSize="30" alignment="0" pref="174" max="32767" attributes="0"/>
+                              <Component id="btnSizeUpdate" linkSize="30" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="20" max="32767" attributes="0"/>
                       </Group>
@@ -1708,20 +1745,20 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                          <Component id="btnProductAdd2" linkSize="31" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSizeAdd" linkSize="31" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear7" linkSize="31" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnSizeUpdate" linkSize="31" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace pref="8" max="32767" attributes="0"/>
-                          <Component id="btnProductClear8" linkSize="31" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnSizeDelete" linkSize="31" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnProductClear6" linkSize="31" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="btnSizeClear" linkSize="31" min="-2" pref="27" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="btnProductClear6">
+                <Component class="javax.swing.JButton" name="btnSizeClear">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1735,7 +1772,7 @@
                     <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductAdd2">
+                <Component class="javax.swing.JButton" name="btnSizeAdd">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1749,7 +1786,7 @@
                     <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear7">
+                <Component class="javax.swing.JButton" name="btnSizeUpdate">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1763,7 +1800,7 @@
                     <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnProductClear8">
+                <Component class="javax.swing.JButton" name="btnSizeDelete">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="96" green="50" red="27" type="rgb"/>
@@ -1786,7 +1823,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tblProducts2">
+                <Component class="javax.swing.JTable" name="tblSize">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="3" rowCount="0">

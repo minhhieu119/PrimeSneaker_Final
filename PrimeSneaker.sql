@@ -151,7 +151,7 @@ create table Sneaker
 	sole_id int,
 	material_id int,
 	sneaker_name nvarchar(100),
-	[status] nvarchar(150),
+	--[status] nvarchar(150),
 	[description] nvarchar(200),
 	created_at date default getdate(),
 	updated_at date default getdate(),
@@ -169,7 +169,7 @@ create table SneakerDetail
 	sneaker_detail_code varchar(10) unique,
 	gender nvarchar(20),
 	price money check(price > 0),
-	quantity int check(quantity > 0),
+	quantity int check(quantity >= 0),
 	[status] nvarchar(50),
 	created_at date default getdate(),
 	updated_at date default getdate(),
@@ -355,97 +355,97 @@ insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount,
 values ('VOUCHER0', N'Không', 0, NULL, 0, 0, 0,'2022-12-31' , '2100-12-31')
 
 --Nhập dữ liệu bảng Sneaker
-insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name,[status], [description])
+insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name, [description])
 values
 --#den, da, nike
-(1,1,1,2,N'Giày Nike Air Jordan 4', N'Đang bán', N'Phiên bản đặc biệt của dòng sản phẩm Air Jordan, được thiết kế để tôn vinh và tái hiện lại phiên bản kinh điển “Bred” (Black and Red) của dòng Air Jordan 4'),
+(1,1,1,2,N'Giày Nike Air Jordan 4', N'Phiên bản đặc biệt của dòng sản phẩm Air Jordan, được thiết kế để tôn vinh và tái hiện lại phiên bản kinh điển “Bred” (Black and Red) của dòng Air Jordan 4'),
 
 --xám, đế cao su, nike
-(1,1,1,3,N'Nike Jordan 1 Dior', N'Đang bán', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
+(1,1,1,3,N'Nike Jordan 1 Dior', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
 
 --Đen, da, vải, nike
-(1,2,1,5,N'Nike Pegasus 40', N'Chưa mở bán', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
+(1,2,1,5,N'Nike Pegasus 40', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
 
 --trắng, da, nike
-(1,3,5,3,N'Nike Air Force 1', N'Chưa mở bán', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
+(1,3,5,3,N'Nike Air Force 1', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
 
 --trắng, da, adidas
-(2,1,3,1,N'Adidas Superstar', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
+(2,1,3,1,N'Adidas Superstar', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --da suede, trắng, đen, nâu, đế EVA, adidas
-(2,5,2,2,N'Adidas Samba', N'Đang bán', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
+(2,5,2,2,N'Adidas Samba', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
 
 --Xanh, adidas, vải
-(2,2,1,4,N'Adidas Ultraboost', N'Đang bán', N'Đã được bày bán trên Sneaker Daily Shop'),
+(2,2,1,4,N'Adidas Ultraboost', N'Đã được bày bán trên Sneaker Daily Shop'),
 
 -- da, adidas, 5900000
-(2,2,1,5,N'Giày adidas golf wide tour', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
+(2,2,1,5,N'Giày adidas golf wide tour', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --trắng, cao su, converse, 2.200.000₫ -> 1.390.000₫
-(4,5,1,5,N'Giày Converse Chuck 70', N'Đang bán', N' Là một trong những mẫu giày đang được nhiều bạn trẻ kiếm tìm hiện nay'),
+(4,5,1,5,N'Giày Converse Chuck 70', N' Là một trong những mẫu giày đang được nhiều bạn trẻ kiếm tìm hiện nay'),
 
 --converse, trắng, đế cao su, 2.990.000₫ 1.490.000₫
-(4,5,1,5,N'Giày Converse Chuck Taylor All Star', N'Đang bán', N'Hứa hẹn là một siêu phẩm mà bất cứ sneakerhead nào cũng mong muốn sở hữu trong tủ giày của mình'),
+(4,5,1,5,N'Giày Converse Chuck Taylor All Star', N'Hứa hẹn là một siêu phẩm mà bất cứ sneakerhead nào cũng mong muốn sở hữu trong tủ giày của mình'),
 
 --lining, xanh, bóng rổ, 1.490.000₫
-(3,1,3,2,N'Giày Li-Ning bóng rổ', N'Đang bán', N'Đôi giày chuyên dụng được thiết kế đặc biệt cho các vận động viên nam chơi bóng rổ'),
+(3,1,3,2,N'Giày Li-Ning bóng rổ', N'Đôi giày chuyên dụng được thiết kế đặc biệt cho các vận động viên nam chơi bóng rổ'),
 
 --lining, trắng, 2.380.000₫
-(3,5,5,1,N'Giày Li-ning Common 70s', N'Đang bán', N'Phong cách thời trang, cá tính, trẻ trung, phù hợp cho đi học, đi làm, đi chơi, dạo phố'),
+(3,5,5,1,N'Giày Li-ning Common 70s', N'Phong cách thời trang, cá tính, trẻ trung, phù hợp cho đi học, đi làm, đi chơi, dạo phố'),
 
 --lining, vàng, hồng, 2.580.000₫
-(3,2,1,6,N'Giày chạy bộ Chitu 7', N'Đang bán', N'Năng động, trẻ trung, phù hợp cho chạy bộ'),
+(3,2,1,6,N'Giày chạy bộ Chitu 7', N'Năng động, trẻ trung, phù hợp cho chạy bộ'),
 
 --fila, trắng, 1.490.000₫
-(6,5,2,3,N'Giày Fila Ranger', N'Đang bán', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
+(6,5,2,3,N'Giày Fila Ranger', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
 
 --fila, trắng, 2.290.000₫
-(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Đang bán', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
+(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
 
 --mlb, trắng, 2.790.000₫
-(5,3,2,2,N'Giày MLB Chunky Liner', N'Đang bán', N'No description'),
+(5,3,2,2,N'Giày MLB Chunky Liner', N'No description'),
 
 --mlb, trắng, 1.500.000₫
-(5,5,3,2,N'Giày MLB BigBall Chunky', N'Đang bán', N'Phong cách Chunky'),
+(5,5,3,2,N'Giày MLB BigBall Chunky', N'Phong cách Chunky'),
 
 --mlb, trắng, 3.390.000₫
-(5,2,2,4,N'Giày MLB Chunky Runner SD', N'Đang bán', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
+(5,2,2,4,N'Giày MLB Chunky Runner SD', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
 
 --newb, trắng-lục, 3.790.000₫
-(7,5,3,4,N'Giày New Balance 550 ', N'Đang bán', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
+(7,5,3,4,N'Giày New Balance 550 ', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
 
 --newb, trắng, 2.590.000₫
-(7,2,1,5,N'Giày New Balance Fresh Foam X 880v14', N'Đang bán', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
+(7,2,1,5,N'Giày New Balance Fresh Foam X 880v14', N'Một thương hiệu thời trang và giày thể thao từ Mỹ'),
 
 --newb, xám, 1.690.000₫
-(7,1,2,6,N'Giày New Balance Fresh Foam BB v2', N'Đang bán', N'Phiên bản thuộc dòng giày thể thao cổ điển của New Balance'),
+(7,1,2,6,N'Giày New Balance Fresh Foam BB v2', N'Phiên bản thuộc dòng giày thể thao cổ điển của New Balance'),
 
 --puma, 1.990.000₫, trắng
-(9,1,2,4,N'Giày Puma Basket Heart Patent', N'Đang bán', N'Giày Puma'),
+(9,1,2,4,N'Giày Puma Basket Heart Patent', N'Giày Puma'),
 
 --puma, trắng, 1.980.000₫
-(9,2,2,5,N'Giày Puma Velocity NITRO 3', N'Đang bán', N'No description'),
+(9,2,2,5,N'Giày Puma Velocity NITRO 3', N'No description'),
 
 --puma, trắng-đen, 2.980.000₫
-(9,4,3,2,N'Giày Puma Mayze', N'Đang bán', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
+(9,4,3,2,N'Giày Puma Mayze', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
 
 --puma, xanh, 2.090.000₫
-(9,5,1,5,N'Giày Puma Suede Classic', N'Đang bán', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
+(9,5,1,5,N'Giày Puma Suede Classic', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
 
 --reebok, đen, 1.790.000₫
-(11,5,5,3,N'Giày Reebok Royal Pervader', N'Đang bán', N'No description'),
+(11,5,5,3,N'Giày Reebok Royal Pervader', N'No description'),
 
 --reebok, trắng, 1.790.000₫
-(11,2,5,2,N'Giày Reebok Floatride Energy 5', N'Đang bán', N'Phù hợp cho những người yêu thích phong cách thể thao và đang tìm kiếm một đôi giày thể thao năng động và trẻ trung'),
+(11,2,5,2,N'Giày Reebok Floatride Energy 5', N'Phù hợp cho những người yêu thích phong cách thể thao và đang tìm kiếm một đôi giày thể thao năng động và trẻ trung'),
 
 --vans, trắng, 2.290.000₫
-(10,5,3,4,N'Giày Vans Old Skool', N'Đang bán', N'No description'),
+(10,5,3,4,N'Giày Vans Old Skool', N'No description'),
 
 --vans, trắng, 2.500.000₫
-(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'Đang bán', N'No description'),
+(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'No description'),
 
 --vans, đen-lục, 1.690.000₫
-(10,5,3,4,N'Giày Vans classic', N'Đang bán', N'No description')
+(10,5,3,4,N'Giày Vans classic', N'No description')
 
 --Nhập dữ liệu SneakerDetail
 insert into SneakerDetail  (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
@@ -585,3 +585,16 @@ select * from [Role]
 select * from [User]
 select * from Voucher
 
+
+drop table OrderDetail
+drop table [Image]
+drop table SneakerDetail
+drop table Sneaker
+
+select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id
+                 left join Category on Sneaker.category_id = Category.category_id
+                   left join Brand on Sneaker.brand_id = Brand.brand_id
+                   left join Sole on Sneaker.sole_id = Sole.sole_id
+                    left join Material on Sneaker.material_id = Material.material_id
+                   left join Size on SneakerDetail.size_id = Size.size_id
+                  left join Color on SneakerDetail.color_id = Color.color_id
