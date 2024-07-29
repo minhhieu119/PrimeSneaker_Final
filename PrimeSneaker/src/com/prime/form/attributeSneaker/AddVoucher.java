@@ -469,10 +469,23 @@ public class AddVoucher extends javax.swing.JFrame {
             String maVoucher = txtVoucherId.getText().trim().replaceAll("\\s+", "");
             boolean maVoucherTonTai = false;
             for (VoucherAq voucherAq : ser.findAll()) {
-                if(voucherAq.getVoucherCode().trim().equals(maVoucher)){
+                if(voucherAq.getVoucherCode().trim().equalsIgnoreCase(maVoucher)){
                     maVoucherTonTai = true;
                     break;
                 }
+            }
+            String tenVoucher = txtVoucherName.getText().trim().replaceAll("\\s+", "");
+            boolean check = false;
+            for (VoucherAq voucherAq : ser.findAll()) {
+                if(voucherAq.getVoucherName().trim().equalsIgnoreCase(tenVoucher)){
+                    check = true;
+                    break;
+                }
+            }
+            if (check) {
+                mess("Tên voucher đã tồn tại");
+                txtVoucherName.requestFocus();
+                return;
             }
             if (maVoucherTonTai) {
                 mess("Mã voucher này đã tồn tại");

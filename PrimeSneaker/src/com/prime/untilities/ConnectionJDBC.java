@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConnectionJDBC {
     public static final String HOSTNAME = "localhost";
     public static final String PORT = "1433";
-    public static final String DBNAME = "PrimeSneaker_OK";
+    public static final String DBNAME = "PrimeSneaker2";
     public static final String USERNAME = "sa";
     public static final String PASSWORD = "12345678";
     

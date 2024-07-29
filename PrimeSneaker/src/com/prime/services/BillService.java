@@ -135,15 +135,18 @@ public class BillService {
 
     public List<BillDetail> getOrderDetai(int OrderId) {
         List<BillDetail> billDetail = new ArrayList<>();
-        String sql = "SELECT [Order].order_id, "
-                + "		Sneaker.sneaker_name, "
-                + "		OrderDetail.quantity, "
-                + "		OrderDetail.price "
-                + "FROM [Order] "
-                + "	JOIN OrderDetail ON [Order].order_id = OrderDetail.order_id "
-                + "	JOIN SneakerDetail ON OrderDetail.sneaker_detail_id = SneakerDetail.sneaker_detail_id "
-                + "	JOIN Sneaker ON SneakerDetail.sneaker_id = Sneaker.sneaker_id "
-                + "Where [Order].order_id = ?";
+        String sql = """
+                     SELECT [Order].order_id,
+                                Sneaker.sneaker_name,
+                     		   SneakerDetail.sneaker_detail_code,
+                                OrderDetail.quantity,
+                                OrderDetail.price
+                     FROM [Order]
+                                JOIN OrderDetail ON [Order].order_id = OrderDetail.order_id
+                                JOIN SneakerDetail ON OrderDetail.sneaker_detail_id = SneakerDetail.sneaker_detail_id
+                                JOIN Sneaker ON SneakerDetail.sneaker_id = Sneaker.sneaker_id
+                     Where [Order].order_id = ?
+                     """;
 
         try {
             pstm = con.prepareStatement(sql);
@@ -152,6 +155,7 @@ public class BillService {
             while (rs.next()) {
                 BillDetail spct = new BillDetail();
                 spct.setOrder_Id(rs.getInt("order_id"));
+                spct.setSneakerDetailCode(rs.getString("sneaker_detail_code"));
                 spct.setProductName(rs.getString("sneaker_name"));
                 spct.setQuantity(rs.getInt("quantity"));
                 spct.setPrice(rs.getBigDecimal("price"));

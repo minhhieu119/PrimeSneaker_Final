@@ -147,7 +147,7 @@ public class OrderService {
     public Voucher getOneVoucher(String name) throws SQLException {
         Voucher v = new Voucher();
         sql = """
-              select voucher_id, voucher_code, voucher_name,voucher_type,voucher_value,quantity,[status],  max_discount, min_order_value,  [start_date], end_date
+              select voucher_id, voucher_code, voucher_name,voucher_type,voucher_value,quantity,  max_discount, min_order_value,  [start_date], end_date
                             from Voucher
                             where voucher_name like ?
               """;

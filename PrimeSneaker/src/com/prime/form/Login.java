@@ -31,8 +31,8 @@ public class Login extends javax.swing.JFrame {
         txtUsername.setBackground(new Color(0, 0, 0, 1));
         txtPassword.setBackground(new Color(0, 0, 0, 1));
         
-        txtUsername.setText("hieu119");
-        txtPassword.setText("hieu1997");
+        txtUsername.setText("quynh2002");
+        txtPassword.setText("quynh123");
         
     }
 

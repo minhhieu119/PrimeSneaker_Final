@@ -201,7 +201,24 @@ public class Properties extends javax.swing.JPanel {
         txtSize.setText(tblSize.getValueAt(index, 2).toString());
         tblSize.setRowSelectionInterval(index, index);
     }
+    private Model_Color readFormCo1() {
+        Model_Color br = new Model_Color();
+        br.setColor_name(txtColor.getText());
+        br.setColor_id(Integer.parseInt(txtColorID.getText()));
+        return br;
+    }
+    private SizeModel readFormSi() {
+        SizeModel br = new SizeModel();
+        br.setSize_Number(Double.parseDouble(txtSize.getText()));
+        return br;
+    }
+    private SizeModel readFormSi1() {
+        SizeModel br = new SizeModel();
+        br.setSize_Number(Double.parseDouble(txtSize.getText()));
+        br.setId_Size(Integer.parseInt(txtSizeID.getText()));
+        return br;
 
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1039,6 +1056,11 @@ public class Properties extends javax.swing.JPanel {
         btnColorUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnColorUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnColorUpdate.setText("Sửa");
+        btnColorUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnColorUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
         jPanel24.setLayout(jPanel24Layout);
@@ -1187,6 +1209,11 @@ public class Properties extends javax.swing.JPanel {
         btnSizeUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnSizeUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnSizeUpdate.setText("Sửa");
+        btnSizeUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSizeUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
@@ -1611,6 +1638,14 @@ public class Properties extends javax.swing.JPanel {
         int index = tblSize.getSelectedRow();
         showDataSize(index);
     }//GEN-LAST:event_tblSizeMouseClicked
+
+    private void btnColorUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorUpdateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnColorUpdateActionPerformed
+
+    private void btnSizeUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeUpdateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSizeUpdateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBrand;

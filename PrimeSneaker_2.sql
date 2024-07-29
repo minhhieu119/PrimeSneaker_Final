@@ -1,10 +1,8 @@
-﻿create database PrimeSneaker_OK
+﻿create database PrimeSneaker2
 go
 
-use PrimeSneaker_OK
+use PrimeSneaker2
 go
-
-
 
 create table Brand
 (
@@ -545,21 +543,21 @@ insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cos
 values (19, 10, 1, 1900000, 1900000)
 
 
---select * from OrderDetail
---select * from [Order]
-----select * from [Image]
---select * from SneakerDetail
---select * from Sneaker
---select * from Brand
---select * from Category
---select * from Color
---select * from Material
---select * from Size
---select * from Sole
---select * from Customer
---select * from [Role]
---select * from [User]
---select * from Voucher
+select * from OrderDetail
+select * from [Order]
+--select * from [Image]
+select * from SneakerDetail
+select * from Sneaker
+select * from Brand
+select * from Category
+select * from Color
+select * from Material
+select * from Size
+select * from Sole
+select * from Customer
+select * from [Role]
+select * from [User]
+select * from Voucher
 
 
 CREATE TRIGGER trg_UpdateStatusOnZeroQuantity
@@ -595,3 +593,26 @@ END
 GO
 
 
+select * from SneakerDetail
+
+
+SELECT [Order].order_id,
+           Sneaker.sneaker_name,
+		   SneakerDetail.sneaker_detail_code,
+           OrderDetail.quantity,
+           OrderDetail.price
+FROM [Order]
+           JOIN OrderDetail ON [Order].order_id = OrderDetail.order_id
+           JOIN SneakerDetail ON OrderDetail.sneaker_detail_id = SneakerDetail.sneaker_detail_id
+           JOIN Sneaker ON SneakerDetail.sneaker_id = Sneaker.sneaker_id
+Where [Order].order_id = 12
+
+select * from SneakerDetail
+
+
+delete from SneakerDetail
+where [status] like N'Hết hàng'
+
+update SneakerDetail
+set size_id=2,color_id=3,price=1000000,quantity=0,[status]= N'Hết hàng'
+where sneaker_detail_code = 2345537

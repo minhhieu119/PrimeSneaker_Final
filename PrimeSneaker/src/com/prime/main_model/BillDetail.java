@@ -14,6 +14,7 @@ public class BillDetail {
 
     private int order_Id;
     private String productName;
+    private String sneakerDetailCode;
     private int quantity;
     private BigDecimal price;
 
@@ -27,12 +28,30 @@ public class BillDetail {
         this.price = price;
     }
 
+    public BillDetail(int order_Id, String productName, String sneakerDetailCode, int quantity, BigDecimal price) {
+        this.order_Id = order_Id;
+        this.productName = productName;
+        this.sneakerDetailCode = sneakerDetailCode;
+        this.quantity = quantity;
+        this.price = price;
+    }
+    
+    
+
     public int getOrder_Id() {
         return order_Id;
     }
 
     public void setOrder_Id(int order_Id) {
         this.order_Id = order_Id;
+    }
+
+    public String getSneakerDetailCode() {
+        return sneakerDetailCode;
+    }
+
+    public void setSneakerDetailCode(String sneakerDetailCode) {
+        this.sneakerDetailCode = sneakerDetailCode;
     }
 
     public String getProductName() {

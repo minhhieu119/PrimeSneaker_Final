@@ -71,6 +71,7 @@ public class ManageOrder extends javax.swing.JPanel {
         for (BillDetail billDetail : list) {
             modelSneakerDetail.addRow(new Object[]{
                 stt++,
+                billDetail.getSneakerDetailCode(),
                 billDetail.getProductName(),
                 billDetail.getPrice(),
                 billDetail.getQuantity()
@@ -310,17 +311,17 @@ public class ManageOrder extends javax.swing.JPanel {
 
         tblBillDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "STT", "TÊN SẢN PHẨM", "GIÁ", "SỐ LƯỢNG"
+                "STT", "MÃ SPCT", "TÊN SẢN PHẨM", "GIÁ", "SỐ LƯỢNG"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -219,6 +219,34 @@ public class ManageSneaker extends javax.swing.JPanel {
         }
         return true;
     }
+    
+    private boolean validateFormUpdateDetail() {
+
+        if (txtQuantity.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Số lượng");
+            txtQuantity.requestFocus();
+            return false;
+        }
+        try {
+            Double price = Double.valueOf(txtPrice.getText());
+            Integer quantity = Integer.valueOf(txtQuantity.getText());
+            if (price < 0 || quantity < 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng và giá phải lớn hơn 0");
+                return false;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Số lượng và giá phải là số");
+            return false;
+        }
+        String trangThai = null;
+        if (rdoStock.isSelected()) {
+            trangThai = "Còn hàng";
+        }
+        if (rdoSoldOut.isSelected()) {
+            trangThai = "Hết hàng";
+        }
+        return true;
+    }
 
     public void loadDataBrand() {
         cboBrand.removeAllItems();
@@ -334,9 +362,10 @@ public class ManageSneaker extends javax.swing.JPanel {
     private Model_SneakerDetail getFormDetailProduct() {
         Model_SneakerDetail sn = new Model_SneakerDetail();
         sn.setMaSPCT(Integer.parseInt(txtProdDetail.getText()));
+        sn.setCode_sneaker(txtProdDetail.getText());
         Model_Color color = colorRS.getColor(cboColor.getSelectedItem().toString());
         SizeModel size = sizeRS.getSize(cboSize.getSelectedItem().toString());
-        sn.setGiaSP(Long.valueOf(txtPrice.getText()));
+        sn.setGiaSP((long) Float.parseFloat(txtPrice.getText()));
         sn.setSoLuong(Integer.valueOf(txtQuantity.getText()));
         sn.setKichCo(size);
         sn.setMauSac(color);
@@ -1711,10 +1740,10 @@ public class ManageSneaker extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 sản phẩm cần sửa");
             return;
         }
-        if (validateFormDetail()) {
+        if (validateFormUpdateDetail()) {
             Model_SneakerDetail sn = getFormDetailProduct();
             System.out.println(sn);
-            if (sdetailRS.updateSneakerDetail(sn) != null) {
+            if (sdetailRS.updateSneakerDetail(sn) > 0) {
                 JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm thành công");
                 loadSneakerDetailToTable(sdetailRS.getALl());
             } else {
