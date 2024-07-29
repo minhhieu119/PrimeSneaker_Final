@@ -27,6 +27,7 @@ public class ManageOrder extends javax.swing.JPanel {
         for (Bill bill : list) {
             i++;
             model.addRow(bill.toDataRow(i));
+            System.out.println(bill.getTotalCost());
         }
     }
     
@@ -80,8 +81,8 @@ public class ManageOrder extends javax.swing.JPanel {
         model.setRowCount(0);
 
 //        System.out.println(trangThai);
-        System.out.println(hinhthucTT);
-        System.out.println(text);
+//        System.out.println(hinhthucTT);
+//        System.out.println(text);
         this.loadDataToTableBill(bs.timKiem(text, hinhthucTT, startStr, endStr));
     }
     @SuppressWarnings("unchecked")
@@ -101,7 +102,6 @@ public class ManageOrder extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         btnInHoaDon = new javax.swing.JButton();
-        btnQR1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblBillDetail = new javax.swing.JTable();
@@ -114,6 +114,9 @@ public class ManageOrder extends javax.swing.JPanel {
         txtSearchBill.setToolTipText("");
         txtSearchBill.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSearchBill.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSearchBillKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSearchBillKeyReleased(evt);
             }
@@ -185,11 +188,6 @@ public class ManageOrder extends javax.swing.JPanel {
         btnInHoaDon.setForeground(new java.awt.Color(255, 255, 255));
         btnInHoaDon.setText("In hóa đơn");
 
-        btnQR1.setBackground(new java.awt.Color(39, 80, 150));
-        btnQR1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnQR1.setForeground(new java.awt.Color(255, 255, 255));
-        btnQR1.setText("Quét QR");
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -218,16 +216,14 @@ public class ManageOrder extends javax.swing.JPanel {
                             .addComponent(jdcEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(260, 260, 260))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnInHoaDon)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnQR1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnXuatExcel)))
                 .addContainerGap())
         );
 
-        jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInHoaDon, btnQR1, btnXuatExcel});
+        jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInHoaDon, btnXuatExcel});
 
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,12 +255,11 @@ public class ManageOrder extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnXuatExcel)
-                    .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnQR1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jPanel4Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnInHoaDon, btnQR1, btnXuatExcel});
+        jPanel4Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnInHoaDon, btnXuatExcel});
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách hóa đơn chi tiết", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 18))); // NOI18N
@@ -353,9 +348,12 @@ public class ManageOrder extends javax.swing.JPanel {
         search();
     }//GEN-LAST:event_jdcEndPropertyChange
 
+    private void txtSearchBillKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchBillKeyPressed
+        search();
+    }//GEN-LAST:event_txtSearchBillKeyPressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInHoaDon;
-    private javax.swing.JButton btnQR1;
     private javax.swing.JButton btnXuatExcel;
     private javax.swing.JComboBox<String> cboPaymentMethod;
     private javax.swing.JLabel jLabel1;

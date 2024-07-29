@@ -1,21 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package com.prime.form.attributeSneaker;
 
-/**
- *
- * @author ADMIN
- */
-public class CategoryDialog extends javax.swing.JFrame {
+import com.prime.form.ManageSneaker;
+import com.prime.main_model.Model_Category;
+import com.prime.responsitory.CategoryResponsitory;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-    /**
-     * Creates new form ProductAttribute
-     */
-    public CategoryDialog() {
+
+public class CategoryDialog extends javax.swing.JDialog {
+
+    int index;
+    DefaultTableModel model = new DefaultTableModel();
+    private final CategoryResponsitory ctrs = new CategoryResponsitory();
+    ManageSneaker sneaker = new ManageSneaker();
+    public CategoryDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
+        model = (DefaultTableModel) tblCategory.getModel();
+        loadCategoryToTable();
     }
 
     /**
@@ -67,13 +72,33 @@ public class CategoryDialog extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblCategory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCategoryMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblCategory);
 
         btnAddCategory.setText("Thêm");
+        btnAddCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddCategoryActionPerformed(evt);
+            }
+        });
 
         btnEditCategory.setText("Sửa");
+        btnEditCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditCategoryActionPerformed(evt);
+            }
+        });
 
         btnClearCategory.setText("Làm mới");
+        btnClearCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearCategoryActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,6 +161,76 @@ public class CategoryDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCategoryActionPerformed
+        if (txtCategoryName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Danh mục");
+            txtCategoryName.requestFocus();
+            return;
+        }
+        if (txtCategoryName.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Danh mục không được nhập số");
+            txtCategoryName.requestFocus();
+            return;
+        }
+        ArrayList<Model_Category> lst = ctrs.getALl();
+        for (Model_Category cate : lst) {
+            if (txtCategoryName.getText().trim().equals(cate.getCategory_name())) {
+                JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                return;
+            }
+        }
+        Model_Category cate = readForm();
+        if (ctrs.addCategory(cate) != null) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            loadCategoryToTable();
+            sneaker.loadDataCate();
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
+    }//GEN-LAST:event_btnAddCategoryActionPerformed
+
+    private void btnEditCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditCategoryActionPerformed
+        if (txtCategoryId.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn Category cần sửa");
+            return;
+        }
+        if (txtCategoryName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập loại Giày");
+            txtCategoryName.requestFocus();
+            return;
+        }
+        if (txtCategoryName.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Loại giày không được nhập số");
+            txtCategoryName.requestFocus();
+            return;
+        }
+        ArrayList<Model_Category> lst = ctrs.getALl();
+        for (Model_Category cate : lst) {
+            if (txtCategoryName.getText().equals(cate.getCategory_name())) {
+                JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                return;
+            }
+        }
+        Model_Category cate = readForm1();
+        if (ctrs.upDateCategory(cate) != null) {
+            JOptionPane.showMessageDialog(this, "Update thành công");
+            loadCategoryToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Update thất bại");
+        }
+    }//GEN-LAST:event_btnEditCategoryActionPerformed
+
+    private void btnClearCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearCategoryActionPerformed
+        txtCategoryId.setText("");
+        txtCategoryName.setText("");
+    }//GEN-LAST:event_btnClearCategoryActionPerformed
+
+    private void tblCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoryMouseClicked
+        index = tblCategory.getSelectedRow();
+        showDetail(index);
+    }//GEN-LAST:event_tblCategoryMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -165,11 +260,22 @@ public class CategoryDialog extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CategoryDialog().setVisible(true);
+                CategoryDialog dialog = new CategoryDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -186,4 +292,33 @@ public class CategoryDialog extends javax.swing.JFrame {
     private javax.swing.JTextField txtCategoryId;
     private javax.swing.JTextField txtCategoryName;
     // End of variables declaration//GEN-END:variables
+    private void loadCategoryToTable() {
+        model.setRowCount(0);
+        ArrayList<Model_Category> lst = ctrs.getALl();
+        for (Model_Category cate : lst) {
+            model.addRow(new Object[]{
+                cate.getCategory_id(),
+                cate.getCategory_name()
+            });
+        }
+    }
+
+    private Model_Category readForm() {
+        Model_Category cate = new Model_Category();
+        cate.setCategory_name(txtCategoryName.getText().trim());
+        return cate;
+    }
+
+    private Model_Category readForm1() {
+        Model_Category cate = new Model_Category();
+        cate.setCategory_name(txtCategoryName.getText().trim());
+        cate.setCategory_id(Integer.parseInt(txtCategoryId.getText()));
+        return cate;
+    }
+
+    private void showDetail(int index) {
+        txtCategoryId.setText(tblCategory.getValueAt(index, 0).toString());
+        txtCategoryName.setText(tblCategory.getValueAt(index, 1).toString());
+        tblCategory.setRowSelectionInterval(index, index);
+    }
 }

@@ -10,8 +10,17 @@ package com.prime.model;
  */
 public class CartQuantity {
     public static int quantity;
+    public static boolean cancel;
 
     public CartQuantity() {
+    }
+
+    public static boolean isCancel() {
+        return cancel;
+    }
+
+    public static void setCancel(boolean cancel) {
+        CartQuantity.cancel = cancel;
     }
 
     public CartQuantity(int quantity) {

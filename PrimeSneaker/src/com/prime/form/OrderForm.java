@@ -37,6 +37,8 @@ import com.prime.model.qrCode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OrderForm extends javax.swing.JPanel {
 
@@ -212,16 +214,16 @@ public class OrderForm extends javax.swing.JPanel {
     private void voucherProcess() throws SQLException {
         Voucher v = os.getOneVoucher((String) cboVoucher.getSelectedItem());
         long orderCost = Long.parseLong(txtOrderCost.getText());
-        float discountRate = v.getDiscountRate();
-        long discountAmount = v.getDiscountAmount();
-        long minOrderValue = v.getMinOrderValue();
         if (cboVoucher.getSelectedIndex() == 0) {
             txtDiscoutCost.setText("0");
             lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
         } else {
-            if (discountRate == 0) {
+            boolean type = v.getVoucherType();
+            int value = v.getVoucherValue();
+            long minOrderValue = v.getMinOrderValue();
+            if (type) {
                 if (orderCost >= minOrderValue) {
-                    txtDiscoutCost.setText(discountAmount + "");
+                    txtDiscoutCost.setText(v.getVoucherValue() + "");
                     lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 } else {
                     txtDiscoutCost.setText("0");
@@ -229,13 +231,30 @@ public class OrderForm extends javax.swing.JPanel {
                 }
             } else {
                 if (orderCost >= minOrderValue) {
-                    txtDiscoutCost.setText((long) (orderCost * discountRate) + "");
+                    txtDiscoutCost.setText((long) (orderCost * v.getVoucherValue() / 100) + "");
                     lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 } else {
                     txtDiscoutCost.setText("0");
                     lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 }
             }
+//            if (discountRate == 0) {
+//                if (orderCost >= minOrderValue) {
+//                    txtDiscoutCost.setText(discountAmount + "");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                } else {
+//                    txtDiscoutCost.setText("0");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                }
+//            } else {
+//                if (orderCost >= minOrderValue) {
+//                    txtDiscoutCost.setText((long) (orderCost * discountRate) + "");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                } else {
+//                    txtDiscoutCost.setText("0");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                }
+//            }
         }
     }
 
@@ -294,6 +313,7 @@ public class OrderForm extends javax.swing.JPanel {
         txtDiscoutCost = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         lbnTotalCost = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         btnAddInvoice = new javax.swing.JButton();
         jPanel15 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
@@ -319,7 +339,7 @@ public class OrderForm extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Mã HĐ", "Mã NV", "Số lượng SP", "Trạng thái", "Ngày tạo", "Action"
+                "STT", "Mã HĐ", "Mã NV", "Số lượng SP", "Trạng thái", "Ngày tạo", "Hủy hóa đơn"
             }
         ) {
             Class[] types = new Class [] {
@@ -368,7 +388,7 @@ public class OrderForm extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Mã HĐ", "Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Hãng", "Màu sắc", "Kích cỡ", "Action"
+                "STT", "Mã HĐ", "Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Đơn giá", "Hãng", "Màu sắc", "Kích cỡ", "Xóa"
             }
         ) {
             Class[] types = new Class [] {
@@ -489,8 +509,10 @@ public class OrderForm extends javax.swing.JPanel {
             }
         });
 
+        jLabel36.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel36.setText("SDT:");
 
+        jLabel37.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel37.setText("Tên KH:");
 
         txtNameCustomer.setEditable(false);
@@ -544,16 +566,19 @@ public class OrderForm extends javax.swing.JPanel {
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel16.setText("Mã hóa đơn:");
 
         txtInvoiceId.setEditable(false);
         txtInvoiceId.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel17.setText("Tên nhân viên");
 
         txtStaffId.setEditable(false);
         txtStaffId.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel18.setText("Giảm giá:");
 
         cboVoucher.setBackground(new java.awt.Color(39, 80, 150));
@@ -565,17 +590,20 @@ public class OrderForm extends javax.swing.JPanel {
             }
         });
 
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel19.setText("Ngày tạo:");
 
         txtStartDateCreated.setEditable(false);
         txtStartDateCreated.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
+        jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel20.setText("Tiền HĐ");
 
         txtOrderCost.setEditable(false);
         txtOrderCost.setText("0");
         txtOrderCost.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
+        jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel21.setText("Hình thức TT:");
 
         cboPaymentMethod.setBackground(new java.awt.Color(39, 80, 150));
@@ -587,12 +615,14 @@ public class OrderForm extends javax.swing.JPanel {
             }
         });
 
+        jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel22.setText("TIền mặt:");
 
         txtMoneyCash.setEditable(false);
         txtMoneyCash.setText("0");
         txtMoneyCash.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
+        jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel24.setText("Tiền CK:");
 
         txtMoneyTransfer.setText("0");
@@ -608,6 +638,7 @@ public class OrderForm extends javax.swing.JPanel {
             }
         });
 
+        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel26.setText("Tiền giảm");
 
         txtDiscoutCost.setEditable(false);
@@ -619,6 +650,10 @@ public class OrderForm extends javax.swing.JPanel {
 
         lbnTotalCost.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lbnTotalCost.setForeground(new java.awt.Color(255, 51, 51));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel3.setText("VNĐ");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -649,8 +684,10 @@ public class OrderForm extends javax.swing.JPanel {
                         .addComponent(cboVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(lbnTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(lbnTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel17)
@@ -716,9 +753,11 @@ public class OrderForm extends javax.swing.JPanel {
                     .addComponent(txtMoneyTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbnTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbnTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))
@@ -861,7 +900,7 @@ public class OrderForm extends javax.swing.JPanel {
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbnGia, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1017,7 +1056,10 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSearchProdDetailFocusLost
 
     private void btnAddInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInvoiceActionPerformed
-
+        if (tblInvoice.getRowCount() >= 10) {
+            JOptionPane.showMessageDialog(this, "Chỉ có thể tối đa 10 hóa đơn chờ", "Thông báo", 0);
+            return;
+        }
         try {
             if (checkProductQuantity() >= 3) {
                 JOptionPane.showMessageDialog(this, "Không được tạo quá 3 hóa đơn trống");
@@ -1044,7 +1086,7 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddInvoiceActionPerformed
 
     private void txtSearchProdDetailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProdDetailKeyReleased
-        
+
         String key = txtSearchProdDetail.getText().trim();
         try {
             if (key.isBlank()) {
@@ -1167,7 +1209,7 @@ public class OrderForm extends javax.swing.JPanel {
                     fillToListCart(os.getToCart((int) tblInvoice.getValueAt(index, 1)));
                     invoiceId = (int) tblInvoice.getValueAt(index, 1);
                     showDetail();
-                    JOptionPane.showMessageDialog(this, "Xóa thành công các hóa đơn chi tiết", "Thông báo", 1);
+                    JOptionPane.showMessageDialog(this, "Xóa thành công", "Thông báo", 1);
                 }
 
             } else {
@@ -1238,7 +1280,9 @@ public class OrderForm extends javax.swing.JPanel {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     try {
-
+                        if (CartQuantity.isCancel()) {
+                            return;
+                        }
                         int id = tblInvoice.getSelectedRow();
                         invoiceId = (int) tblCart.getValueAt(tblCart.getSelectedRow(), 1);
                         indexSneaker = tblCart.getSelectedRow();
@@ -1246,6 +1290,20 @@ public class OrderForm extends javax.swing.JPanel {
                         int sdId = os.getIdSneaker(sneakerCode);
                         int squantity = os.getQuantity(sneakerCode);
                         int cartQuantity = (int) tblCart.getValueAt(indexSneaker, 4);
+                        if (CartQuantity.getQuantity() == 0) {
+                            sdId = os.getIdSneaker((String) tblCart.getValueAt(cartIndex, 2));
+                            int orderId = (int) tblCart.getValueAt(cartIndex, 1);
+                            int quan = (int) tblCart.getValueAt(cartIndex, 4);
+                            if (os.deleteOrderDetail(orderId, sdId) != null || os.deleteOrderDetail(invoiceId, sdId) != 0) {
+                                os.updateQuantityDeleteSneaker((String) tblCart.getValueAt(cartIndex, 2), quan);
+                                fillToListSneakerDetail(os.getAllSneakerDetail());
+                                fillToListInvoice(os.getOrder());
+                                tblInvoice.setRowSelectionInterval(id, id);
+                                fillToListCart(os.getToCart(invoiceId));
+                                showDetail();
+                            }
+                            return;
+                        }
                         if (CartQuantity.getQuantity() > cartQuantity) {
                             if ((CartQuantity.getQuantity() - Integer.parseInt(tblCart.getValueAt(indexSneaker, 4) + "")) <= squantity) {
                                 if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
@@ -1276,7 +1334,8 @@ public class OrderForm extends javax.swing.JPanel {
                         Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            });
+            }
+            );
         } else {
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm trong giỏ", "Thông báo", 1);
         }
@@ -1293,21 +1352,16 @@ public class OrderForm extends javax.swing.JPanel {
                 if (tblInvoice.getValueAt(i, 6) != null) {
                     int orderQuantity = (int) tblInvoice.getValueAt(i, 3);
                     int orderId = Integer.parseInt(tblInvoice.getValueAt(i, 1) + "");
-//                    os.removeInvoice(orderId);
-//                    for (int j = 0; j < tblCart.getRowCount(); j++) {
-//                        String code = (String) tblCart.getValueAt(j, 2);
-//                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(j, 4));
-//                    }
-                    if (orderQuantity == 0) {
-                        os.removeInvoice(orderId);
-                    } else {
-                        os.updateOrder(orderId);
-                        for (int j = 0; j < tblCart.getRowCount(); j++) {
-                            String code = (String) tblCart.getValueAt(j, 2);
-                            os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(j, 4));
+                    if (!(orderQuantity > 0)) {
+                        if (os.removeInvoice(orderId) > 0) {
+                            for (int j = 0; j < tblCart.getRowCount(); j++) {
+                                String code = (String) tblCart.getValueAt(j, 2);
+                                os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(j, 4));
+                                fillToListSneakerDetail(os.getAllSneakerDetail());
+                            }
                         }
+                        active = true;
                     }
-                    active = true;
                 }
             }
             if (active) {
@@ -1319,35 +1373,86 @@ public class OrderForm extends javax.swing.JPanel {
                     fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
                 } else {
                     fillToListCart(new ArrayList<>());
+                    clearForm();
+                    return;
                 }
                 invoiceId = (int) tblInvoice.getValueAt(0, 1);
                 showDetail();
             } else {
-//                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn để xóa", "Thông báo", 1);
-                int orderId2 = Integer.parseInt(tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 1) + "");
-                if (os.removeInvoice(orderId2) > 0) {
-                    for (int i = 0; i < tblCart.getRowCount(); i++) {
-                        String code = (String) tblCart.getValueAt(i, 2);
-                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(i, 4));
-                    }
-                    fillToListSneakerDetail(os.getAllSneakerDetail());
-                    fillToListInvoice(os.getOrder());
-                    tblInvoice.setRowSelectionInterval(0, 0);
-                    JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
-                    if (tblInvoice.getRowCount() > 0) {
-                        tblInvoice.setRowSelectionInterval(0, 0);
-                        fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
-                    } else {
-                        fillToListCart(new ArrayList<>());
-                    }
-                    invoiceId = (int) tblInvoice.getValueAt(0, 1);
-                    showDetail();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
-                }
+                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn để xóa", "Thông báo", 1);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi hủy hóa đơn", "Thông báo", 0);
         }
+//        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn này không?", "Thông báo", 1);
+//        boolean active = false;
+//        if (confirm != 0) {
+//            return;
+//        }
+//        try {
+//                         for (int i = 0; i < tblInvoice.getRowCount(); i++) {
+//                            if (tblInvoice.getValueAt(i, 6) != null) {
+//                                int orderQuantity = (int) tblInvoice.getValueAt(i, 3);
+//                                int orderId = Integer.parseInt(tblInvoice.getValueAt(i, 1) + "");
+//            //                    os.removeInvoice(orderId);
+//            //                    for (int j = 0; j < tblCart.getRowCount(); j++) {
+//            //                        String code = (String) tblCart.getValueAt(j, 2);
+//            //                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(j, 4));
+//            //                    }
+//                                if (os.removeInvoice(orderId) > 0) {
+//                                    for (int j = 0; j < tblCart.getRowCount(); j++) {
+//                                        String code = (String) tblCart.getValueAt(j, 2);
+//                                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(j, 4));
+//                                        fillToListSneakerDetail(os.getAllSneakerDetail());
+//                                    }
+//                                }
+//                                active = true;
+//                                
+//                            }
+//                        }
+//                        if (active) {
+//                            JOptionPane.showMessageDialog(this, "Hủy thành công", "Thông báo", 1);
+//                            fillToListSneakerDetail(os.getAllSneakerDetail());
+//                            fillToListInvoice(os.getOrder());
+//                            if (tblInvoice.getRowCount() > 0) {
+//                                tblInvoice.setRowSelectionInterval(0, 0);
+//                                fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
+//                            } else {
+//                                fillToListCart(new ArrayList<>());
+//                                clearForm();
+//                                return;
+//                            }
+//                            invoiceId = (int) tblInvoice.getValueAt(0, 1);
+//                            showDetail();
+//                        } 
+//            else {
+////                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn để xóa", "Thông báo", 1);
+//                int orderId2 = Integer.parseInt(tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 1) + "");
+//                if (os.removeInvoice(orderId2) > 0) {
+//                    for (int i = 0; i < tblCart.getRowCount(); i++) {
+//                        String code = (String) tblCart.getValueAt(i, 2);
+//                        os.updateQuantityDeleteSneaker(code, (int) tblCart.getValueAt(i, 4));
+//                    }
+//                    fillToListSneakerDetail(os.getAllSneakerDetail());
+//                    fillToListInvoice(os.getOrder());
+//                    JOptionPane.showMessageDialog(this, "Hủy hóa đơn thành công", "Thông báo", 1);
+//                    if (tblInvoice.getRowCount() > 0) {
+//                        tblInvoice.setRowSelectionInterval(0, 0);
+//                        fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));
+//                    } else {
+//                        fillToListCart(new ArrayList<>());
+//                        clearForm();
+//                        return;
+//                    }
+//                    invoiceId = (int) tblInvoice.getValueAt(0, 1);
+//                    showDetail();
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Không hủy được hóa đơn", "Thông báo", 1);
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
     }//GEN-LAST:event_btnDeleteMuchActionPerformed
 
     private void btnListCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListCustomerActionPerformed
@@ -1364,6 +1469,10 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnListCustomerActionPerformed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
+        if (txtInvoiceId.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn cần thanh toán");
+            return;
+        }
         Integer orderId = Integer.parseInt(txtInvoiceId.getText());
         Integer customerId = null;
         Integer userId = null;
@@ -1371,6 +1480,7 @@ public class OrderForm extends javax.swing.JPanel {
 
         String userCode = txtStaffId.getText().substring(0, txtStaffId.getText().indexOf(" "));
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán không?", "Thông báo", 2);
+
         if (tblInvoice.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Không còn hóa đơn để thanh toán");
             return;
@@ -1413,11 +1523,21 @@ public class OrderForm extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Bạn chưa nhập tiền mặt");
                 return;
             } else {
-                int cash = Integer.parseInt(txtMoneyCash.getText());
+                int cash;
+                try {
+                    cash = Integer.parseInt(txtMoneyCash.getText());
+                    if (cash < 0) {
+                        JOptionPane.showMessageDialog(this, "Số tiền mặt nhập vào phải lớn hon 0!", "Thông báo", 2);
+                        return;
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Số tiền mặt nhập vào phải là số!", "Thông báo", 2);
+                    return;
+                }
                 int totalCash = Integer.parseInt(lbnTotalCost.getText());
                 int change = cash - totalCash;
                 if (change > 0) {
-                    JOptionPane.showMessageDialog(this, "Số tiền cần trả lại khách: " + change, "Thông báo", 1);
+                    JOptionPane.showMessageDialog(this, "Số tiền cần trả lại khách: " + change + "VNĐ", "Thông báo", 1);
                 } else if (change == 0) {
                 } else {
                     JOptionPane.showMessageDialog(this, "Số tiền mặt nhập vào chưa đủ!", "Thông báo", 2);
@@ -1529,6 +1649,10 @@ public class OrderForm extends javax.swing.JPanel {
                 document.close();
                 System.out.println("Created pdf");
 //                fillToListSneakerDetail(os.getAllSneakerDetail());
+                if (!(os.updateQuantityVoucher((String) cboVoucher.getSelectedItem()) > 0)) {
+                    JOptionPane.showMessageDialog(this, "Không sử dụng được voucher");
+                    return;
+                }
                 fillToListInvoice(os.getOrder());
                 if (tblInvoice.getRowCount() <= 0) {
                     fillToListInvoice(new ArrayList<>());
@@ -1593,6 +1717,7 @@ public class OrderForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JPanel jPanel1;

@@ -25,20 +25,21 @@ public class BillService {
 
     public ArrayList<Bill> getAllBill() {
         ArrayList<Bill> listOrder = new ArrayList<>();
-        String sql = "SELECT dbo.[Order].order_id, "
-                + " dbo.[User].user_code, "
-                + " dbo.Customer.full_name, "
-                + " dbo.[Order].payment_method, "
-                + " SUM(dbo.OrderDetail.quantity * dbo.OrderDetail.price) as total_cost, "
-                + " dbo.[Order].created_at "
-                + " FROM "
-                + " dbo.[Order] LEFT JOIN "
-                + " dbo.[User] ON dbo.[Order].user_id = dbo.[User].user_id LEFT JOIN "
-                + " dbo.Customer ON dbo.[Order].customer_id = dbo.Customer.customer_id LEFT JOIN "
-                + " dbo.OrderDetail ON dbo.OrderDetail.order_id = dbo.[Order].order_id "
-                + " WHERE  dbo.[Order].status LIKE N'Đã thanh toán' "
-                + " GROUP BY dbo.[Order].order_id, dbo.[User].user_code, dbo.Customer.full_name, dbo.[Order].payment_method, dbo.[Order].created_at "
-                + " ORDER BY dbo.[Order].order_id ASC";
+        String sql = """
+                     SELECT distinct dbo.[Order].order_id,
+                        dbo.[User].user_code,
+                        dbo.Customer.full_name,
+                        dbo.[Order].payment_method,
+                        dbo.[Order].total_cost,
+                        dbo.[Order].created_at
+                     FROM 
+                        dbo.[Order] LEFT JOIN
+                        dbo.[User] ON dbo.[Order].user_id = dbo.[User].user_id LEFT JOIN
+                        dbo.Customer ON dbo.[Order].customer_id = dbo.Customer.customer_id LEFT JOIN
+                     	dbo.OrderDetail ON dbo.OrderDetail.order_id = dbo.[Order].order_id
+                     WHERE  dbo.[Order].status LIKE N'Đã thanh toán'
+                     ORDER BY dbo.[Order].order_id ASC
+                     """;
         try {
             pstm = con.prepareStatement(sql);
             rs = pstm.executeQuery();
@@ -48,7 +49,7 @@ public class BillService {
                 bill.setStaff_id(rs.getString("user_code"));
                 bill.setNameCustomer(rs.getString("full_name"));
                 bill.setPaymentMethod(rs.getString("payment_method"));
-                bill.setTotalCost(BigDecimal.ZERO);
+                bill.setTotalCost(rs.getBigDecimal("total_cost"));
                 bill.setCreatedDay(rs.getDate("created_at"));
                 listOrder.add(bill);
             }
@@ -61,12 +62,34 @@ public class BillService {
     public List<Bill> timKiem(String timKiem, String hinhThucTT, String ngayBatDau, String ngayKetThuc) {
         List<Bill> listBillSearch = new ArrayList<>();
 
+//        String sql = "SELECT "
+//                + " DISTINCT dbo.[Order].order_id, "
+//                + " dbo.[User].user_code, "
+//                + " dbo.Customer.full_name, "
+//                + " dbo.[Order].payment_method, "
+//                + " SUM(dbo.OrderDetail.quantity * dbo.OrderDetail.price) as total_cost, "
+//                + " dbo.[Order].created_at "
+//                + " FROM dbo.[Order] "
+//                + " LEFT JOIN "
+//                + " dbo.Customer ON dbo.Customer.customer_id = dbo.[Order].customer_id "
+//                + " LEFT JOIN "
+//                + " dbo.[User] ON dbo.[Order].user_id = dbo.[User].user_id "
+//                + " LEFT JOIN "
+//                + " dbo.OrderDetail ON dbo.OrderDetail.order_id = dbo.[Order].order_id "
+//                + " WHERE dbo.[Order].status LIKE N'Đã thanh toán' "
+//                + " AND ( ? IS NULL OR dbo.[Order].payment_method LIKE ? ) "
+//                + " AND dbo.[Order].created_at BETWEEN ? AND ? "
+//                + " AND ( ? IS NULL OR dbo.[Order].order_id LIKE ? "
+//                + " OR dbo.[User].user_code LIKE ? "
+//                + " OR dbo.Customer.full_name LIKE ? ) "
+//                + " GROUP BY dbo.[Order].order_id, dbo.[User].user_code, dbo.Customer.full_name, dbo.[Order].payment_method, dbo.[Order].created_at"
+//                + " ORDER BY dbo.[Order].order_id ASC";
         String sql = "SELECT "
                 + " DISTINCT dbo.[Order].order_id, "
                 + " dbo.[User].user_code, "
                 + " dbo.Customer.full_name, "
                 + " dbo.[Order].payment_method, "
-                + " SUM(dbo.OrderDetail.quantity * dbo.OrderDetail.price) as total_cost, "
+                + " dbo.[Order].total_cost, "
                 + " dbo.[Order].created_at "
                 + " FROM dbo.[Order] "
                 + " LEFT JOIN "
@@ -81,7 +104,6 @@ public class BillService {
                 + " AND ( ? IS NULL OR dbo.[Order].order_id LIKE ? "
                 + " OR dbo.[User].user_code LIKE ? "
                 + " OR dbo.Customer.full_name LIKE ? ) "
-                + " GROUP BY dbo.[Order].order_id, dbo.[User].user_code, dbo.Customer.full_name, dbo.[Order].payment_method, dbo.[Order].created_at"
                 + " ORDER BY dbo.[Order].order_id ASC";
         try {
             pstm = con.prepareStatement(sql);

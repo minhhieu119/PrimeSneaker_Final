@@ -1,11 +1,25 @@
 
 package com.prime.form.attributeSneaker;
 
-public class SoleDialog extends javax.swing.JFrame {
+import com.prime.form.ManageSneaker;
+import com.prime.main_model.Model_DeGiay;
+import com.prime.responsitory.SoleResponsitory;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-    public SoleDialog() {
+public class SoleDialog extends javax.swing.JDialog {
+
+    DefaultTableModel model = new DefaultTableModel();
+    int index;
+    private final SoleResponsitory soleRS = new SoleResponsitory();
+    ManageSneaker sneaker = new ManageSneaker();
+    public SoleDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
+        model = (DefaultTableModel) tblSole.getModel();
+        loadDeGiayToTable();
     }
 
 
@@ -53,13 +67,33 @@ public class SoleDialog extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblSole.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSoleMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblSole);
 
         btnAddSole.setText("Thêm");
+        btnAddSole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddSoleActionPerformed(evt);
+            }
+        });
 
         btnEditSole.setText("Sửa");
+        btnEditSole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditSoleActionPerformed(evt);
+            }
+        });
 
         btnClearSole.setText("Làm mới");
+        btnClearSole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearSoleActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,11 +156,87 @@ public class SoleDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddSoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSoleActionPerformed
+        if (txtSoleName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên Đế Giày");
+            txtSoleName.requestFocus();
+            return;
+        }
+        if (txtSoleName.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Tên Đế giày không được nhập số");
+            txtSoleName.requestFocus();
+            return;
+        }
+        ArrayList<Model_DeGiay> lst = soleRS.getAll();
+            for (Model_DeGiay co : lst) {
+                if (txtSoleName.getText().trim().equals(co.getTenDeGiay())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+        Model_DeGiay dg = readForm();
+        if (soleRS.addSole(dg) != null) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            loadDeGiayToTable();
+            sneaker.loadDataSole();
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
+    }//GEN-LAST:event_btnAddSoleActionPerformed
+
+    private void btnEditSoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditSoleActionPerformed
+        if (txtSoleId.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn Đế giày cần sửa");
+            return;
+        }
+        if (txtSoleName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Đế Giày");
+            txtSoleName.requestFocus();
+            return;
+        }
+        if (txtSoleName.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Tên Đế giày không được nhập số");
+            txtSoleName.requestFocus();
+            return;
+        }
+        ArrayList<Model_DeGiay> lst = soleRS.getAll();
+            for (Model_DeGiay co : lst) {
+                if (txtSoleName.getText().equals(co.getTenDeGiay())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+        Model_DeGiay dg = readForm1();
+        if (soleRS.updateSole(dg) != null) {
+            loadDeGiayToTable();
+            JOptionPane.showMessageDialog(this, "Cập nhật đế giày thành công thành công");
+        } else
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
+    }//GEN-LAST:event_btnEditSoleActionPerformed
+
+    private void btnClearSoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearSoleActionPerformed
+        txtSoleId.setText("");
+        txtSoleName.setText("");
+    }//GEN-LAST:event_btnClearSoleActionPerformed
+
+    private void tblSoleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSoleMouseClicked
+        index = tblSole.getSelectedRow();
+        showDeTail(index);
+    }//GEN-LAST:event_tblSoleMouseClicked
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SoleDialog().setVisible(true);
+                SoleDialog dialog = new SoleDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -143,4 +253,35 @@ public class SoleDialog extends javax.swing.JFrame {
     private javax.swing.JTextField txtSoleId;
     private javax.swing.JTextField txtSoleName;
     // End of variables declaration//GEN-END:variables
+    private void loadDeGiayToTable() {
+        model.setRowCount(0);
+        ArrayList<Model_DeGiay> lstDeGiay = soleRS.getAll();
+        for (Model_DeGiay dg : lstDeGiay) {
+           // System.out.println(dg);
+            model.addRow(new Object[]{
+                dg.getMaDeGiay(),
+                dg.getTenDeGiay()
+            });
+        }
+    }
+
+    private void showDeTail(int index) {
+        txtSoleId.setText(tblSole.getValueAt(index, 0).toString());
+        txtSoleName.setText(tblSole.getValueAt(index, 1).toString());
+        tblSole.setRowSelectionInterval(index, index);
+    }
+
+    private Model_DeGiay readForm() {
+        Model_DeGiay dg = new Model_DeGiay();
+        dg.setTenDeGiay(txtSoleName.getText().trim());
+        //dg.setMaDeGiay(Integer.parseInt(txtSoleId.getText()));
+        return dg;
+    }
+
+    private Model_DeGiay readForm1() {
+        Model_DeGiay dg = new Model_DeGiay();
+        dg.setTenDeGiay(txtSoleName.getText().trim());
+        dg.setMaDeGiay(Integer.parseInt(txtSoleId.getText()));
+        return dg;
+    }
 }

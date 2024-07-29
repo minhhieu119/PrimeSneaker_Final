@@ -11,7 +11,7 @@ package com.prime.main_model;
 public class Model_SneakerDetail {
     private int maSPCT;
     private Model_addNameProduct tenSP;
-    private double giaSP;
+    private long giaSP;
     private int soLuong;
     private String code_sneaker;
     private Model_Category danhMuc;
@@ -25,7 +25,7 @@ public class Model_SneakerDetail {
     public Model_SneakerDetail() {
     }
 
-    public Model_SneakerDetail(int maSPCT, Model_addNameProduct tenSP, double giaSP, int soLuong, String code_sneaker, Model_Category danhMuc, Model_Brand hang, Model_Color mauSac, Material chatLieu, SizeModel kichCo, Model_DeGiay deGiay, String trangThai) {
+    public Model_SneakerDetail(int maSPCT, Model_addNameProduct tenSP, long giaSP, int soLuong, String code_sneaker, Model_Category danhMuc, Model_Brand hang, Model_Color mauSac, Material chatLieu, SizeModel kichCo, Model_DeGiay deGiay, String trangThai) {
         this.maSPCT = maSPCT;
         this.tenSP = tenSP;
         this.giaSP = giaSP;
@@ -60,7 +60,7 @@ public class Model_SneakerDetail {
         return giaSP;
     }
 
-    public void setGiaSP(double giaSP) {
+    public void setGiaSP(long giaSP) {
         this.giaSP = giaSP;
     }
 

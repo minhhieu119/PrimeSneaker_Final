@@ -26,9 +26,9 @@ public class UserService {
 
     public ArrayList<ModelUser> getAllUsers() throws SQLException {
         ArrayList<ModelUser> listUser = new ArrayList<>();
-        String query = "SELECT user_code, Role.role_name, full_name, gender, date_of_birth, phone_number, "
+        String query = "SELECT user_code, role_id, full_name, gender, date_of_birth, phone_number, "
                 + "address, email, id_card_number, account_name, password, status\n"
-                + " FROM [User] JOIN Role ON [User].role_id = Role.role_id";
+                + " FROM [User]";
         try {
             connect = ConnectionJDBC.getConnection();
             ps = connect.prepareStatement(query);
@@ -36,7 +36,7 @@ public class UserService {
             while (result.next()) {
                 ModelUser user = new ModelUser();
                 user.setUserCode(result.getString("user_code"));
-                user.setRole(result.getString("role_name"));
+                user.setRoleId(result.getInt("role_id"));
 //                user.setUserQR(result.getString("user_code"));
                 user.setStaffName(result.getString("full_name"));
                 user.setGender(result.getBoolean("gender"));
@@ -147,9 +147,9 @@ public class UserService {
 
     public ArrayList<ModelUser> getUsersByKey(String key) throws SQLException {
         ArrayList<ModelUser> resulList = new ArrayList<>();
-        String query = "SELECT user_code, Role.role_name, full_name, gender, date_of_birth, phone_number, "
+        String query = "SELECT user_code, role_id, full_name, gender, date_of_birth, phone_number, "
                 + "address, email, id_card_number, account_name, password, status\n"
-                + " FROM [User] JOIN Role ON [User].role_id = Role.role_id\n"
+                + " FROM [User]\n"
                 + "WHERE user_code LIKE ?"
                 + " OR full_name LIKE ?"
                 + " OR date_of_birth LIKE ?"
@@ -169,7 +169,7 @@ public class UserService {
             while (result.next()) {                
                 ModelUser user = new ModelUser();
                 user.setUserCode(result.getString("user_code"));
-                user.setRole(result.getString("role_name"));
+                user.setRoleId(result.getInt("role_id"));
 //                user.setUserQR(result.getString("user_code"));
                 user.setStaffName(result.getString("full_name"));
                 user.setGender(result.getBoolean("gender"));

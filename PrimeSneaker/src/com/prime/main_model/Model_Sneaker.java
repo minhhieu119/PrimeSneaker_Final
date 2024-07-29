@@ -86,9 +86,6 @@ public class Model_Sneaker {
     }
 
     public String getTrangThai() {
-        if (this.trangThai == null){
-            return "Đã ngừng bán";
-        }
         return trangThai;
     }
 

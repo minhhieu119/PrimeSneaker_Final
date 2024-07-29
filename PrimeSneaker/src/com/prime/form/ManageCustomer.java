@@ -18,7 +18,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class ManageCustomer extends javax.swing.JPanel {
 
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model1 = new DefaultTableModel();
+    DefaultTableModel model2 = new DefaultTableModel();
     CustomerService svc = new CustomerService();
     int index = -1;
     int confirm;
@@ -26,7 +27,7 @@ public class ManageCustomer extends javax.swing.JPanel {
     public ManageCustomer() throws SQLException {
         initComponents();
         setOpaque(false);
-        model = (DefaultTableModel) tblListCustomer.getModel();    
+        model1 = (DefaultTableModel) tblListCustomer.getModel();
         ArrayList<ModelCustomer> list = svc.getAllCustomer();
         fillToTable(list);
         if (tblListCustomer.getRowCount() > 0) {
@@ -35,8 +36,8 @@ public class ManageCustomer extends javax.swing.JPanel {
         }
         txtCustomerId.setEditable(false);
         txtCustomerId.setBackground(Color.lightGray);
-        
-        model = (DefaultTableModel) tblOrderHistory.getModel();
+
+        model2 = (DefaultTableModel) tblOrderHistory.getModel();
         ArrayList<Order> listOrder = svc.getOrderHistory();
         fillToOrderHistoryTbl();
     }
@@ -531,9 +532,7 @@ public class ManageCustomer extends javax.swing.JPanel {
             return;
         }
         try {
-            ModelCustomer cus = readForm();
-            System.out.println(cus.getCustomerID());
-            System.out.println(txtCustomerId.getText());
+            ModelCustomer cus = readFormToUpdate();
             if (checkExistID()) {
                 confirm = JOptionPane.showConfirmDialog(this, "Xác nhận sửa khách hàng?");
                 if (confirm != JOptionPane.YES_OPTION) {
@@ -552,11 +551,10 @@ public class ManageCustomer extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }//GEN-LAST:event_btnUpdateCustomerActionPerformed
 
     private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
-     
+
         checkNull();
         if (!checkPhone()) {
             showMess("Số điện thoại không đúng định dạng");
@@ -568,31 +566,34 @@ public class ManageCustomer extends javax.swing.JPanel {
             txtDob.requestFocus();
             return;
         }
-        
+
         try {
             if (checkExistName() && checkExistPhone()) {
                 showMess("Đã tồn tại khách hàng và số ĐT này");
                 txtCustomerName.requestFocus();
                 return;
             }
-        try {
-            ModelCustomer cus = readForm();
+
             confirm = JOptionPane.showConfirmDialog(this, "Xác nhận thêm khách hàng?");
             if (confirm != JOptionPane.YES_OPTION) {
                 return;
             }
-            if (svc.addCustomer(cus)) {
-                ArrayList<ModelCustomer> list = svc.getAllCustomer();
-                fillToTable(list);
-                showMess("Thêm khách hàng thành công");
-                index = 0;
-                showDetail(list);
+            ModelCustomer cus = readForm();
+            if (!checkExistID()) {
+                if (svc.addCustomer(cus)) {
+                    ArrayList<ModelCustomer> list = svc.getAllCustomer();
+                    fillToTable(list);
+                    showMess("Thêm khách hàng thành công");
+                    index = tblListCustomer.getRowCount() - 1;
+                    showDetail(list);
+                }
+            } else {
+                showMess("Không thể thêm mới, vui lòng chọn Reset để thêm mới");
+                txtCustomerId.requestFocus();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        } catch (SQLException ex) {
-            Logger.getLogger(ManageCustomer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAddCustomerActionPerformed
 
@@ -639,10 +640,10 @@ public class ManageCustomer extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void fillToTable(ArrayList<ModelCustomer> list) {
-        model.setRowCount(0);
+        model1.setRowCount(0);
         int i = 1;
         for (ModelCustomer customer : list) {
-            model.addRow(new Object[]{
+            model1.addRow(new Object[]{
                 i++,
                 customer.getCustomerID(),
                 customer.getCustomerName(),
@@ -730,6 +731,20 @@ public class ManageCustomer extends javax.swing.JPanel {
 
     private ModelCustomer readForm() throws ParseException {
         ModelCustomer cus = new ModelCustomer();
+//        cus.setCustomerID(Integer.valueOf(txtCustomerId.getText()));
+        cus.setCustomerName(txtCustomerName.getText());
+        cus.setPhoneNumber(txtCustomerPhone.getText());
+        cus.setGender(rdoMale.isSelected());
+        cus.setAddress(txtAddress.getText());
+        String string = txtDob.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(string);
+        cus.setDob(date);
+        return cus;
+    }
+
+    private ModelCustomer readFormToUpdate() throws ParseException {
+        ModelCustomer cus = new ModelCustomer();
         cus.setCustomerID(Integer.valueOf(txtCustomerId.getText()));
         cus.setCustomerName(txtCustomerName.getText());
         cus.setPhoneNumber(txtCustomerPhone.getText());
@@ -753,10 +768,10 @@ public class ManageCustomer extends javax.swing.JPanel {
     }
 
     private void fillToOrderHistoryTbl() throws SQLException {
-        model.setRowCount(0);
+        model2.setRowCount(0);
         int i = 1;
         for (Order order : svc.getOrderHistory()) {
-            model.addRow(new Object[]{
+            model2.addRow(new Object[]{
                 i++,
                 order.getCustomerId(),
                 order.getCustomerName(),

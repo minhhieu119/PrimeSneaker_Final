@@ -18,10 +18,6 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author tt
- */
 public class SneakerDetailResponsitory {
 
     public ArrayList<Model_SneakerDetail> getALl() {
@@ -29,7 +25,8 @@ public class SneakerDetailResponsitory {
         try {
             Connection con = ConnectionJDBC.getConnection();
             Statement stm = con.createStatement();
-            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
+            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] "
+                    + "from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
                     + "                                     left join Category on Sneaker.category_id = Category.category_id\n"
                     + "						left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "						left join Sole on Sneaker.sole_id = Sole.sole_id\n"
@@ -51,7 +48,7 @@ public class SneakerDetailResponsitory {
                 sd.setCode_sneaker(rs.getString("sneaker_detail_code"));
                 sn.setProduct_name(rs.getString("sneaker_name"));
                 sd.setTenSP(sn);
-                sd.setGiaSP(rs.getDouble("price"));
+                sd.setGiaSP(rs.getLong("price"));
                 sd.setSoLuong(rs.getInt("quantity"));
                 cate.setCategory_name(rs.getString("category_name"));
                 sd.setDanhMuc(cate);
@@ -100,7 +97,8 @@ public class SneakerDetailResponsitory {
         try {
             Connection con = ConnectionJDBC.getConnection();
 
-            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
+            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] "
+                    + "from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
                     + "                                     left join Category on Sneaker.category_id = Category.category_id\n"
                     + "						left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "						left join Sole on Sneaker.sole_id = Sole.sole_id\n"
@@ -121,9 +119,10 @@ public class SneakerDetailResponsitory {
                 SizeModel si = new SizeModel();
                 Model_DeGiay de = new Model_DeGiay();
                 sd.setMaSPCT(rs.getInt("sneaker_detail_id"));
+                sd.setCode_sneaker(rs.getString("sneaker_detail_code"));
                 sn.setProduct_name(rs.getString("sneaker_name"));
                 sd.setTenSP(sn);
-                sd.setGiaSP(rs.getDouble("price"));
+                sd.setGiaSP(rs.getLong("price"));
                 sd.setSoLuong(rs.getInt("quantity"));
                 cate.setCategory_name(rs.getString("category_name"));
                 sd.setDanhMuc(cate);
@@ -151,7 +150,7 @@ public class SneakerDetailResponsitory {
         try {
             Connection con = ConnectionJDBC.getConnection();
 
-            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
+            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
                     + "                                     left join Category on Sneaker.category_id = Category.category_id\n"
                     + "						left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "						left join Sole on Sneaker.sole_id = Sole.sole_id\n"
@@ -172,9 +171,10 @@ public class SneakerDetailResponsitory {
                 SizeModel si = new SizeModel();
                 Model_DeGiay de = new Model_DeGiay();
                 sd.setMaSPCT(rs.getInt("sneaker_detail_id"));
+                sd.setCode_sneaker(rs.getString("sneaker_detail_code"));
                 sn.setProduct_name(rs.getString("sneaker_name"));
                 sd.setTenSP(sn);
-                sd.setGiaSP(rs.getDouble("price"));
+                sd.setGiaSP(rs.getLong("price"));
                 sd.setSoLuong(rs.getInt("quantity"));
                 cate.setCategory_name(rs.getString("category_name"));
                 sd.setDanhMuc(cate);
@@ -201,7 +201,7 @@ public class SneakerDetailResponsitory {
         Integer row = null;
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "update SneakerDetail \n"
+            String sql = "update Sneaker \n"
                     + "set status = N'Đã ngừng bán'"
                     + "where sneaker_id =? ";
             PreparedStatement prsm = con.prepareStatement(sql);
@@ -217,7 +217,7 @@ public class SneakerDetailResponsitory {
         Integer row = null;
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "update SneakerDetail \n"
+            String sql = "update Sneaker \n"
                     + "set status = N'Đang bán'"
                     + "where sneaker_id =? ";
             PreparedStatement prsm = con.prepareStatement(sql);
@@ -234,16 +234,15 @@ public class SneakerDetailResponsitory {
         try {
             Connection con = ConnectionJDBC.getConnection();
 
-            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
+            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
                     + "                         left join Category on Sneaker.category_id = Category.category_id\n"
                     + "           				left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "                		left join Sole on Sneaker.sole_id = Sole.sole_id\n"
                     + "                		left join Material on Sneaker.material_id = Material.material_id\n"
                     + "           				left join Size on SneakerDetail.size_id = Size.size_id\n"
                     + "          				left join Color on SneakerDetail.color_id = Color.color_id\n"
-                    + "                       where(SneakerDetail.sneaker_detail_id like ? or sneaker_name like ? or  brand_name like ? or category_name like ? \n"
-                    + "					 or  material_name like ? or quantity like ? or price like ? or size_number like ? or color_name like ? \n"
-                    + "					   )";
+                    + "                       where(SneakerDetail.sneaker_detail_id like ? or sneaker_detail_code like ? or sneaker_name like ? or  brand_name like ? or category_name like ? \n"
+                    + "					 or  material_name like ? or quantity like ? or price like ? or size_number like ? or color_name like ? ) \n";
             PreparedStatement prsm = con.prepareCall(sql);
             prsm.setObject(1, '%' + key + '%');
             prsm.setObject(2, '%' + key + '%');
@@ -254,6 +253,7 @@ public class SneakerDetailResponsitory {
             prsm.setObject(7, '%' + key + '%');
             prsm.setObject(8, '%' + key + '%');
             prsm.setObject(9, '%' + key + '%');
+            prsm.setObject(10, '%' + key + '%');
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
                 Model_SneakerDetail sd = new Model_SneakerDetail();
@@ -265,9 +265,10 @@ public class SneakerDetailResponsitory {
                 SizeModel si = new SizeModel();
                 Model_DeGiay de = new Model_DeGiay();
                 sd.setMaSPCT(rs.getInt("sneaker_detail_id"));
+                sd.setCode_sneaker(rs.getString("sneaker_detail_code"));
                 sn.setProduct_name(rs.getString("sneaker_name"));
                 sd.setTenSP(sn);
-                sd.setGiaSP(rs.getDouble("price"));
+                sd.setGiaSP(rs.getLong("price"));
                 sd.setSoLuong(rs.getInt("quantity"));
                 cate.setCategory_name(rs.getString("category_name"));
                 sd.setDanhMuc(cate);
@@ -297,13 +298,13 @@ public class SneakerDetailResponsitory {
             String sql = "update SneakerDetail \n"
                     + "	set size_id=?,color_id=?,price=?,quantity=?,[status]=?\n"
                     + " where sneaker_detail_id = ?";
-            PreparedStatement prsm = con.prepareStatement(sql);     
+            PreparedStatement prsm = con.prepareStatement(sql);
             prsm.setObject(1, md.getKichCo().getId_Size());
             prsm.setObject(2, md.getMauSac().getColor_id());
             prsm.setObject(3, md.getGiaSP());
             prsm.setObject(4, md.getSoLuong());
             prsm.setObject(5, md.getTrangThai());
-            prsm.setObject(6,md.getMaSPCT());
+            prsm.setObject(6, md.getMaSPCT());
             row = prsm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(SneakerDetailResponsitory.class.getName()).log(Level.SEVERE, null, ex);

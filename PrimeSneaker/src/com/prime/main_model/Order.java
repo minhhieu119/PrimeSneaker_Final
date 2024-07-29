@@ -20,7 +20,7 @@ public class Order {
     private Integer voucherId;
     private String voucherName;
     private String paymentMethod;
-    private long totalCost, receivedCash, change;
+    private long totalCost;
     private int quantity;
     private String status;
     private String note;
@@ -47,7 +47,7 @@ public class Order {
         this.totalCost = totalCost;
     }
 
-    public Order(Integer orderId, Integer userId, String orderQrCode, String userName, Integer customerId, String customerName, Integer voucherId, String voucherName, String paymentMethod, long totalCost, long receivedCash, long change, int quantity, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
+    public Order(Integer orderId, Integer userId, String orderQrCode, String userName, Integer customerId, String customerName, Integer voucherId, String voucherName, String paymentMethod, long totalCost, int quantity, String status, String note, Date created_at, Date update_at, String created_by, String updated_by) {
         this.orderId = orderId;
         this.userId = userId;
         this.orderQrCode = orderQrCode;
@@ -58,8 +58,6 @@ public class Order {
         this.voucherName = voucherName;
         this.paymentMethod = paymentMethod;
         this.totalCost = totalCost;
-        this.receivedCash = receivedCash;
-        this.change = change;
         this.quantity = quantity;
         this.status = status;
         this.note = note;
@@ -68,6 +66,8 @@ public class Order {
         this.created_by = created_by;
         this.updated_by = updated_by;
     }
+
+    
 
     public Integer getOrderId() {
         return orderId;
@@ -149,22 +149,6 @@ public class Order {
         this.totalCost = totalCost;
     }
 
-    public long getReceivedCash() {
-        return receivedCash;
-    }
-
-    public void setReceivedCash(long receivedCash) {
-        this.receivedCash = receivedCash;
-    }
-
-    public long getChange() {
-        return change;
-    }
-
-    public void setChange(long change) {
-        this.change = change;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -223,7 +207,8 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + orderId + ", userId=" + userId + ", orderQrCode=" + orderQrCode + ", userName=" + userName + ", customerId=" + customerId + ", customerName=" + customerName + ", voucherId=" + voucherId + ", voucherName=" + voucherName + ", paymentMethod=" + paymentMethod + ", totalCost=" + totalCost + ", receivedCash=" + receivedCash + ", change=" + change + ", quantity=" + quantity + ", status=" + status + ", note=" + note + ", created_at=" + created_at + ", update_at=" + update_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
+        return "Order{" + "orderId=" + orderId + ", userId=" + userId + ", orderQrCode=" + orderQrCode + ", userName=" + userName + ", customerId=" + customerId + ", customerName=" + customerName + ", voucherId=" + voucherId + ", voucherName=" + voucherName + ", paymentMethod=" + paymentMethod + ", totalCost=" + totalCost + ", quantity=" + quantity + ", status=" + status + ", note=" + note + ", created_at=" + created_at + ", update_at=" + update_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
     }
+
     
 }

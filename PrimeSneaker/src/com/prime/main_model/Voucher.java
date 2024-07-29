@@ -14,8 +14,9 @@ public class Voucher {
     private int voucherId;
     private String voucherCode;
     private String voucherName;
-    private float discountRate, maxDiscount;
-    private long discountAmount;
+    private Boolean voucherType;
+    private Integer voucherValue;
+    private float maxDiscount;
     private long minOrderValue;
     private int quantity;
     private Date startDate, endDate;
@@ -31,12 +32,12 @@ public class Voucher {
         this.voucherName = voucherName;
     }
 
-    public Voucher(int voucherId, String voucherCode, String voucherName, float discountRate, long discountAmount, float maxDiscount, long minOrderValue, int quantity, Date startDate, Date endDate, Date created_at, Date updated_at, String created_by, String updated_by) {
+    public Voucher(int voucherId, String voucherCode, String voucherName, Boolean voucherType, Integer voucherValue, float maxDiscount, long minOrderValue, int quantity, Date startDate, Date endDate, Date created_at, Date updated_at, String created_by, String updated_by) {
         this.voucherId = voucherId;
         this.voucherCode = voucherCode;
         this.voucherName = voucherName;
-        this.discountRate = discountRate;
-        this.discountAmount = discountAmount;
+        this.voucherType = voucherType;
+        this.voucherValue = voucherValue;
         this.maxDiscount = maxDiscount;
         this.minOrderValue = minOrderValue;
         this.quantity = quantity;
@@ -72,20 +73,20 @@ public class Voucher {
         this.voucherName = voucherName;
     }
 
-    public float getDiscountRate() {
-        return discountRate;
+    public Boolean getVoucherType() {
+        return voucherType;
     }
 
-    public void setDiscountRate(float discountRate) {
-        this.discountRate = discountRate;
+    public void setVoucherType(Boolean voucherType) {
+        this.voucherType = voucherType;
     }
 
-    public long getDiscountAmount() {
-        return discountAmount;
+    public Integer getVoucherValue() {
+        return voucherValue;
     }
 
-    public void setDiscountAmount(long discountAmount) {
-        this.discountAmount = discountAmount;
+    public void setVoucherValue(Integer voucherValue) {
+        this.voucherValue = voucherValue;
     }
 
     public float getMaxDiscount() {
@@ -162,8 +163,6 @@ public class Voucher {
 
     @Override
     public String toString() {
-        return "Voucher{" + "voucherId=" + voucherId + ", voucherCode=" + voucherCode + ", voucherName=" + voucherName + ", discountRate=" + discountRate + ", discountAmount=" + discountAmount + ", maxDiscount=" + maxDiscount + ", minOrderValue=" + minOrderValue + ", quantity=" + quantity + ", startDate=" + startDate + ", endDate=" + endDate + ", created_at=" + created_at + ", updated_at=" + updated_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
+        return "Voucher{" + "voucherId=" + voucherId + ", voucherCode=" + voucherCode + ", voucherName=" + voucherName + ", voucherType=" + voucherType + ", voucherValue=" + voucherValue + ", maxDiscount=" + maxDiscount + ", minOrderValue=" + minOrderValue + ", quantity=" + quantity + ", startDate=" + startDate + ", endDate=" + endDate + ", created_at=" + created_at + ", updated_at=" + updated_at + ", created_by=" + created_by + ", updated_by=" + updated_by + '}';
     }
-    
-    
 }

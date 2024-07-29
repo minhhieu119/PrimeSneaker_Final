@@ -167,6 +167,40 @@ public class Properties extends javax.swing.JPanel {
         loadDataColor();
         loadDataSize();
     }
+    
+    private void showDataBrand(int index) {
+        txtBrandID.setText(tblBrand.getValueAt(index, 1).toString());
+        txtBrandName.setText(tblBrand.getValueAt(index, 2).toString());
+        tblBrand.setRowSelectionInterval(index, index);
+    }
+
+    private void showDataCate(int index) {
+        txtIdCategory.setText(tblCategory.getValueAt(index, 1).toString());
+        txtCategory.setText(tblCategory.getValueAt(index, 2).toString());
+        tblCategory.setRowSelectionInterval(index, index);
+    }
+
+    private void showDataColor(int index) {
+        txtColorID.setText(tblColor.getValueAt(index, 1).toString());
+        txtColor.setText(tblColor.getValueAt(index, 2).toString());
+        tblColor.setRowSelectionInterval(index, index);
+    }
+
+    private void showDataMaterial(int index) {
+        txtMaterialID.setText(tblMaterial.getValueAt(index, 1).toString());
+        txtMaterial.setText(tblMaterial.getValueAt(index, 2).toString());
+        tblMaterial.setRowSelectionInterval(index, index);
+    }
+    private void showDataSole(int index) {
+        txtSoleID.setText(tblSole.getValueAt(index, 1).toString());
+        txtSoleName.setText(tblSole.getValueAt(index, 2).toString());
+        tblSole.setRowSelectionInterval(index, index);
+    }
+    private void showDataSize(int index) {
+        txtSizeID.setText(tblSize.getValueAt(index, 1).toString());
+        txtSize.setText(tblSize.getValueAt(index, 2).toString());
+        tblSize.setRowSelectionInterval(index, index);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -186,7 +220,6 @@ public class Properties extends javax.swing.JPanel {
         btnBrandClear = new javax.swing.JButton();
         btnAddBrand = new javax.swing.JButton();
         btnUpdateBrand = new javax.swing.JButton();
-        btnDeleteBrand = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblBrand = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
@@ -200,7 +233,6 @@ public class Properties extends javax.swing.JPanel {
         btnClearCate = new javax.swing.JButton();
         btnAddCate = new javax.swing.JButton();
         btnUpdateCate = new javax.swing.JButton();
-        btnDeleteCate = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblCategory = new javax.swing.JTable();
         tab3 = new javax.swing.JPanel();
@@ -213,7 +245,6 @@ public class Properties extends javax.swing.JPanel {
         btnClearMaterial = new javax.swing.JButton();
         btnAddMaterial = new javax.swing.JButton();
         btnUpdateMaterial = new javax.swing.JButton();
-        btnDeleteMaterial = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         tblMaterial = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
@@ -226,7 +257,6 @@ public class Properties extends javax.swing.JPanel {
         btnSoleClear = new javax.swing.JButton();
         btnSoleAdd = new javax.swing.JButton();
         btnSoleUpdate = new javax.swing.JButton();
-        btnSoleDelete = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         tblSole = new javax.swing.JTable();
         jPanel16 = new javax.swing.JPanel();
@@ -239,7 +269,6 @@ public class Properties extends javax.swing.JPanel {
         btnColorClear = new javax.swing.JButton();
         btnColorAdd = new javax.swing.JButton();
         btnColorUpdate = new javax.swing.JButton();
-        btnColorDelete = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         tblColor = new javax.swing.JTable();
         jPanel18 = new javax.swing.JPanel();
@@ -252,7 +281,6 @@ public class Properties extends javax.swing.JPanel {
         btnSizeClear = new javax.swing.JButton();
         btnSizeAdd = new javax.swing.JButton();
         btnSizeUpdate = new javax.swing.JButton();
-        btnSizeDelete = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblSize = new javax.swing.JTable();
 
@@ -272,6 +300,7 @@ public class Properties extends javax.swing.JPanel {
 
         jLabel16.setText("Mã");
 
+        txtBrandID.setEditable(false);
         txtBrandID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtBrandID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
@@ -308,7 +337,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtBrandName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel13Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtBrandID, txtBrandName});
@@ -346,11 +375,6 @@ public class Properties extends javax.swing.JPanel {
             }
         });
 
-        btnDeleteBrand.setBackground(new java.awt.Color(39, 80, 150));
-        btnDeleteBrand.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnDeleteBrand.setForeground(new java.awt.Color(255, 255, 255));
-        btnDeleteBrand.setText("Xóa");
-
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
@@ -359,29 +383,26 @@ public class Properties extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnBrandClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDeleteBrand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAddBrand, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(btnUpdateBrand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jPanel14Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddBrand, btnBrandClear, btnDeleteBrand, btnUpdateBrand});
+        jPanel14Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddBrand, btnBrandClear, btnUpdateBrand});
 
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addGap(15, 15, 15)
                 .addComponent(btnAddBrand)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnUpdateBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnDeleteBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnBrandClear, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
-        jPanel14Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddBrand, btnBrandClear, btnDeleteBrand, btnUpdateBrand});
+        jPanel14Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddBrand, btnBrandClear, btnUpdateBrand});
 
         tblBrand.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -400,6 +421,11 @@ public class Properties extends javax.swing.JPanel {
             }
         });
         tblBrand.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblBrand.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBrandMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblBrand);
 
         javax.swing.GroupLayout tab1Layout = new javax.swing.GroupLayout(tab1);
@@ -440,7 +466,7 @@ public class Properties extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(tab1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 53, Short.MAX_VALUE))
+                .addGap(0, 57, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Hãng", jPanel2);
@@ -454,6 +480,7 @@ public class Properties extends javax.swing.JPanel {
 
         jLabel19.setText("Mã");
 
+        txtIdCategory.setEditable(false);
         txtIdCategory.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtIdCategory.setSelectionColor(new java.awt.Color(39, 80, 150));
 
@@ -487,7 +514,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel17.setBackground(new java.awt.Color(185, 213, 246));
@@ -523,11 +550,6 @@ public class Properties extends javax.swing.JPanel {
             }
         });
 
-        btnDeleteCate.setBackground(new java.awt.Color(39, 80, 150));
-        btnDeleteCate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnDeleteCate.setForeground(new java.awt.Color(255, 255, 255));
-        btnDeleteCate.setText("Xóa");
-
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
         jPanel17Layout.setHorizontalGroup(
@@ -536,7 +558,6 @@ public class Properties extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnClearCate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDeleteCate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAddCate, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(btnUpdateCate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -546,16 +567,14 @@ public class Properties extends javax.swing.JPanel {
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(btnAddCate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnUpdateCate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnDeleteCate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnClearCate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddCate, btnClearCate, btnDeleteCate, btnUpdateCate});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddCate, btnClearCate, btnUpdateCate});
 
         tblCategory.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -574,6 +593,11 @@ public class Properties extends javax.swing.JPanel {
             }
         });
         tblCategory.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblCategory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCategoryMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(tblCategory);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -614,7 +638,7 @@ public class Properties extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 53, Short.MAX_VALUE))
+                .addGap(0, 57, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Danh mục", jPanel1);
@@ -627,6 +651,7 @@ public class Properties extends javax.swing.JPanel {
 
         jLabel42.setText("Mã");
 
+        txtMaterialID.setEditable(false);
         txtMaterialID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtMaterialID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
@@ -663,7 +688,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel28.setBackground(new java.awt.Color(185, 213, 246));
@@ -699,11 +724,6 @@ public class Properties extends javax.swing.JPanel {
             }
         });
 
-        btnDeleteMaterial.setBackground(new java.awt.Color(39, 80, 150));
-        btnDeleteMaterial.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnDeleteMaterial.setForeground(new java.awt.Color(255, 255, 255));
-        btnDeleteMaterial.setText("Xóa");
-
         javax.swing.GroupLayout jPanel28Layout = new javax.swing.GroupLayout(jPanel28);
         jPanel28.setLayout(jPanel28Layout);
         jPanel28Layout.setHorizontalGroup(
@@ -712,29 +732,26 @@ public class Properties extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnClearMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDeleteMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAddMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(btnUpdateMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jPanel28Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddMaterial, btnClearMaterial, btnDeleteMaterial, btnUpdateMaterial});
+        jPanel28Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddMaterial, btnClearMaterial, btnUpdateMaterial});
 
         jPanel28Layout.setVerticalGroup(
             jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel28Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(btnAddMaterial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnUpdateMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnDeleteMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnClearMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        jPanel28Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddMaterial, btnClearMaterial, btnDeleteMaterial, btnUpdateMaterial});
+        jPanel28Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddMaterial, btnClearMaterial, btnUpdateMaterial});
 
         tblMaterial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -753,6 +770,11 @@ public class Properties extends javax.swing.JPanel {
             }
         });
         tblMaterial.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblMaterial.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMaterialMouseClicked(evt);
+            }
+        });
         jScrollPane8.setViewportView(tblMaterial);
 
         javax.swing.GroupLayout tab3Layout = new javax.swing.GroupLayout(tab3);
@@ -780,7 +802,7 @@ public class Properties extends javax.swing.JPanel {
                     .addComponent(jPanel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Chất liệu", tab3);
@@ -792,6 +814,7 @@ public class Properties extends javax.swing.JPanel {
 
         jLabel40.setText("Mã");
 
+        txtSoleID.setEditable(false);
         txtSoleID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSoleID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
@@ -828,7 +851,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSoleName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel26.setBackground(new java.awt.Color(185, 213, 246));
@@ -864,11 +887,6 @@ public class Properties extends javax.swing.JPanel {
             }
         });
 
-        btnSoleDelete.setBackground(new java.awt.Color(39, 80, 150));
-        btnSoleDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnSoleDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnSoleDelete.setText("Xóa");
-
         javax.swing.GroupLayout jPanel26Layout = new javax.swing.GroupLayout(jPanel26);
         jPanel26.setLayout(jPanel26Layout);
         jPanel26Layout.setHorizontalGroup(
@@ -877,29 +895,26 @@ public class Properties extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnSoleClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSoleDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSoleAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(btnSoleUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jPanel26Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnSoleAdd, btnSoleClear, btnSoleDelete, btnSoleUpdate});
+        jPanel26Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnSoleAdd, btnSoleClear, btnSoleUpdate});
 
         jPanel26Layout.setVerticalGroup(
             jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel26Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(btnSoleAdd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSoleUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnSoleDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSoleClear, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        jPanel26Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnSoleAdd, btnSoleClear, btnSoleDelete, btnSoleUpdate});
+        jPanel26Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnSoleAdd, btnSoleClear, btnSoleUpdate});
 
         tblSole.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -918,6 +933,11 @@ public class Properties extends javax.swing.JPanel {
             }
         });
         tblSole.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblSole.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSoleMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(tblSole);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -945,7 +965,7 @@ public class Properties extends javax.swing.JPanel {
                     .addComponent(jPanel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Đế giày", jPanel7);
@@ -957,6 +977,7 @@ public class Properties extends javax.swing.JPanel {
 
         jLabel38.setText("Mã");
 
+        txtColorID.setEditable(false);
         txtColorID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtColorID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
@@ -993,7 +1014,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel24.setBackground(new java.awt.Color(185, 213, 246));
@@ -1019,11 +1040,6 @@ public class Properties extends javax.swing.JPanel {
         btnColorUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnColorUpdate.setText("Sửa");
 
-        btnColorDelete.setBackground(new java.awt.Color(39, 80, 150));
-        btnColorDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnColorDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnColorDelete.setText("Xóa");
-
         javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
         jPanel24.setLayout(jPanel24Layout);
         jPanel24Layout.setHorizontalGroup(
@@ -1032,29 +1048,26 @@ public class Properties extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnColorClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnColorDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnColorAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(btnColorUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jPanel24Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnColorAdd, btnColorClear, btnColorDelete, btnColorUpdate});
+        jPanel24Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnColorAdd, btnColorClear, btnColorUpdate});
 
         jPanel24Layout.setVerticalGroup(
             jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel24Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(btnColorAdd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnColorUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnColorDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnColorClear, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        jPanel24Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnColorAdd, btnColorClear, btnColorDelete, btnColorUpdate});
+        jPanel24Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnColorAdd, btnColorClear, btnColorUpdate});
 
         tblColor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1073,6 +1086,11 @@ public class Properties extends javax.swing.JPanel {
             }
         });
         tblColor.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblColor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblColorMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(tblColor);
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
@@ -1100,7 +1118,7 @@ public class Properties extends javax.swing.JPanel {
                     .addComponent(jPanel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Màu", jPanel16);
@@ -1112,6 +1130,7 @@ public class Properties extends javax.swing.JPanel {
 
         jLabel28.setText("Mã");
 
+        txtSizeID.setEditable(false);
         txtSizeID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSizeID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
@@ -1148,7 +1167,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel22.setBackground(new java.awt.Color(185, 213, 246));
@@ -1169,11 +1188,6 @@ public class Properties extends javax.swing.JPanel {
         btnSizeUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnSizeUpdate.setText("Sửa");
 
-        btnSizeDelete.setBackground(new java.awt.Color(39, 80, 150));
-        btnSizeDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnSizeDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnSizeDelete.setText("Xóa");
-
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
         jPanel22Layout.setHorizontalGroup(
@@ -1182,29 +1196,26 @@ public class Properties extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnSizeClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSizeDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSizeAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(btnSizeUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jPanel22Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnSizeAdd, btnSizeClear, btnSizeDelete, btnSizeUpdate});
+        jPanel22Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnSizeAdd, btnSizeClear, btnSizeUpdate});
 
         jPanel22Layout.setVerticalGroup(
             jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel22Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(btnSizeAdd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSizeUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btnSizeDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSizeClear, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        jPanel22Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnSizeAdd, btnSizeClear, btnSizeDelete, btnSizeUpdate});
+        jPanel22Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnSizeAdd, btnSizeClear, btnSizeUpdate});
 
         tblSize.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1223,6 +1234,11 @@ public class Properties extends javax.swing.JPanel {
             }
         });
         tblSize.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblSize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSizeMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(tblSize);
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
@@ -1250,7 +1266,7 @@ public class Properties extends javax.swing.JPanel {
                     .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Kích thước", jPanel18);
@@ -1566,6 +1582,36 @@ public class Properties extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnSoleClearActionPerformed
 
+    private void tblBrandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBrandMouseClicked
+        int index = tblBrand.getSelectedRow();
+        showDataBrand(index);
+    }//GEN-LAST:event_tblBrandMouseClicked
+
+    private void tblCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoryMouseClicked
+        int index = tblCategory.getSelectedRow();
+        showDataCate(index);
+    }//GEN-LAST:event_tblCategoryMouseClicked
+
+    private void tblMaterialMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMaterialMouseClicked
+        int index = tblMaterial.getSelectedRow();
+        showDataMaterial(index);
+    }//GEN-LAST:event_tblMaterialMouseClicked
+
+    private void tblSoleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSoleMouseClicked
+        int index = tblSole.getSelectedRow();
+        showDataSole(index);
+    }//GEN-LAST:event_tblSoleMouseClicked
+
+    private void tblColorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblColorMouseClicked
+        int index = tblColor.getSelectedRow();
+        showDataColor(index);
+    }//GEN-LAST:event_tblColorMouseClicked
+
+    private void tblSizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSizeMouseClicked
+        int index = tblSize.getSelectedRow();
+        showDataSize(index);
+    }//GEN-LAST:event_tblSizeMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBrand;
     private javax.swing.JButton btnAddCate;
@@ -1575,18 +1621,12 @@ public class Properties extends javax.swing.JPanel {
     private javax.swing.JButton btnClearMaterial;
     private javax.swing.JButton btnColorAdd;
     private javax.swing.JButton btnColorClear;
-    private javax.swing.JButton btnColorDelete;
     private javax.swing.JButton btnColorUpdate;
-    private javax.swing.JButton btnDeleteBrand;
-    private javax.swing.JButton btnDeleteCate;
-    private javax.swing.JButton btnDeleteMaterial;
     private javax.swing.JButton btnSizeAdd;
     private javax.swing.JButton btnSizeClear;
-    private javax.swing.JButton btnSizeDelete;
     private javax.swing.JButton btnSizeUpdate;
     private javax.swing.JButton btnSoleAdd;
     private javax.swing.JButton btnSoleClear;
-    private javax.swing.JButton btnSoleDelete;
     private javax.swing.JButton btnSoleUpdate;
     private javax.swing.JButton btnUpdateBrand;
     private javax.swing.JButton btnUpdateCate;

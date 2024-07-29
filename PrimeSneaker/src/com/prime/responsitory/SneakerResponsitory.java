@@ -22,13 +22,13 @@ public class SneakerResponsitory {
         ArrayList<Model_Sneaker> lst = new ArrayList<>();
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,[status] \n"
+            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status] \n"
                     + "					from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id\n"
                     + "                              		left join Category on Sneaker.category_id = Category.category_id\n"
                     + "						left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "                    			left join Sole on Sneaker.sole_id = Sole.sole_id\n"
                     + "                    			left join Material on Sneaker.material_id = Material.material_id				\n"
-                    + "               			group by Sneaker.sneaker_id,sneaker_name,category_name,[status],material_name,sole_name,brand_name ";
+                    + "               			group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name ";
             PreparedStatement prsm = con.prepareCall(sql);
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
@@ -64,14 +64,14 @@ public class SneakerResponsitory {
         ArrayList<Model_Sneaker> lst = new ArrayList<>();
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,[status] \n"
+            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status] \n"
                     + "										from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id\n"
                     + "                              				 left join Category on Sneaker.category_id = Category.category_id\n"
                     + "											 left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "                    						left join Sole on Sneaker.sole_id = Sole.sole_id\n"
                     + "                    						left join Material on Sneaker.material_id = Material.material_id \n"
-                    + "											where [status] like N'Đang bán'				\n"
-                    + "               					 group by Sneaker.sneaker_id,sneaker_name,category_name,[status],material_name,sole_name,brand_name";
+                    + "											where Sneaker.[status] like N'Đang bán' 		\n"
+                    + "               					 group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name";
             PreparedStatement prsm = con.prepareCall(sql);
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
@@ -107,14 +107,14 @@ public class SneakerResponsitory {
         ArrayList<Model_Sneaker> lst = new ArrayList<>();
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,[status] \n"
+            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status] \n"
                     + "										from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id\n"
                     + "                              				 left join Category on Sneaker.category_id = Category.category_id\n"
                     + "											 left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "                    						left join Sole on Sneaker.sole_id = Sole.sole_id\n"
                     + "                    						left join Material on Sneaker.material_id = Material.material_id \n"
-                    + "											where [status] like N'Đã ngừng bán'				\n"
-                    + "               					 group by Sneaker.sneaker_id,sneaker_name,category_name,[status],material_name,sole_name,brand_name";
+                    + "											where Sneaker.[status] like N'Ngừng bán' 				\n"
+                    + "               					 group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name";
             PreparedStatement prsm = con.prepareCall(sql);
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
@@ -151,7 +151,7 @@ public class SneakerResponsitory {
         try {
             Connection con = ConnectionJDBC.getConnection();
             String sql = "update Sneaker\n"
-                    + "	set sneaker_name = ?, brand_id=?, category_id= ?, sole_id=?,material_id=?\n"
+                    + "	set sneaker_name = ?, brand_id=?, category_id= ?, sole_id=?,material_id=?, [status] = ?\n"
                     + "	where sneaker_id= ? ";
             PreparedStatement prsm = con.prepareCall(sql);
             prsm.setObject(1, sn.getTen_SP().getProduct_name());
@@ -159,7 +159,8 @@ public class SneakerResponsitory {
             prsm.setObject(3, sn.getDanhMuc().getCategory_id());
             prsm.setObject(4, sn.getDeGiay().getMaDeGiay());
             prsm.setObject(5, sn.getChatLieu().getMaMaterial());
-            prsm.setObject(6, sn.getId_Sneaker());
+            prsm.setObject(6, sn.getTrangThai());
+            prsm.setObject(7, sn.getId_Sneaker());
             row = prsm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(SneakerResponsitory.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,14 +172,15 @@ public class SneakerResponsitory {
         ArrayList<Model_Sneaker> lst = new ArrayList<>();
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,[status] \n"
+            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status] \n"
                     + "             							from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id\n"
                     + "                                      				 left join Category on Sneaker.category_id = Category.category_id\n"
                     + "           							left join Brand on Sneaker.brand_id = Brand.brand_id\n"
                     + "                            					left join Sole on Sneaker.sole_id = Sole.sole_id\n"
                     + "                           					left join Material on Sneaker.material_id = Material.material_id \n"
-                    + "        								where (Sneaker.sneaker_id like ? or sneaker_name like ? or  brand_name like ? or category_name like ? or material_name like ? or sole_name like ? or quantity like ? )	\n"
-                    + "                         					 group by Sneaker.sneaker_id,sneaker_name,category_name,[status],material_name,sole_name,brand_name";
+                    + "        								where (Sneaker.sneaker_id like ? or sneaker_name like ? or  brand_name like ? or category_name like ? or material_name like ? or sole_name like ?) or quantity like ?	\n"
+                    + "                         					 group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name"
+                    + "                                                                      having sum(quantity) like ?";
             PreparedStatement prsm = con.prepareStatement(sql);
             prsm.setObject(1, '%' + key + '%');
             prsm.setObject(2, '%' + key + '%');
@@ -187,6 +189,7 @@ public class SneakerResponsitory {
             prsm.setObject(5, '%' + key + '%');
             prsm.setObject(6, '%' + key + '%');
             prsm.setObject(7, '%' + key + '%');
+            prsm.setObject(8, '%' + key + '%');
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
                 Model_Sneaker sn = new Model_Sneaker();
@@ -221,21 +224,20 @@ public class SneakerResponsitory {
         Integer row = null;
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "insert into Sneaker(sneaker_name,brand_id,category_id,sole_id,material_id)\n"
-                    + "values (?,?,?,?,?)";
+            String sql = "insert into Sneaker(sneaker_name,brand_id,category_id,sole_id,material_id,[status])\n"
+                    + "values (?,?,?,?,?,?)";
             PreparedStatement prsm = con.prepareStatement(sql);
             prsm.setObject(1, sn.getTen_SP().getProduct_name());
             prsm.setObject(2, sn.getHang().getBrand_id());
             prsm.setObject(3, sn.getDanhMuc().getCategory_id());
             prsm.setObject(4, sn.getDeGiay().getMaDeGiay());
             prsm.setObject(5, sn.getChatLieu().getMaMaterial());
+            prsm.setObject(6, sn.getTrangThai());
             row = prsm.executeUpdate();
         } catch (Exception e) {
             Logger.getLogger(SneakerResponsitory.class.getName()).log(Level.SEVERE, null, e);
         }
         return row;
     }
-
-    
 
 }

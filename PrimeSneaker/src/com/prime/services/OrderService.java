@@ -121,7 +121,7 @@ public class OrderService {
         sql = """
               select voucher_name
               from Voucher
-              where deleted = 1 and start_date < getdate() and getdate() < end_date
+              where deleted = 1 and start_date < getdate() and getdate() < end_date and quantity > 0
               order by voucher_id asc
               """;
 
@@ -147,9 +147,9 @@ public class OrderService {
     public Voucher getOneVoucher(String name) throws SQLException {
         Voucher v = new Voucher();
         sql = """
-              select voucher_id, voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date
-              from Voucher
-              where voucher_name like ?
+              select voucher_id, voucher_code, voucher_name,voucher_type,voucher_value,quantity,[status],  max_discount, min_order_value,  [start_date], end_date
+                            from Voucher
+                            where voucher_name like ?
               """;
 
         try {
@@ -161,8 +161,8 @@ public class OrderService {
                 v.setVoucherId(rs.getInt("voucher_id"));
                 v.setVoucherCode(rs.getString("voucher_code"));
                 v.setVoucherName(rs.getString("voucher_name"));
-                v.setDiscountRate(rs.getFloat("discount_rate"));
-                v.setDiscountAmount(rs.getLong("discount_amount"));
+                v.setVoucherType(rs.getBoolean("voucher_type"));
+                v.setVoucherValue(rs.getInt("voucher_value"));
                 v.setMaxDiscount(rs.getFloat("max_discount"));
                 v.setMinOrderValue(rs.getLong("min_order_value"));
                 v.setQuantity(rs.getInt("quantity"));
@@ -177,6 +177,27 @@ public class OrderService {
             c.close();
         }
         return v;
+    }
+    
+    public Integer updateQuantityVoucher (String name) throws SQLException{
+        sql = """
+              update Voucher
+              set quantity = quantity - 1
+              where voucher_name like ?
+              """;
+        
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, name);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ps.close();
+            c.close();
+        }
+        return null;
     }
 
     public List<SneakerDetail> searchSD(String key) throws SQLException {
@@ -617,11 +638,11 @@ public class OrderService {
         Order o = new Order();
 
         sql = """
-              select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quantity) as total_cost, payment_method, received_cash, [change]
+              select o.order_id, [user_id], voucher_name, o.created_at, sum(od.price * od.quantity) as total_cost, payment_method
               from [Order] o left join Voucher v on o.voucher_id = v.voucher_id
               join OrderDetail od on o.order_id = od.order_id
               where o.order_id = ?
-              group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method, received_cash, [change]
+              group by o.order_id, [user_id], voucher_name, o.created_at,  payment_method
               """;
 
         try {
@@ -636,8 +657,6 @@ public class OrderService {
                 o.setCreated_at(rs.getDate("created_at"));
                 o.setTotalCost(rs.getLong("total_cost"));
                 o.setPaymentMethod(rs.getString("payment_method"));
-                o.setReceivedCash(rs.getLong("received_cash"));
-                o.setChange(rs.getLong("change"));
             }
             return o;
         } catch (Exception e) {

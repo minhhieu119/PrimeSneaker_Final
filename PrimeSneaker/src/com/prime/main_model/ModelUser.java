@@ -8,7 +8,7 @@ import java.util.Date;
 public class ModelUser {
     private String userCode;
     private int roleId;
-    private String role;
+//    private String role;
     private String staffName;
     private boolean gender;
     private Date dob;
@@ -23,10 +23,9 @@ public class ModelUser {
     public ModelUser() {
     }
 
-    public ModelUser(String userCode, int roleId, String role, String staffName, boolean gender, Date dob, String phone, String address, String email, String idCardNumber, String accountName, String psw, String status) {
+    public ModelUser(String userCode, int roleId, String staffName, boolean gender, Date dob, String phone, String address, String email, String idCardNumber, String accountName, String psw, String status) {
         this.userCode = userCode;
         this.roleId = roleId;
-        this.role = role;
         this.staffName = staffName;
         this.gender = gender;
         this.dob = dob;
@@ -53,14 +52,6 @@ public class ModelUser {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getStaffName() {
@@ -145,15 +136,9 @@ public class ModelUser {
 
     @Override
     public String toString() {
-        return "ModelUser{" + "userCode=" + userCode + ", roleId=" + roleId + ", role=" + role + ", staffName=" + staffName + ", gender=" + gender + ", dob=" + dob + ", phone=" + phone + ", address=" + address + ", email=" + email + ", idCardNumber=" + idCardNumber + ", accountName=" + accountName + ", psw=" + psw + ", status=" + status + '}';
+        return "ModelUser{" + "userCode=" + userCode + ", roleId=" + roleId + ", staffName=" + staffName + ", gender=" + gender + ", dob=" + dob + ", phone=" + phone + ", address=" + address + ", email=" + email + ", idCardNumber=" + idCardNumber + ", accountName=" + accountName + ", psw=" + psw + ", status=" + status + '}';
     }
 
     
-    
-    
-    
- 
-
-     
     
 }

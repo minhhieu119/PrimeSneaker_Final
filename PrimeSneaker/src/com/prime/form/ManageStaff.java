@@ -6,6 +6,10 @@ import com.prime.services.UserService;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,9 +19,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import org.apache.commons.compress.compressors.FileNameUtil;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ManageStaff extends javax.swing.JPanel {
 
@@ -175,6 +188,11 @@ public class ManageStaff extends javax.swing.JPanel {
         btnExportExcel.setBackground(new java.awt.Color(39, 80, 150));
         btnExportExcel.setForeground(new java.awt.Color(255, 255, 255));
         btnExportExcel.setText("Xuất Excel");
+        btnExportExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportExcelActionPerformed(evt);
+            }
+        });
 
         btnClearStaff.setBackground(new java.awt.Color(39, 80, 150));
         btnClearStaff.setForeground(new java.awt.Color(255, 255, 255));
@@ -466,6 +484,11 @@ public class ManageStaff extends javax.swing.JPanel {
         cboGender.setBackground(new java.awt.Color(39, 80, 150));
         cboGender.setForeground(new java.awt.Color(255, 255, 255));
         cboGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ" }));
+        cboGender.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboGenderItemStateChanged(evt);
+            }
+        });
 
         jLabel4.setText("Giới tính: ");
 
@@ -473,11 +496,21 @@ public class ManageStaff extends javax.swing.JPanel {
 
         cboRole.setBackground(new java.awt.Color(39, 80, 150));
         cboRole.setForeground(new java.awt.Color(255, 255, 255));
-        cboRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Nhân Viên" }));
+        cboRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Nhân viên" }));
+        cboRole.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboRoleItemStateChanged(evt);
+            }
+        });
 
         cboStatus.setBackground(new java.awt.Color(39, 80, 150));
         cboStatus.setForeground(new java.awt.Color(255, 255, 255));
         cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm việc", "Đã nghỉ việc" }));
+        cboStatus.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboStatusItemStateChanged(evt);
+            }
+        });
 
         jLabel16.setText("Trạng thái");
 
@@ -732,7 +765,7 @@ public class ManageStaff extends javax.swing.JPanel {
 
     private void btnBlockAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_btnBlockActionPerformed
 
     private void btnScanCitizenQRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanCitizenQRActionPerformed
@@ -748,9 +781,9 @@ public class ManageStaff extends javax.swing.JPanel {
 
         try {
             ModelUser user = readForm();
-            ArrayList<ModelUser> list = svc.getAllUsers();
             if (svc.updateUserStatus(user)) {
                 showMess("Khóa tài khoản thành công");
+                ArrayList<ModelUser> list = svc.getAllUsers();
                 fillToTable(list);
                 index = 0;
                 showDetail(list);
@@ -759,6 +792,76 @@ public class ManageStaff extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }//GEN-LAST:event_btnBlockStaffActionPerformed
+
+    private void btnExportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportExcelActionPerformed
+        // TODO add your handling code here:
+        FileOutputStream output = null;
+        BufferedOutputStream buffer = null;
+        XSSFWorkbook excelExporter = null;
+
+        JFileChooser excelFileChooser = new JFileChooser("Desktop");
+        excelFileChooser.setDialogTitle("Save As");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showSaveDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+
+            try {
+                excelExporter = new XSSFWorkbook();
+                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    XSSFRow excelRow = sheet.createRow(i);
+                    for (int j = 0; j < model.getColumnCount()-1; j++) {
+                        XSSFCell excelCell = excelRow.createCell(j);
+                        excelCell.setCellValue(model.getValueAt(i, j).toString());
+//                            System.out.println(model.getValueAt(i, j));
+                    }
+                }
+                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
+                buffer = new BufferedOutputStream(output);
+                excelExporter.write(buffer);
+                showMess("Xuất file thành công!");
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    if (buffer != null) {
+                        buffer.close();
+                    }
+                    if (output != null) {
+                        output.close();
+                    }
+                    if (excelExporter != null) {
+                        excelExporter.close();
+                    }
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_btnExportExcelActionPerformed
+
+    private void cboGenderItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboGenderItemStateChanged
+        // TODO add your handling code here:
+//        String item = cboGender.getSelectedItem().toString();
+//        filter(item);
+    }//GEN-LAST:event_cboGenderItemStateChanged
+
+    private void cboRoleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboRoleItemStateChanged
+        // TODO add your handling code here:
+        String item = cboRole.getSelectedItem().toString();
+        filter(item);
+    }//GEN-LAST:event_cboRoleItemStateChanged
+
+    private void cboStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboStatusItemStateChanged
+        // TODO add your handling code here:
+        String item = cboStatus.getSelectedItem().toString();
+        filter(item);
+    }//GEN-LAST:event_cboStatusItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNewStaff;
@@ -824,7 +927,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 user.isGender() ? "Nam" : "Nữ",
                 user.getAccountName(),
                 user.getPsw(),
-                user.getRole(),
+                user.getRoleId() == Role.ADMIN ?"Quản lý":"Nhân viên",
                 user.getAddress(),
                 user.getEmail(),
                 user.getIdCardNumber(),
@@ -841,7 +944,7 @@ public class ManageStaff extends javax.swing.JPanel {
         txtStaffPhone.setText(user.getPhone());
         rdoMale.setSelected(user.isGender());
         rdoFemale.setSelected(!user.isGender());
-        if (user.getRole().contains("Quản lý")) {
+        if (user.getRoleId() == Role.ADMIN) {
             rdoAdmin.setSelected(true);
         } else {
             rdoStaff.setSelected(true);
@@ -1025,6 +1128,17 @@ public class ManageStaff extends javax.swing.JPanel {
             }
         }
         return false;
+    }
+
+    private void filter(String item) {
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter(model);
+        tblStaff.setRowSorter(sorter);
+        
+        if (!item.equals("None")) {
+            sorter.setRowFilter(RowFilter.regexFilter(item));
+        } else {
+            tblStaff.setRowSorter(sorter);
+        }
     }
 
 }
