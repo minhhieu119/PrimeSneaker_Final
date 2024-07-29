@@ -34,9 +34,11 @@ import javax.swing.table.DefaultTableModel;
 import com.prime.model.CartQuantity;
 import com.prime.model.Customer;
 import com.prime.model.qrCode;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -1379,7 +1381,7 @@ public class OrderForm extends javax.swing.JPanel {
                 invoiceId = (int) tblInvoice.getValueAt(0, 1);
                 showDetail();
             } else {
-                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn để xóa", "Thông báo", 1);
+                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn để hủy", "Thông báo", 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1552,9 +1554,11 @@ public class OrderForm extends javax.swing.JPanel {
         try {
             if (os.updateOrderPayment(o) > 0) {
                 JOptionPane.showMessageDialog(this, "Thanh toán thành công", "Thông báo", 1);
-
+                if (!(os.updateQuantityVoucher((String) cboVoucher.getSelectedItem()) > 0)) {
+                    JOptionPane.showMessageDialog(this, "Không sử dụng voucher");
+                }
                 String path = "C:/Users/MSII/Desktop/PDF/";
-                String name = "hoa_don.pdf";
+                String name = "hoa_don" + orderId + ".pdf";
                 Document document = new Document();
                 float threeCol = 190f;
                 float threeColWidth[] = {threeCol, threeCol, threeCol};
@@ -1626,16 +1630,16 @@ public class OrderForm extends javax.swing.JPanel {
                     String price = String.valueOf(tblCart.getValueAt(i, 5));
                     table.addCell(new PdfPCell(new Paragraph(nameTable + " - " + brand + " - " + size, font2)));
                     table.addCell(new PdfPCell(new Paragraph(quantityTable, font2)));
-                    table.addCell(new PdfPCell(new Paragraph(price, font2)));
+                    table.addCell(new PdfPCell(new Paragraph(price + " VND", font2)));
                 }
                 document.add(table);
                 document.add(Chunk.NEWLINE);
                 Paragraph tongCong = new Paragraph("Tong cong:          ", font3);
-                tongCong.add(new Chunk(txtOrderCost.getText(), font3));
+                tongCong.add(new Chunk(txtOrderCost.getText() + " VND", font1));
                 Paragraph chietKhau = new Paragraph("Chiet khau:          ", font3);
-                chietKhau.add(new Chunk(txtDiscoutCost.getText(), font2));
+                chietKhau.add(new Chunk(txtDiscoutCost.getText() + " VND", font2));
                 Paragraph tienThanhToan = new Paragraph("Tien phai thanh toan:          ", font3);
-                tienThanhToan.add(new Chunk(lbnTotalCost.getText(), font3));
+                tienThanhToan.add(new Chunk(lbnTotalCost.getText() + " VND", font1));
                 document.add(tongCong);
                 document.add(chietKhau);
                 document.add(tienThanhToan);
@@ -1648,11 +1652,28 @@ public class OrderForm extends javax.swing.JPanel {
                 document.add(camOn);
                 document.close();
                 System.out.println("Created pdf");
-//                fillToListSneakerDetail(os.getAllSneakerDetail());
-                if (!(os.updateQuantityVoucher((String) cboVoucher.getSelectedItem()) > 0)) {
-                    JOptionPane.showMessageDialog(this, "Không sử dụng được voucher");
-                    return;
+                if (orderId != -1) {
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            File pdfFile = new File("C:\\Users\\MSII\\Desktop\\PDF\\hoa_don" + orderId + ".pdf");
+
+                            // Kiểm tra xem tệp có tồn tại và có thể đọc được không
+                            if (pdfFile.exists() && pdfFile.canRead()) {
+                                Desktop.getDesktop().open(pdfFile);
+                            } else {
+                                System.out.println("File không tồn tại hoặc không thể đọc.");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("Desktop API không được hỗ trợ.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 0);
                 }
+//                fillToListSneakerDetail(os.getAllSneakerDetail());
+                
                 fillToListInvoice(os.getOrder());
                 if (tblInvoice.getRowCount() <= 0) {
                     fillToListInvoice(new ArrayList<>());

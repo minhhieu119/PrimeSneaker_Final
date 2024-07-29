@@ -13,7 +13,8 @@ import com.prime.form.ManageStaff;
 import com.prime.form.OrderForm;
 import com.prime.form.ManageOrder;
 import com.prime.form.Properties;
-import com.prime.form.Voucher;
+import com.prime.form.VoucherForm;
+import com.prime.form.VoucherForm;
 import com.prime.main_model.SneakerDetail;
 import com.prime.swing.MenuItem;
 import com.prime.swing.PopupMenu;
@@ -63,7 +64,7 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new ManageOrder());
                 }
                 if (menuIndex == 2) {
-                    main.showForm(new Voucher());
+                    main.showForm(new VoucherForm());
                 }
                 if (menuIndex == 3) {
                     main.showForm(new ManageSneaker());

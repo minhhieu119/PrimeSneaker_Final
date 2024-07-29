@@ -1,25 +1,58 @@
 package com.prime.form;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.prime.main_model.Bill;
 import com.prime.main_model.BillDetail;
+import com.prime.main_model.Order;
 import com.prime.services.BillService;
+import com.prime.services.OrderService;
+import java.awt.Desktop;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ManageOrder extends javax.swing.JPanel {
+
+    OrderService os = new OrderService();
     DefaultTableModel model = new DefaultTableModel();
     DefaultTableModel modelSneakerDetail = new DefaultTableModel();
     BillService bs = new BillService();
+
     public ManageOrder() {
         initComponents();
         setOpaque(false);
         model = (DefaultTableModel) tblManagerOder.getModel();
-        
+
         loadDataToTableBill(bs.getAllBill());
     }
-    
+
     private void loadDataToTableBill(List<Bill> list) {
 
         model.setRowCount(0);
@@ -30,8 +63,8 @@ public class ManageOrder extends javax.swing.JPanel {
             System.out.println(bill.getTotalCost());
         }
     }
-    
-    private void fillToListOderDetail(List<BillDetail> list){
+
+    private void fillToListOderDetail(List<BillDetail> list) {
         modelSneakerDetail = (DefaultTableModel) tblBillDetail.getModel();
         modelSneakerDetail.setRowCount(0);
         int stt = 1;
@@ -73,11 +106,11 @@ public class ManageOrder extends javax.swing.JPanel {
         endStr = sdf.format(ngayKetThuc);
 
         String text = txtSearchBill.getText().trim();
-        
-        if(text.isEmpty()){
+
+        if (text.isEmpty()) {
             text = null;
         }
-        
+
         model.setRowCount(0);
 
 //        System.out.println(trangThai);
@@ -85,6 +118,7 @@ public class ManageOrder extends javax.swing.JPanel {
 //        System.out.println(text);
         this.loadDataToTableBill(bs.timKiem(text, hinhthucTT, startStr, endStr));
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -164,6 +198,11 @@ public class ManageOrder extends javax.swing.JPanel {
         btnXuatExcel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnXuatExcel.setForeground(new java.awt.Color(255, 255, 255));
         btnXuatExcel.setText("Xuất excel");
+        btnXuatExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXuatExcelActionPerformed(evt);
+            }
+        });
 
         jdcStart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
         jdcStart.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -187,6 +226,11 @@ public class ManageOrder extends javax.swing.JPanel {
         btnInHoaDon.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnInHoaDon.setForeground(new java.awt.Color(255, 255, 255));
         btnInHoaDon.setText("In hóa đơn");
+        btnInHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInHoaDonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -331,13 +375,13 @@ public class ManageOrder extends javax.swing.JPanel {
         int index = tblManagerOder.getSelectedRow();
         String id = String.valueOf(tblManagerOder.getValueAt(index, 1));
         int orderDetail = Integer.parseInt(id);
-        
+
         try {
             fillToListOderDetail(bs.getOrderDetai(orderDetail));
         } catch (Exception e) {
-            
+
         }
-        
+
     }//GEN-LAST:event_tblManagerOderMouseClicked
 
     private void jdcStartPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jdcStartPropertyChange
@@ -351,6 +395,82 @@ public class ManageOrder extends javax.swing.JPanel {
     private void txtSearchBillKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchBillKeyPressed
         search();
     }//GEN-LAST:event_txtSearchBillKeyPressed
+
+    private void btnXuatExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatExcelActionPerformed
+        FileOutputStream output = null;
+        BufferedOutputStream buffer = null;
+        XSSFWorkbook excelExporter = null;
+
+        JFileChooser excelFileChooser = new JFileChooser("Desktop");
+        excelFileChooser.setDialogTitle("Save As");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showSaveDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+
+            try {
+                excelExporter = new XSSFWorkbook();
+                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    XSSFRow excelRow = sheet.createRow(i);
+                    for (int j = 0; j < model.getColumnCount() - 1; j++) {
+                        XSSFCell excelCell = excelRow.createCell(j);
+                        excelCell.setCellValue(model.getValueAt(i, j).toString());
+//                            System.out.println(model.getValueAt(i, j));
+                    }
+                }
+                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
+                buffer = new BufferedOutputStream(output);
+                excelExporter.write(buffer);
+                JOptionPane.showMessageDialog(this, "Xuất file thành công", "Thông báo", 1);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    if (buffer != null) {
+                        buffer.close();
+                    }
+                    if (output != null) {
+                        output.close();
+                    }
+                    if (excelExporter != null) {
+                        excelExporter.close();
+                    }
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_btnXuatExcelActionPerformed
+
+    private void btnInHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHoaDonActionPerformed
+        int orderId = (int) tblManagerOder.getValueAt(tblManagerOder.getSelectedRow(), 1);
+        if (orderId != -1) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File pdfFile = new File("C:\\Users\\MSII\\Desktop\\PDF\\hoa_don" + orderId + ".pdf");
+
+                    // Kiểm tra xem tệp có tồn tại và có thể đọc được không
+                    if (pdfFile.exists() && pdfFile.canRead()) {
+                        Desktop.getDesktop().open(pdfFile);
+                    } else {
+                        System.out.println("File không tồn tại hoặc không thể đọc.");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Desktop API không được hỗ trợ.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 0);
+        }
+
+    }//GEN-LAST:event_btnInHoaDonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInHoaDon;

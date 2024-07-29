@@ -652,3 +652,6 @@ SELECT distinct dbo.[Order].order_id,
                      	dbo.OrderDetail ON dbo.OrderDetail.order_id = dbo.[Order].order_id
                      WHERE  dbo.[Order].status LIKE N'Đã thanh toán'
                      ORDER BY dbo.[Order].order_id ASC
+
+
+					 update SneakerDetail
