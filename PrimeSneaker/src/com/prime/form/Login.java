@@ -6,6 +6,7 @@ package com.prime.form;
 
 import com.prime.main.Main;
 import com.prime.main_model.User;
+import com.prime.model.Admin;
 import com.prime.services.LoginService;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -31,8 +32,8 @@ public class Login extends javax.swing.JFrame {
         txtUsername.setBackground(new Color(0, 0, 0, 1));
         txtPassword.setBackground(new Color(0, 0, 0, 1));
         
-        txtUsername.setText("quynh2002");
-        txtPassword.setText("quynh123");
+        txtUsername.setText("hieu119");
+        txtPassword.setText("hieu1997");
         
     }
 
@@ -43,7 +44,7 @@ public class Login extends javax.swing.JFrame {
             if (user.getAccount_name().equalsIgnoreCase(account_name) && user.getPassword().equalsIgnoreCase(password)) {
                 return true;
             }
-            System.out.println(user);
+//            System.out.println(user);
         }
         return false;
     }
@@ -185,6 +186,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+        account_name = txtUsername.getText();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (txtUsername.getText().isBlank()) {
                 JOptionPane.showMessageDialog(this, "Không được để trống tên đăng nhập", "Thông báo", 2);
@@ -196,6 +198,12 @@ public class Login extends javax.swing.JFrame {
             }
 
             if (checkAccount()) {
+                try {
+                    Admin.user = ls.getOneUser(account_name);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+//                System.out.println(Admin.user.getAccountName() + " - " + Admin.user.getPsw());
                 this.dispose();
                 try {
                     new Main().setVisible(true);
@@ -211,6 +219,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordKeyPressed
 
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
+        account_name = txtUsername.getText();
         if (txtUsername.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Không được để trống tên đăng nhập", "Thông báo", 2);
             return;
@@ -222,6 +231,8 @@ public class Login extends javax.swing.JFrame {
 
         if (checkAccount()) {
             try {
+                Admin.user = ls.getOneUser(account_name);
+//                System.out.println(Admin.user.getAccountName() + " - " + Admin.user.getPsw());
                 this.dispose();
                 new Main().setVisible(true);
 //                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);

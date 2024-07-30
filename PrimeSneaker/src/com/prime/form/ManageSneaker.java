@@ -1649,6 +1649,8 @@ public class ManageSneaker extends javax.swing.JPanel {
     private void btnAddNewProd2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewProd2ActionPerformed
         new FormAddProductDetail(null, true).setVisible(true);
         loadSneakerDetailToTable(sdetailRS.getALl());
+        index = sdetailRS.getALl().size()-1;
+        showProductDetail(index);
     }//GEN-LAST:event_btnAddNewProd2ActionPerformed
 
     private void btnRefresh2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresh2ActionPerformed
@@ -1728,6 +1730,8 @@ public class ManageSneaker extends javax.swing.JPanel {
             if (sneakerRS.addSneaker(sn) != null) {
                 JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
                 loadSneakerToTable(sneakerRS.getAll());
+                int index = sneakerRS.getAll().size()-1;
+                showDataProduct(index);
             } else {
                 JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại");
                 return;

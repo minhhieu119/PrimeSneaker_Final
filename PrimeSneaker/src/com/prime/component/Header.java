@@ -1,11 +1,14 @@
 package com.prime.component;
 
+import com.prime.model.Admin;
 import java.awt.event.ActionListener;
 
 public class Header extends javax.swing.JPanel {
 
     public Header() {
         initComponents();
+        lbUserName.setText(Admin.user.getStaffName());
+        lbRole.setText(Admin.user.getRoleId() == 1 ? "Quản lý" : "Nhân viên");
     }
 
     public void addMenuEvent(ActionListener event) {
@@ -30,7 +33,7 @@ public class Header extends javax.swing.JPanel {
             }
         });
 
-        pic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/prime/icon/avt8.jpg"))); // NOI18N
+        pic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/prime/icon2/login_img.png"))); // NOI18N
 
         lbUserName.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         lbUserName.setForeground(new java.awt.Color(255, 255, 255));

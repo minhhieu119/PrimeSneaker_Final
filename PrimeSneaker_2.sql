@@ -616,3 +616,57 @@ where [status] like N'Hết hàng'
 update SneakerDetail
 set size_id=2,color_id=3,price=1000000,quantity=0,[status]= N'Hết hàng'
 where sneaker_detail_code = 2345537
+
+
+select user_code, role_id, full_name, gender, date_of_birth,phone_number, [address], email, id_card_number, account_name, [password], [status]
+from [User] where account_name like 'hieu119'
+
+select * from [User]
+
+select COUNT([user_id])
+from [User]
+where [status] like N'Đang làm việc'
+
+select * from Customer
+
+select COUNT(customer_id) as quantity
+from Customer
+
+
+select * from SneakerDetail
+select COUNT(sneaker_detail_id) as quantity
+from SneakerDetail
+
+select * from [Order]
+
+select SUM(total_cost) as total_cost
+from [Order]
+where [status] like N'Đã thanh toán'
+
+SELECT 
+    updated_at,
+    SUM(total_cost) AS total_cost
+FROM 
+    [Order]
+WHERE 
+    updated_at >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE))
+GROUP BY 
+    updated_at
+ORDER BY 
+    updated_at DESC;
+
+	select * from [Order]
+	select * from OrderDetail
+
+	select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost)
+	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
+	join Sneaker s on sd.sneaker_id = s.sneaker_id
+	group by sd.sneaker_detail_code, sneaker_name
+	order by quantity desc
+
+	select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost) as total_cost
+	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
+	join Sneaker s on sd.sneaker_id = s.sneaker_id
+	group by sd.sneaker_detail_code, sneaker_name
+	order by quantity asc
+	

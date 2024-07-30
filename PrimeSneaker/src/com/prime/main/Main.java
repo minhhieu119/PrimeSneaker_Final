@@ -3,7 +3,6 @@ package com.prime.main;
 import com.prime.component.Header;
 import com.prime.component.Menu;
 import com.prime.event.EventMenuSelected;
-import com.prime.event.EventShowPopupMenu;
 import com.prime.form.Login;
 import com.prime.form.ManageSneaker;
 import com.prime.form.Statistic;
@@ -14,18 +13,15 @@ import com.prime.form.OrderForm;
 import com.prime.form.ManageOrder;
 import com.prime.form.Properties;
 import com.prime.form.VoucherForm;
-import com.prime.form.VoucherForm;
-import com.prime.main_model.SneakerDetail;
-import com.prime.swing.MenuItem;
-import com.prime.swing.PopupMenu;
+import com.prime.model.Admin;
 import com.prime.swing.icon.GoogleMaterialDesignIcons;
 import com.prime.swing.icon.IconFontSwing;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -73,10 +69,14 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new Properties());
                 }
                 if (menuIndex == 5) {
-                    try {
-                        main.showForm(new ManageStaff());
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    if (Admin.isAdmin()) {
+                        try {
+                            main.showForm(new ManageStaff());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép xem nhân viên!", "Thông báo", 1);
                     }
                 }
                 if (menuIndex == 6) {
@@ -87,49 +87,25 @@ public class Main extends javax.swing.JFrame {
                     }
                 }
                 if (menuIndex == 7) {
-                    main.showForm(new Statistic());
+                    if (Admin.isAdmin()) {
+                        try {
+                            main.showForm(new Statistic());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép xem thống kê!", "Thông báo", 1);
+                    }
                 }
             }
         });
-//        menu.addEventShowPopup(new EventShowPopupMenu() {
-//            @Override
-//            public void showPopup(Component com) {
-//                MenuItem item = (MenuItem) com;
-//                PopupMenu popup = new PopupMenu(Main.this, item.getIndex(), item.getEventSelected(), item.getMenu().getSubMenu());
-//                int x = Main.this.getX() + 52;
-//                int y = Main.this.getY() + com.getY() + 500;
-//                popup.setLocation(x, y);
-//                popup.setVisible(true);
-//            }
-//        });
         menu.initMenuItem();
-//        bg.add(menu, "w 230!, spany 2");    // Span Y 2cell
-//        bg.add(header, "h 58!, wrap");
-//        bg.add(main, "w 100%, h 100%");
-        bg.add(menu, "w 62!, spany 2");    // Span Y 2cell
+        bg.add(menu, "w 62!, spany 2");
         bg.add(header, "h 58!, wrap");
         bg.add(main, "w 100%, h 100%");
         TimingTarget target = new TimingTargetAdapter() {
 
-//            @Override
-//            public void timingEvent(float fraction) {
-//                double width;
-//                if (menu.isShowMenu()) {
-//                    width = 60 + (170 * (1f - fraction));
-//                } else {
-//                    width = 60 + (170 * fraction);
-//                }
-//                layout.setComponentConstraints(menu, "w " + width + "!, spany2");
-//                menu.revalidate();
-//            }
-//
-//            @Override
-//            public void end() {
-//                menu.setShowMenu(!menu.isShowMenu());
-//                menu.setEnableMenu(true);
-//            }
-            
-             @Override
+            @Override
             public void timingEvent(float fraction) {
                 double width;
                 if (menu.isShowMenu()) {
@@ -166,7 +142,6 @@ public class Main extends javax.swing.JFrame {
         });
         //  Init google icon font
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
-        //  Start with this form
         main.showForm(new OrderForm());
     }
 
