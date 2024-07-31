@@ -12,7 +12,10 @@ import java.util.Date;
  */
 public class Statistic {
     private Date createdAt;
+    private int month;
+    private int date;
     private long totalCost;
+    private Integer quantity;
 
     public Statistic() {
     }
@@ -21,6 +24,38 @@ public class Statistic {
         this.createdAt = createdAt;
         this.totalCost = totalCost;
     }
+
+    public Statistic(Date createdAt, long totalCost, Integer quantity) {
+        this.createdAt = createdAt;
+        this.totalCost = totalCost;
+        this.quantity = quantity;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+    
+    
 
     public Date getCreatedAt() {
         return createdAt;

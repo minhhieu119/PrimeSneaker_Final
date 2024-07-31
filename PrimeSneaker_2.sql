@@ -664,9 +664,120 @@ ORDER BY
 	group by sd.sneaker_detail_code, sneaker_name
 	order by quantity desc
 
+
+
+		select * from OrderDetail
 	select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost) as total_cost
 	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
 	join Sneaker s on sd.sneaker_id = s.sneaker_id
+	where MONTH(od.created_at) = 7
 	group by sd.sneaker_detail_code, sneaker_name
 	order by quantity asc
 	
+
+	SELECT o.updated_at, SUM(o.total_cost) AS total_cost, SUM(od.quantity) as quantity
+              FROM [Order] o join OrderDetail od on o.order_id = od.order_id
+              WHERE year(o.updated_at) = 2024
+              GROUP BY o.updated_at
+              ORDER BY updated_at DESC;
+
+SELECT 
+    MONTH(o.updated_at) AS month,
+    SUM(o.total_cost) AS total_cost, 
+    SUM(od.quantity) AS quantity
+FROM 
+    [Order] o 
+JOIN 
+    OrderDetail od 
+ON 
+    o.order_id = od.order_id
+WHERE 
+    YEAR(o.updated_at) = 2024
+GROUP BY 
+    MONTH(o.updated_at)
+ORDER BY 
+    month DESC;
+
+	SELECT MONTH(o.updated_at) AS month,
+    SUM(o.total_cost) AS total_cost, 
+    SUM(od.quantity) AS quantity
+FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+WHERE YEAR(o.updated_at) = 2024
+GROUP BY MONTH(o.updated_at)
+ORDER BY month ASC;
+
+WITH RankedOrders AS (
+    SELECT CAST(o.updated_at AS DATE) AS order_date, SUM(o.total_cost) AS total_cost
+    FROM [Order] o
+    GROUP BY CAST(o.updated_at AS DATE)
+),
+RankedDays AS (SELECT order_date, total_cost, ROW_NUMBER() OVER (ORDER BY order_date DESC) AS rn
+    FROM RankedOrders)
+SELECT order_date AS updated_at, total_cost
+FROM RankedDays
+WHERE rn <= 7
+ORDER BY order_date DESC;
+
+SELECT DAY(o.updated_at) as dayss,  SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+WHERE YEAR(o.updated_at) = 2024 AND MONTH(o.updated_at) = 7
+GROUP BY CAST(o.updated_at AS DATE)
+ORDER BY dayss;
+
+SELECT MONTH(o.updated_at) AS month,
+                  SUM(o.total_cost) AS total_cost, 
+                  SUM(od.quantity) AS quantity
+              FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+              WHERE YEAR(o.updated_at) = 2024
+              GROUP BY MONTH(o.updated_at)
+              ORDER BY month ASC;
+
+
+
+SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+WHERE YEAR(o.updated_at) = 2024 AND MONTH(o.updated_at) = 7
+GROUP BY DAY(o.updated_at)
+ORDER BY day ASC;
+
+
+SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+WHERE YEAR(o.updated_at) = 2024 AND MONTH(o.updated_at) = 7 AND DAY(o.updated_at) BETWEEN 23 AND 27
+GROUP BY DAY(o.updated_at)
+ORDER BY day ASC;
+
+
+SELECT 
+    DAY(o.updated_at) AS day,
+    SUM(o.total_cost) AS total_cost,
+    SUM(od.quantity) AS quantity
+FROM 
+    [Order] o
+JOIN 
+    OrderDetail od ON o.order_id = od.order_id
+WHERE 
+    o.updated_at BETWEEN '2024-07-23' AND '2024-07-27'
+GROUP BY 
+    DAY(o.updated_at)
+ORDER BY 
+    day ASC;
+
+	SELECT 
+    o.updated_at AS day,
+    SUM(o.total_cost) AS total_cost, 
+    SUM(od.quantity) AS quantity
+FROM 
+    [Order] o
+JOIN 
+    OrderDetail od 
+ON 
+    o.order_id = od.order_id
+WHERE 
+    YEAR(o.updated_at) = 2024
+    AND MONTH(o.updated_at) = 7
+    AND CAST(o.updated_at AS DATE) BETWEEN '2024-07-23' AND '2024-07-27'
+GROUP BY 
+   o.updated_at
+ORDER BY 
+    day ASC;

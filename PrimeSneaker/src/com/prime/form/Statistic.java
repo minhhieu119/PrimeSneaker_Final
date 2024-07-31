@@ -2,29 +2,28 @@ package com.prime.form;
 
 import com.prime.dialog.Message;
 import com.prime.main.Main;
-import com.prime.main_model.SneakerDetail;
 import com.prime.model.ModelCard;
 import com.prime.services.StatisticService;
 import com.prime.swing.icon.GoogleMaterialDesignIcons;
 import com.prime.swing.icon.IconFontSwing;
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Statistic extends javax.swing.JPanel {
@@ -32,7 +31,7 @@ public class Statistic extends javax.swing.JPanel {
     int index;
     StatisticService ss = new StatisticService();
     DefaultTableModel modelStatisticWeek = new DefaultTableModel();
-    DefaultTableModel modelSneakerTable = new DefaultTableModel();
+    DefaultTableModel modelStatisticTable = new DefaultTableModel();
 
     public Statistic() throws SQLException {
         initComponents();
@@ -40,6 +39,7 @@ public class Statistic extends javax.swing.JPanel {
         setOpaque(false);
         initData();
         showChart(pnlChart);
+        disableOption();
     }
 
     private void fillToWeekTable(List<com.prime.main_model.Statistic> list) throws SQLException {
@@ -53,6 +53,59 @@ public class Statistic extends javax.swing.JPanel {
                 s.getTotalCost()
             });
         }
+    }
+
+    private void fillToStatisticYear(List<com.prime.main_model.Statistic> list) throws SQLException {
+        index = 0;
+        modelStatisticTable = (DefaultTableModel) tblStatistic.getModel();
+        modelStatisticTable.setRowCount(0);
+        for (com.prime.main_model.Statistic s : list) {
+            modelStatisticTable.addRow(new Object[]{
+                index += 1,
+                s.getMonth(),
+                s.getQuantity(),
+                s.getTotalCost()
+            });
+        }
+    }
+
+    private void fillToStatisticMonth(List<com.prime.main_model.Statistic> list) throws SQLException {
+        index = 0;
+        modelStatisticTable = (DefaultTableModel) tblStatistic.getModel();
+        modelStatisticTable.setRowCount(0);
+        for (com.prime.main_model.Statistic s : list) {
+            modelStatisticTable.addRow(new Object[]{
+                index += 1,
+                s.getDate(),
+                s.getQuantity(),
+                s.getTotalCost()
+            });
+        }
+    }
+
+    private void fillToStatisticDay(List<com.prime.main_model.Statistic> list) throws SQLException {
+        index = 0;
+        modelStatisticTable = (DefaultTableModel) tblStatistic.getModel();
+        modelStatisticTable.setRowCount(0);
+        for (com.prime.main_model.Statistic s : list) {
+            modelStatisticTable.addRow(new Object[]{
+                index += 1,
+                s.getCreatedAt(),
+                s.getQuantity(),
+                s.getTotalCost()
+            });
+        }
+    }
+
+    private void disableOption() {
+        lblYear.setVisible(false);
+        lblMonth.setVisible(false);
+        lblStartDate.setVisible(false);
+        lblEndDate.setVisible(false);
+        cboYear.setVisible(false);
+        cboMonth.setVisible(false);
+        jdcStart.setVisible(false);
+        jdcEnd.setVisible(false);
     }
 
     private void initData() {
@@ -88,7 +141,67 @@ public class Statistic extends javax.swing.JPanel {
         for (com.prime.main_model.Statistic s : ss.getStatisticOneWeek()) {
             d.addValue(s.getTotalCost(), "VNĐ", s.getCreatedAt());
         }
-        JFreeChart barChart = ChartFactory.createBarChart("Thống kê doanh thu 7 ngày gần nhất", "Ngày", "Tổng tiền", d);
+        JFreeChart barChart = ChartFactory.createBarChart("Biểu đồ doanh thu 7 ngày gần nhất", "Ngày", "Tổng tiền", d);
+        CategoryPlot plot = barChart.getCategoryPlot();
+        BarRenderer renderer = new BarRenderer();
+        renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        plot.setRenderer(renderer);
+        ChartPanel c = new ChartPanel(barChart);
+        c.setPreferredSize(new Dimension(jpn.getWidth(), 300));
+        jpn.removeAll();
+        jpn.setLayout(new CardLayout());
+        jpn.add(c);
+        jpn.validate();
+        jpn.repaint();
+    }
+
+    public void showChartStatisticYear(JPanel jpn, String year) throws SQLException {
+
+        final DefaultCategoryDataset d = new DefaultCategoryDataset();
+        for (com.prime.main_model.Statistic s : ss.getStatisticYear(year)) {
+            d.addValue(s.getTotalCost(), "VNĐ", s.getMonth() + "");
+        }
+        JFreeChart barChart = ChartFactory.createBarChart("Biểu đồ doanh thu theo năm", "Tháng", "Tổng tiền", d);
+        CategoryPlot plot = barChart.getCategoryPlot();
+        BarRenderer renderer = new BarRenderer();
+        renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        plot.setRenderer(renderer);
+        ChartPanel c = new ChartPanel(barChart);
+        c.setPreferredSize(new Dimension(jpn.getWidth(), 300));
+        jpn.removeAll();
+        jpn.setLayout(new CardLayout());
+        jpn.add(c);
+        jpn.validate();
+        jpn.repaint();
+    }
+
+    public void showChartStatisticMonth(JPanel jpn, String year, String month) throws SQLException {
+
+        final DefaultCategoryDataset d = new DefaultCategoryDataset();
+        for (com.prime.main_model.Statistic s : ss.getStatisticMonth(year, month)) {
+            d.addValue(s.getTotalCost(), "VNĐ", s.getDate() + "");
+        }
+        JFreeChart barChart = ChartFactory.createBarChart("Biểu đồ doanh thu theo tháng", "Ngày", "Tổng tiền", d);
+        CategoryPlot plot = barChart.getCategoryPlot();
+        BarRenderer renderer = new BarRenderer();
+        renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        plot.setRenderer(renderer);
+        ChartPanel c = new ChartPanel(barChart);
+        c.setPreferredSize(new Dimension(jpn.getWidth(), 300));
+        jpn.removeAll();
+        jpn.setLayout(new CardLayout());
+        jpn.add(c);
+        jpn.validate();
+        jpn.repaint();
+    }
+
+    public void showChartStatisticDay(JPanel jpn, String startDate, String endDate) throws SQLException {
+
+        final DefaultCategoryDataset d = new DefaultCategoryDataset();
+        for (com.prime.main_model.Statistic s : ss.getStatisticDay(startDate, endDate)) {
+            d.addValue(s.getTotalCost(), "VNĐ", s.getCreatedAt() + "");
+        }
+        JFreeChart barChart = ChartFactory.createBarChart("Biểu đồ doanh thu theo từ ngày đến ngày", "Ngày", "Tổng tiền", d);
         CategoryPlot plot = barChart.getCategoryPlot();
         BarRenderer renderer = new BarRenderer();
         renderer.setSeriesPaint(0, new Color(39, 80, 150));
@@ -120,19 +233,19 @@ public class Statistic extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lblYear = new javax.swing.JLabel();
+        lblMonth = new javax.swing.JLabel();
+        lblStartDate = new javax.swing.JLabel();
         jdcStart = new com.toedter.calendar.JDateChooser();
         jdcEnd = new com.toedter.calendar.JDateChooser();
-        jLabel7 = new javax.swing.JLabel();
+        lblEndDate = new javax.swing.JLabel();
         cboStatisticOption = new javax.swing.JComboBox<>();
-        txtYear = new javax.swing.JTextField();
-        txtMonth = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblDoanhThuTuan1 = new javax.swing.JTable();
+        tblStatistic = new javax.swing.JTable();
         pnlStatistic = new javax.swing.JPanel();
+        cboYear = new javax.swing.JComboBox<>();
+        cboMonth = new javax.swing.JComboBox<>();
 
         tabTong.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -259,11 +372,11 @@ public class Statistic extends javax.swing.JPanel {
 
         jLabel2.setText("Thống kê theo thời gian:");
 
-        jLabel4.setText("Năm");
+        lblYear.setText("Năm");
 
-        jLabel5.setText("Tháng");
+        lblMonth.setText("Tháng");
 
-        jLabel6.setText("Từ ngày");
+        lblStartDate.setText("Từ ngày");
 
         jdcStart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
         jdcStart.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -279,30 +392,35 @@ public class Statistic extends javax.swing.JPanel {
             }
         });
 
-        jLabel7.setText("Đến ngày");
+        lblEndDate.setText("Đến ngày");
 
-        cboStatisticOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Năm", "Tháng", "Ngày" }));
+        cboStatisticOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "Năm", "Tháng", "Ngày" }));
+        cboStatisticOption.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboStatisticOptionActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Bảng thống kê doanh thu"));
 
-        tblDoanhThuTuan1.setModel(new javax.swing.table.DefaultTableModel(
+        tblStatistic.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "STT", "Thời gian", "Doanh thu"
+                "STT", "Thời gian", "Số lượng", "Doanh thu"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tblDoanhThuTuan1);
+        jScrollPane2.setViewportView(tblStatistic);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -318,6 +436,8 @@ public class Statistic extends javax.swing.JPanel {
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        pnlStatistic.setBackground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout pnlStatisticLayout = new javax.swing.GroupLayout(pnlStatistic);
         pnlStatistic.setLayout(pnlStatisticLayout);
         pnlStatisticLayout.setHorizontalGroup(
@@ -326,8 +446,22 @@ public class Statistic extends javax.swing.JPanel {
         );
         pnlStatisticLayout.setVerticalGroup(
             pnlStatisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
+            .addGap(0, 335, Short.MAX_VALUE)
         );
+
+        cboYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2020", "2021", "2022", "2023", "2024" }));
+        cboYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboYearActionPerformed(evt);
+            }
+        });
+
+        cboMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+        cboMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboMonthActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -347,19 +481,19 @@ public class Statistic extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(cboStatisticOption, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(59, 59, 59)
-                                .addComponent(jLabel4)
+                                .addComponent(lblYear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(52, 52, 52)
-                                .addComponent(jLabel5)
+                                .addComponent(cboYear, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(lblMonth)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(86, 86, 86)
-                                .addComponent(jLabel6)
+                                .addComponent(cboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(71, 71, 71)
+                                .addComponent(lblStartDate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jdcStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel7)
+                                .addComponent(lblEndDate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jdcEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -379,26 +513,26 @@ public class Statistic extends javax.swing.JPanel {
                         .addGap(15, 15, 15)
                         .addComponent(jLabel1))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
+                        .addGap(40, 40, 40)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jdcStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(cboStatisticOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2))
                             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4))
+                                .addComponent(lblYear)
+                                .addComponent(cboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))
-                            .addComponent(jLabel7)
+                                .addComponent(lblMonth)
+                                .addComponent(cboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblEndDate)
                             .addComponent(jdcEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))))
-                .addGap(18, 18, 18)
+                            .addComponent(lblStartDate))))
+                .addGap(44, 44, 44)
                 .addComponent(pnlStatistic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         tabTong.addTab("Doanh thu", jPanel5);
@@ -418,25 +552,117 @@ public class Statistic extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jdcStartPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jdcStartPropertyChange
-//        search();
+        System.out.println();
     }//GEN-LAST:event_jdcStartPropertyChange
 
     private void jdcEndPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jdcEndPropertyChange
-        // TODO add your handling code here:
+        if ("date".equals(evt.getPropertyName())) {
+            Date startDate = jdcStart.getDate();
+            Date endDate = jdcEnd.getDate();
+            if (startDate != null && endDate != null) {
+                if (endDate.before(startDate)) {
+                    JOptionPane.showMessageDialog(this, "Đến ngày không được trước từ ngày");
+                    return;
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày chỉ lấy ngày trong tháng
+                String startDay = sdf.format(startDate); // Chuyển đổi ngày thành chuỗi
+                String endDay = sdf.format(endDate);
+                try {
+                    //                System.out.println(startDay + " - " + endDay);
+                    fillToStatisticDay(ss.getStatisticDay(startDay, endDay));
+                    showChartStatisticDay(pnlStatistic, startDay, endDay);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Statistic.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                System.out.println("Không có ngày nào được chọn");
+            }
+        }
+
     }//GEN-LAST:event_jdcEndPropertyChange
+
+    private void cboStatisticOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboStatisticOptionActionPerformed
+        if (cboStatisticOption.getSelectedIndex() == 0) {
+
+        } else if (cboStatisticOption.getSelectedIndex() == 1) {
+            lblYear.setVisible(true);
+            cboYear.setVisible(true);
+            lblMonth.setVisible(false);
+            cboMonth.setVisible(false);
+            lblStartDate.setVisible(false);
+            lblEndDate.setVisible(false);
+            jdcStart.setVisible(false);
+            jdcEnd.setVisible(false);
+            try {
+                fillToStatisticYear(ss.getStatisticYear(cboYear.getSelectedItem() + ""));
+                showChartStatisticYear(pnlStatistic, cboYear.getSelectedItem() + "");
+            } catch (SQLException ex) {
+                Logger.getLogger(Statistic.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else if (cboStatisticOption.getSelectedIndex() == 2) {
+            lblYear.setVisible(true);
+            cboYear.setVisible(true);
+            lblMonth.setVisible(true);
+            cboMonth.setVisible(true);
+            lblStartDate.setVisible(false);
+            lblEndDate.setVisible(false);
+            jdcStart.setVisible(false);
+            jdcEnd.setVisible(false);
+            try {
+                fillToStatisticMonth(ss.getStatisticMonth(cboYear.getSelectedItem() + "", cboMonth.getSelectedItem() + ""));
+                showChartStatisticMonth(pnlStatistic, cboYear.getSelectedItem() + "", cboMonth.getSelectedItem() + "");
+            } catch (SQLException ex) {
+                Logger.getLogger(Statistic.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            lblYear.setVisible(false);
+            cboYear.setVisible(false);
+            lblMonth.setVisible(false);
+            cboMonth.setVisible(false);
+            lblStartDate.setVisible(true);
+            lblEndDate.setVisible(true);
+            jdcStart.setVisible(true);
+            jdcEnd.setVisible(true);
+            jdcStart.setDate(null);
+            jdcEnd.setDate(null);
+            try {
+                fillToStatisticDay(ss.getStatisticDay("1900-01-01", "1900-01-01"));
+                showChartStatisticDay(pnlStatistic, "1900-01-01", "1900-01-01");
+            } catch (SQLException ex) {
+                Logger.getLogger(Statistic.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_cboStatisticOptionActionPerformed
+
+    private void cboYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboYearActionPerformed
+        try {
+            fillToStatisticYear(ss.getStatisticYear(cboYear.getSelectedItem() + ""));
+            showChartStatisticYear(pnlStatistic, cboYear.getSelectedItem() + "");
+        } catch (SQLException ex) {
+            Logger.getLogger(Statistic.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboYearActionPerformed
+
+    private void cboMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMonthActionPerformed
+        try {
+            fillToStatisticMonth(ss.getStatisticMonth(cboYear.getSelectedItem() + "", cboMonth.getSelectedItem() + ""));
+            showChartStatisticMonth(pnlStatistic, cboYear.getSelectedItem() + "", cboMonth.getSelectedItem() + "");
+        } catch (SQLException ex) {
+            Logger.getLogger(Statistic.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboMonthActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.prime.component.Card card1;
     private com.prime.component.Card card2;
     private com.prime.component.Card card3;
     private com.prime.component.Card card4;
+    private javax.swing.JComboBox<String> cboMonth;
     private javax.swing.JComboBox<String> cboStatisticOption;
+    private javax.swing.JComboBox<String> cboYear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
@@ -446,12 +672,14 @@ public class Statistic extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private com.toedter.calendar.JDateChooser jdcEnd;
     private com.toedter.calendar.JDateChooser jdcStart;
+    private javax.swing.JLabel lblEndDate;
+    private javax.swing.JLabel lblMonth;
+    private javax.swing.JLabel lblStartDate;
+    private javax.swing.JLabel lblYear;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlStatistic;
     private javax.swing.JTabbedPane tabTong;
     private javax.swing.JTable tblDoanhThuTuan;
-    private javax.swing.JTable tblDoanhThuTuan1;
-    private javax.swing.JTextField txtMonth;
-    private javax.swing.JTextField txtYear;
+    private javax.swing.JTable tblStatistic;
     // End of variables declaration//GEN-END:variables
 }

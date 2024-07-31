@@ -116,11 +116,17 @@ public class StatisticService {
     public List<Statistic> getStatisticOneWeek() throws SQLException {
         List<Statistic> list = new ArrayList<>();
         sql = """
-              SELECT updated_at, SUM(total_cost) AS total_cost
-              FROM [Order]
-              WHERE updated_at >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE))
-              GROUP BY updated_at
-              ORDER BY updated_at DESC;
+              WITH RankedOrders AS (
+                  SELECT CAST(o.updated_at AS DATE) AS order_date, SUM(o.total_cost) AS total_cost
+                  FROM [Order] o
+                  GROUP BY CAST(o.updated_at AS DATE)
+              ),
+              RankedDays AS (SELECT order_date, total_cost, ROW_NUMBER() OVER (ORDER BY order_date DESC) AS rn
+                  FROM RankedOrders)
+              SELECT order_date AS updated_at, total_cost
+              FROM RankedDays
+              WHERE rn <= 7
+              ORDER BY order_date DESC;
               """;
         try {
             c = ConnectionJDBC.getConnection();
@@ -143,26 +149,30 @@ public class StatisticService {
         return list;
     }
 
-    public SneakerDetail getOneSneakerDeatail() throws SQLException {
-        SneakerDetail sd = new SneakerDetail();
+    public List<Statistic> getStatisticYear(String year) throws SQLException {
+        List<Statistic> list = new ArrayList<>();
         sql = """
-                select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost) as total_cost
-              	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-              	join Sneaker s on sd.sneaker_id = s.sneaker_id
-              	group by sd.sneaker_detail_code, sneaker_name
-              	order by quantity desc
+              SELECT MONTH(o.updated_at) AS month,
+                  SUM(o.total_cost) AS total_cost, 
+                  SUM(od.quantity) AS quantity
+              FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+              WHERE YEAR(o.updated_at) = ?
+              GROUP BY MONTH(o.updated_at)
+              ORDER BY month ASC;
               """;
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
+            ps.setString(1, year);
             rs = ps.executeQuery();
-            if (rs.next()) {
-                sd.setSneakerCode(rs.getString("sneaker_detail_code"));
-                sd.setSneakerName(rs.getString("sneaker_name"));
-                sd.setQuantity(rs.getInt("quantity"));
-                sd.setPrice(rs.getLong("total_cost"));
+            while (rs.next()) {
+                Statistic s = new Statistic();
+                s.setMonth(rs.getInt("month"));
+                s.setTotalCost(rs.getLong("total_cost"));
+                s.setQuantity(rs.getInt("quantity"));
+                list.add(s);
             }
-            return sd;
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -170,29 +180,32 @@ public class StatisticService {
             ps.close();
             c.close();
         }
-        return sd;
+        return list;
     }
     
-    public SneakerDetail getOneSneakerDeatailPrice() throws SQLException {
-        SneakerDetail sd = new SneakerDetail();
+    public List<Statistic> getStatisticMonth(String year, String month) throws SQLException {
+        List<Statistic> list = new ArrayList<>();
         sql = """
-                select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost) as total_cost
-                	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-                	join Sneaker s on sd.sneaker_id = s.sneaker_id
-                	group by sd.sneaker_detail_code, sneaker_name
-                	order by total_cost desc
+              SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+              FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+              WHERE YEAR(o.updated_at) = ? AND MONTH(o.updated_at) = ?
+              GROUP BY DAY(o.updated_at)
+              ORDER BY day ASC;
               """;
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
+            ps.setString(1, year);
+            ps.setString(2, month);
             rs = ps.executeQuery();
-            if (rs.next()) {
-                sd.setSneakerCode(rs.getString("sneaker_detail_code"));
-                sd.setSneakerName(rs.getString("sneaker_name"));
-                sd.setQuantity(rs.getInt("quantity"));
-                sd.setPrice(rs.getLong("total_cost"));
+            while (rs.next()) {
+                Statistic s = new Statistic();
+                s.setDate(rs.getInt("day"));
+                s.setTotalCost(rs.getLong("total_cost"));
+                s.setQuantity(rs.getInt("quantity"));
+                list.add(s);
             }
-            return sd;
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -200,8 +213,40 @@ public class StatisticService {
             ps.close();
             c.close();
         }
-        return sd;
+        return list;
     }
     
+    public List<Statistic> getStatisticDay(String startDate, String endDate) throws SQLException {
+        List<Statistic> list = new ArrayList<>();
+        sql = """
+              SELECT o.updated_at AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+              FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+              WHERE o.updated_at BETWEEN ? AND ?
+              GROUP BY o.updated_at
+              ORDER BY day ASC;
+              """;
+        try {
+            c = ConnectionJDBC.getConnection();
+            ps = c.prepareStatement(sql);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Statistic s = new Statistic();
+                s.setCreatedAt(rs.getDate("day"));
+                s.setTotalCost(rs.getLong("total_cost"));
+                s.setQuantity(rs.getInt("quantity"));
+                list.add(s);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rs.close();
+            ps.close();
+            c.close();
+        }
+        return list;
+    }
     
 }
