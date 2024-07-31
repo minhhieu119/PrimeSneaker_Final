@@ -1,26 +1,62 @@
-
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.ManageSneaker;
 import com.prime.main_model.Model_Color;
+import com.prime.main_model.Model_SneakerDetail;
+import com.prime.main_model.Model_addNameProduct;
 import com.prime.main_model.SizeModel;
 import com.prime.responsitory.ColorResponsitory;
 import com.prime.responsitory.SizeResponsitory;
+import com.prime.responsitory.SneakerDetailResponsitory;
+import com.prime.responsitory.TeSPResponsitory;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Random;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import net.glxn.qrgen.image.ImageType;
 
-public class FormAddProductDetail extends javax.swing.JFrame {
+public class FormAddProductDetail extends javax.swing.JDialog {
 
-    
     DefaultComboBoxModel dcboSize = new DefaultComboBoxModel();
-    DefaultComboBoxModel dcboColor = new DefaultComboBoxModel();
+    DefaultComboBoxModel dcboColor, dcboName = new DefaultComboBoxModel();
     private final ColorResponsitory colorRS = new ColorResponsitory();
     private final SizeResponsitory sizeRS = new SizeResponsitory();
-    public FormAddProductDetail() {
+    private final TeSPResponsitory nameProduct = new TeSPResponsitory();
+    private SneakerDetailResponsitory snDetailRS = new SneakerDetailResponsitory();
+    ManageSneaker sneaker = new ManageSneaker();
+
+    public FormAddProductDetail(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
         dcboColor = (DefaultComboBoxModel) cboColor.getModel();
         dcboSize = (DefaultComboBoxModel) cboSize.getModel();
+        dcboName = (DefaultComboBoxModel) cboNameProduct.getModel();
         loadDataColor();
         loadDataSize();
+        loadDataName();
+        if (rdoHethang.isSelected()) {
+            txtQuantity.setText("0");
+            txtQuantity.setEditable(false);
+        }
+        txtCodeSneaker.setText(generateCode());
+        txtCodeSneaker.setEnabled(false);
+    }
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int CODE_LENGTH = 8;
+
+    public static String generateCode() {
+        Random random = new Random();
+        StringBuilder code = new StringBuilder(CODE_LENGTH);
+
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            code.append(CHARACTERS.charAt(index));
+        }
+
+        return code.toString();
     }
 
     private void loadDataSize() {
@@ -36,33 +72,115 @@ public class FormAddProductDetail extends javax.swing.JFrame {
             dcboColor.addElement(color);
         }
     }
+
+    private void loadDataName() {
+        dcboName.removeAllElements();
+        for (Model_addNameProduct name : nameProduct.getAll()) {
+            dcboName.addElement(name);
+        }
+    }
+
+    private boolean validateForm() {
+        if (txtCodeSneaker.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập code Sản Phẩm");
+            txtCodeSneaker.requestFocus();
+            return false;
+        }
+        if (txtPrice.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá SP");
+            txtPrice.requestFocus();
+            return false;
+        }
+        if (txtQuantity.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Số lượng");
+            txtQuantity.requestFocus();
+            return false;
+        }
+
+        for (Model_SneakerDetail sn : snDetailRS.getALl()) {
+            if (sn.getCode_sneaker().equals(txtCodeSneaker.getText())) {
+                JOptionPane.showMessageDialog(this, "Code_Sneaker đã tồn tại");
+                txtCodeSneaker.setText(generateCode());
+                return false;
+            }
+        }
+        try {
+            Double price = Double.valueOf(txtPrice.getText());
+            Integer quantity = Integer.valueOf(txtQuantity.getText());
+            if (price < 100000 || quantity < 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng và giá phải lớn hơn hoặc bằng 0 và giá lớn hơn hoặc = 100000");
+                return false;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Số lượng và giá phải là số");
+            return false;
+        }
+        String trangThai = null;
+        if (rdoSell.isSelected()) {
+            trangThai = "Còn hàng";
+        }
+        if (rdoHethang.isSelected()) {
+            trangThai = "Hết hàng";
+        }
+        for (Model_SneakerDetail sn : snDetailRS.getALl()) {
+            if (sn.getTenSP().getProduct_name().equals(cboNameProduct.getSelectedItem().toString())
+                    && (sn.getKichCo().getSize_Number() == Double.valueOf(cboSize.getSelectedItem().toString()))
+                    && sn.getMauSac().getColor_name().equals(cboColor.getSelectedItem().toString())
+                    && sn.getCode_sneaker().equals(txtCodeSneaker.getText())) {
+                JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Model_SneakerDetail getDataFrom() {
+        Model_SneakerDetail sn = new Model_SneakerDetail();
+        Model_addNameProduct name = nameProduct.getName(cboNameProduct.getSelectedItem().toString());
+        System.out.println(name);
+        Model_Color color = colorRS.getColor(cboColor.getSelectedItem().toString());
+        SizeModel size = sizeRS.getSize(cboSize.getSelectedItem().toString());
+        sn.setGiaSP(Long.valueOf(txtPrice.getText()));
+        sn.setSoLuong(Integer.valueOf(txtQuantity.getText()));
+        sn.setCode_sneaker(txtCodeSneaker.getText());
+        sn.setTenSP(name);
+        sn.setKichCo(size);
+        sn.setMauSac(color);
+        if (rdoSell.isSelected()) {
+            sn.setTrangThai("Còn hàng");
+        }
+        if (rdoHethang.isSelected()) {
+            sn.setTrangThai("Hết hàng");
+        }
+        return sn;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jLabel28 = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
-        txtPrice1 = new javax.swing.JTextField();
-        txtPrice2 = new javax.swing.JTextField();
-        txtPrice3 = new javax.swing.JTextField();
-        txtPrice4 = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
+        txtQuantity = new javax.swing.JTextField();
         jLabel51 = new javax.swing.JLabel();
         cboColor = new javax.swing.JComboBox<>();
         jLabel32 = new javax.swing.JLabel();
-        cboSize = new javax.swing.JComboBox<>();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        cboNameProduct = new javax.swing.JComboBox<>();
+        rdoSell = new javax.swing.JRadioButton();
+        rdoHethang = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
-        btnNext = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        cboSize = new javax.swing.JComboBox<>();
+        jLabel41 = new javax.swing.JLabel();
+        txtCodeSneaker = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Form add ProductDetail");
-
-        jLabel28.setText("Mã SPCT");
 
         jLabel37.setText("Tên sản phẩm");
 
@@ -80,117 +198,168 @@ public class FormAddProductDetail extends javax.swing.JFrame {
 
         jLabel32.setText("Màu sắc");
 
+        cboNameProduct.setBackground(new java.awt.Color(39, 80, 150));
+        cboNameProduct.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        cboNameProduct.setBorder(null);
+
+        buttonGroup1.add(rdoSell);
+        rdoSell.setSelected(true);
+        rdoSell.setText("Còn hàng");
+        rdoSell.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoSellActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(rdoHethang);
+        rdoHethang.setText("Hết hàng");
+        rdoHethang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoHethangActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel1.setText("Thêm sản phẩm chi tiết");
+
+        btnSave.setBackground(new java.awt.Color(39, 80, 150));
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
         cboSize.setBackground(new java.awt.Color(39, 80, 150));
         cboSize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
         cboSize.setBorder(null);
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Còn hàng");
-
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("Hết hàng");
-
-        jLabel1.setText("Thêm sản phẩm chi tiết");
-
-        btnNext.setBackground(new java.awt.Color(39, 80, 150));
-        btnNext.setForeground(new java.awt.Color(255, 255, 255));
-        btnNext.setText("Save");
+        jLabel41.setText("Code ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel38)
+                    .addComponent(jLabel41)
+                    .addComponent(jLabel39)
+                    .addComponent(jLabel40))
+                .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtQuantity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                        .addComponent(txtPrice, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtCodeSneaker))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(143, 143, 143)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel40))
+                        .addComponent(rdoSell, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPrice4, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPrice3, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(51, 51, 51)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtPrice2))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jLabel32, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(61, 61, 61)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(cboColor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(80, Short.MAX_VALUE))
+                        .addComponent(rdoHethang)))
+                .addGap(81, 81, 81)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel51)
+                    .addComponent(jLabel37)
+                    .addComponent(jLabel32))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cboNameProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboColor, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(61, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(149, 149, 149))
+                .addComponent(jLabel1)
+                .addGap(284, 284, 284))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(305, 305, 305))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cboColor, cboNameProduct, cboSize});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel1)
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtPrice2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel37))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel51)
-                            .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel32)
-                            .addComponent(cboColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel28))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel38)
-                            .addComponent(txtPrice3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPrice4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel39))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(cboNameProduct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel41)
+                    .addComponent(txtCodeSneaker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel38)
+                    .addComponent(jLabel51)
+                    .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel39)
+                    .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel40)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
-                .addGap(44, 44, 44)
-                .addComponent(btnNext)
-                .addGap(58, 58, 58))
+                    .addComponent(rdoSell)
+                    .addComponent(rdoHethang))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(btnSave)
+                .addGap(33, 33, 33))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboColor, cboNameProduct, cboSize});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+
+        if (validateForm()) {
+            int chon = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm sản phẩm này không");
+            if (chon != JOptionPane.YES_OPTION) {
+                return;
+            }
+            Model_SneakerDetail sn = getDataFrom();
+            System.out.println(sn);
+            try {
+                ByteArrayOutputStream out = net.glxn.qrgen.QRCode.from(sn.getCode_sneaker()).to(ImageType.PNG).stream();
+                String path = "D:\\QRcode\\";
+
+                FileOutputStream fout = new FileOutputStream(new File(path + (sn.getCode_sneaker() + ".png")));
+                fout.write(out.toByteArray());
+                fout.flush();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            if (snDetailRS.addSneakerDetail(sn) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
+                sneaker.loadSneakerDetailToTable(snDetailRS.getALl());
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại");
+            }
+        }
+
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void rdoHethangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoHethangActionPerformed
+        if (rdoHethang.isSelected()) {
+            txtQuantity.setText("0");
+            txtQuantity.setEditable(false);
+        }
+    }//GEN-LAST:event_rdoHethangActionPerformed
+
+    private void rdoSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSellActionPerformed
+        txtQuantity.setEditable(true);
+    }//GEN-LAST:event_rdoSellActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -345,29 +514,37 @@ public class FormAddProductDetail extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormAddProductDetail().setVisible(true);
+                FormAddProductDetail dialog = new FormAddProductDetail(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnSave;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cboColor;
+    private javax.swing.JComboBox<String> cboNameProduct;
     private javax.swing.JComboBox<String> cboSize;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel51;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JTextField txtPrice1;
-    private javax.swing.JTextField txtPrice2;
-    private javax.swing.JTextField txtPrice3;
-    private javax.swing.JTextField txtPrice4;
+    private javax.swing.JRadioButton rdoHethang;
+    private javax.swing.JRadioButton rdoSell;
+    private javax.swing.JTextField txtCodeSneaker;
+    private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtQuantity;
     // End of variables declaration//GEN-END:variables
+
 }

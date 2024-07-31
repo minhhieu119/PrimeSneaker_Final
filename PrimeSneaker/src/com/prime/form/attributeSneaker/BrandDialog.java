@@ -1,6 +1,7 @@
 
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.ManageSneaker;
 import com.prime.main_model.Model_Brand;
 import com.prime.responsitory.BrandResponsitory;
 import java.util.ArrayList;
@@ -8,16 +9,18 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
-public class BrandDialog extends javax.swing.JFrame {
+public class BrandDialog extends javax.swing.JDialog {
 
     DefaultTableModel model = new DefaultTableModel();
     int index;
+    ManageSneaker sneaker = new ManageSneaker();
     private final BrandResponsitory brs = new BrandResponsitory();
-    public BrandDialog() {
+    public BrandDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
         model = (DefaultTableModel) tblBrand.getModel();
-        loadBrandToTable();
+        loadBrandToTable(brs.getALl());
     }
 
     
@@ -167,7 +170,7 @@ public class BrandDialog extends javax.swing.JFrame {
         }
         ArrayList<Model_Brand> lst = brs.getALl();
             for (Model_Brand br : lst) {
-                if (txtBrandName.getText().equals(br.getBrand_name())) {
+                if (txtBrandName.getText().trim().toLowerCase().equals(br.getBrand_name().toLowerCase())) {
                     JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
                     return;
                 }
@@ -175,7 +178,9 @@ public class BrandDialog extends javax.swing.JFrame {
         Model_Brand br = readForm();
         if (brs.addBrand(br) != null) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
-            loadBrandToTable();
+            loadBrandToTable(brs.getALl());
+            sneaker.loadDataBrand();
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
         }
@@ -206,7 +211,7 @@ public class BrandDialog extends javax.swing.JFrame {
         Model_Brand br = readForm1();
         if (brs.upDateBrand(br) != null) {
             JOptionPane.showMessageDialog(this, "Update thành công");
-            loadBrandToTable();
+            loadBrandToTable(brs.getALl());
         } else
             JOptionPane.showMessageDialog(this, "Update thất bại");
     }//GEN-LAST:event_btnEditBrandActionPerformed
@@ -258,7 +263,14 @@ public class BrandDialog extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BrandDialog().setVisible(true);
+                BrandDialog dialog = new BrandDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -275,9 +287,8 @@ public class BrandDialog extends javax.swing.JFrame {
     private javax.swing.JTextField txtBrandId;
     private javax.swing.JTextField txtBrandName;
     // End of variables declaration//GEN-END:variables
-    private void loadBrandToTable() {
-        model.setRowCount(0);
-        ArrayList<Model_Brand> lst = brs.getALl();
+    private void loadBrandToTable(ArrayList<Model_Brand> lst) {
+        model.setRowCount(0);       
         for (Model_Brand br : lst) {
             model.addRow(new Object[]{
                 br.getBrand_id(),
@@ -288,7 +299,7 @@ public class BrandDialog extends javax.swing.JFrame {
 
     private Model_Brand readForm() {
         Model_Brand br = new Model_Brand();
-        br.setBrand_name(txtBrandName.getText());
+        br.setBrand_name(txtBrandName.getText().trim());
         return br;
     }
 

@@ -18,7 +18,7 @@ import com.prime.main_model.SneakerDetail;
 import com.prime.swing.MenuItem;
 import com.prime.swing.PopupMenu;
 import com.prime.swing.icon.GoogleMaterialDesignIcons;
-import com.prime.swing.icon.IconFontSwing;
+import com.prime.swing.icon.IconFontSwing;  
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

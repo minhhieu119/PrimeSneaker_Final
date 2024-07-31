@@ -1,18 +1,21 @@
 
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.ManageSneaker;
 import com.prime.main_model.SizeModel;
 import com.prime.responsitory.SizeResponsitory;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class SizeDialog extends javax.swing.JFrame {
+public class SizeDialog extends javax.swing.JDialog {
 
     DefaultTableModel model = new DefaultTableModel();
     int index;
     private final SizeResponsitory sizeRS = new SizeResponsitory();
-    public SizeDialog() {
+    ManageSneaker sneaker = new ManageSneaker();
+    public SizeDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
         model = (DefaultTableModel) tblSize.getModel();
@@ -181,6 +184,8 @@ public class SizeDialog extends javax.swing.JFrame {
         if (sizeRS.addSize(dg) != null) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
             loadSizeToTable();
+            sneaker.loadDataSize();
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
         }
@@ -238,7 +243,14 @@ public class SizeDialog extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SizeDialog().setVisible(true);
+                SizeDialog dialog = new SizeDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

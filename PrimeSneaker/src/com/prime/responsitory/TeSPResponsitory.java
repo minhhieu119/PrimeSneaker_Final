@@ -79,7 +79,7 @@ public class TeSPResponsitory {
             PreparedStatement prsm = con.prepareStatement(sql);
             prsm.setObject(1,key);
             Model_addNameProduct name =null;
-            ResultSet rs = prsm.executeQuery(sql);
+            ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
                  name = new Model_addNameProduct();
                 name.setProduct_id(rs.getInt("sneaker_id"));

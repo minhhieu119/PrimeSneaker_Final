@@ -8,10 +8,11 @@ package com.prime.form.attributeSneaker;
  *
  * @author ADMIN
  */
-public class InfoProductDialog extends javax.swing.JFrame {
+public class InfoProductDialog extends javax.swing.JDialog {
 
     
-    public InfoProductDialog() {
+    public InfoProductDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -283,7 +284,14 @@ public class InfoProductDialog extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InfoProductDialog().setVisible(true);
+                InfoProductDialog dialog = new InfoProductDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

@@ -1,18 +1,21 @@
 
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.ManageSneaker;
 import com.prime.main_model.Model_DeGiay;
 import com.prime.responsitory.SoleResponsitory;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class SoleDialog extends javax.swing.JFrame {
+public class SoleDialog extends javax.swing.JDialog {
 
     DefaultTableModel model = new DefaultTableModel();
     int index;
     private final SoleResponsitory soleRS = new SoleResponsitory();
-    public SoleDialog() {
+    ManageSneaker sneaker = new ManageSneaker();
+    public SoleDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
         model = (DefaultTableModel) tblSole.getModel();
@@ -166,7 +169,7 @@ public class SoleDialog extends javax.swing.JFrame {
         }
         ArrayList<Model_DeGiay> lst = soleRS.getAll();
             for (Model_DeGiay co : lst) {
-                if (txtSoleName.getText().equals(co.getTenDeGiay())) {
+                if (txtSoleName.getText().trim().equals(co.getTenDeGiay())) {
                     JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
                     return;
                 }
@@ -175,6 +178,8 @@ public class SoleDialog extends javax.swing.JFrame {
         if (soleRS.addSole(dg) != null) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
             loadDeGiayToTable();
+            sneaker.loadDataSole();
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
         }
@@ -224,7 +229,14 @@ public class SoleDialog extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SoleDialog().setVisible(true);
+                SoleDialog dialog = new SoleDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -261,14 +273,14 @@ public class SoleDialog extends javax.swing.JFrame {
 
     private Model_DeGiay readForm() {
         Model_DeGiay dg = new Model_DeGiay();
-        dg.setTenDeGiay(txtSoleName.getText());
+        dg.setTenDeGiay(txtSoleName.getText().trim());
         //dg.setMaDeGiay(Integer.parseInt(txtSoleId.getText()));
         return dg;
     }
 
     private Model_DeGiay readForm1() {
         Model_DeGiay dg = new Model_DeGiay();
-        dg.setTenDeGiay(txtSoleName.getText());
+        dg.setTenDeGiay(txtSoleName.getText().trim());
         dg.setMaDeGiay(Integer.parseInt(txtSoleId.getText()));
         return dg;
     }

@@ -80,14 +80,14 @@ go
 create table Voucher
 (
 	voucher_id int identity(1,1) primary key,
-	voucher_code varchar(10) unique,
+	voucher_code varchar(20) unique,
 	voucher_name nvarchar(100),
-	discount_rate float check(discount_rate >= 0 and discount_rate <= 100),
-	discount_amount money check(discount_amount >= 0),
-	--  max_discout lưu số tiền hoặc %  tối đa mà 1 voucher có thể giảm giá cho đơn hàng khi sử dụng
+	voucher_type bit, -- loại voucher: 0-%, 1-tiền
+	voucher_value int, -- giá trị giảm
+	quantity int check(quantity >= 0),
+	[status] nvarchar(50),
 	max_discount float check(max_discount >= 0),
 	min_order_value money check(min_order_value >= 0),
-	quantity int check(quantity >= 0),
 	[start_date] date,
 	end_date date,
 	created_at date default getdate(),
@@ -96,7 +96,6 @@ create table Voucher
 	updated_by int,
 	deleted bit default 1
 )
-go
 
 create table [Role]
 (
@@ -169,26 +168,12 @@ create table SneakerDetail
 	sneaker_detail_code varchar(10) unique,
 	gender nvarchar(20),
 	price money check(price > 0),
-	quantity int check(quantity > 0),
+	quantity int check(quantity >= 0),
 	[status] nvarchar(50),
 	created_at date default getdate(),
 	updated_at date default getdate(),
 	created_by int,
 	updated_by int
-)
-go
-
-create table [Image]
-(
-	image_id int identity(1,1) primary key,
-	sneaker_detail_id int,
-	image_name nvarchar(50),
-	image_url varchar(100),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
 )
 go
 
@@ -199,10 +184,7 @@ create table [Order]
 	customer_id int,
 	voucher_id int,
 	payment_method nvarchar(40),
-	order_qr_code varchar(50),
 	total_cost money check(total_cost >= 0),
-	received_cash money check(received_cash >= 0),
-	[change] money check([change] >= 0),
 	[status] nvarchar(50),
 	note nvarchar(255),
 	created_at date default getdate(),
@@ -226,8 +208,6 @@ create table OrderDetail
 	primary key(sneaker_detail_id, order_id)
 )
 go
-
-alter table [Image] add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
 alter table SneakerDetail add foreign key (sneaker_id) references Sneaker (sneaker_id)
 alter table SneakerDetail add foreign key (size_id) references Size (size_id)
@@ -262,19 +242,19 @@ drop table OrderDetail
 drop table SneakerDetail
 drop table Sneaker
 drop table [Image]
---drop table Brand
---drop table Category
---drop table Color
---drop table Customer
---drop table Exchange
---drop table Material
---drop table [Order]
---drop table PaymentMethod
---drop table [Role]
---drop table [User]
---drop table Size
---drop table Sole
---drop table Voucher
+drop table Brand
+drop table Category
+drop table Color
+drop table Customer
+drop table Exchange
+drop table Material
+drop table [Order]
+drop table PaymentMethod
+drop table [Role]
+drop table [User]
+drop table Size
+drop table Sole
+drop table Voucher
 
 
 
@@ -339,20 +319,32 @@ values (N'Nguyễn Văn Hiếu', 1, '1990-05-10', N'123 Trịnh Văn Bô, Nam T�
 (N'Bùi Huy Hoàng', 1, '2003-02-26', N'30 Lê Lai, Thái Bình', '0354172896')
 
 --Nhập dữ liệu bảng Voucher
-insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date)
-values ('VOUCHER1', N'Khuyến mãi hè', 0.1, NULL, 100000, 500000, 20, '2024-06-01', '2024-12-31'),
-('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 0.15, NULL, 150000, 700000, 20, '2024-02-01', '2024-11-30'),
-('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', NULL, 50000, 200000, 300000, 20, '2024-05-01', '2024-10-31'),
-('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 0.2, NULL, 250000, 800000, 20, '2024-04-01', '2024-09-30'),
-('VOUCHER5', N'Khuyến mãi Black Friday', NULL, 70000, 300000, 400000, 20, '2024-06-01', '2024-08-31'),
-('VOUCHER6', N'Khuyến mãi đầu Xuân', 0.25, NULL, 300000, 900000, 20, '2024-06-01', '2024-07-31'),
-('VOUCHER7', N'Khuyến mãi sinh nhật shop', NULL, 100000, 350000, 600000, 20, '2024-07-01', '2024-06-30'),
-('VOUCHER8', N'Khuyến mãi sinh nhật khách hàng', 0.3, NULL, 400000, 950000, 20, '2024-08-01', '2024-05-31'),
-('VOUCHER9', N'Khuyến mãi valentine', NULL, 120000, 200000, 700000, 20, '2024-09-01', '2024-04-30'),
-('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0.35, NULL, 500000, 1000000, 20, '2024-01-01', '2024-03-31');
+--insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date)
+--values ('VOUCHER1', N'Khuyến mãi hè', 0.1, NULL, 100000, 500000, 20, '2024-06-01', '2024-12-31'),
+--('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 0.15, NULL, 150000, 700000, 20, '2024-02-01', '2024-11-30'),
+--('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', NULL, 50000, 200000, 300000, 20, '2024-05-01', '2024-10-31'),
+--('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 0.2, NULL, 250000, 800000, 20, '2024-04-01', '2024-09-30'),
+--('VOUCHER5', N'Khuyến mãi Black Friday', NULL, 70000, 300000, 400000, 20, '2024-06-01', '2024-08-31'),
+--('VOUCHER6', N'Khuyến mãi đầu Xuân', 0.25, NULL, 300000, 900000, 20, '2024-06-01', '2024-07-31'),
+--('VOUCHER7', N'Khuyến mãi sinh nhật shop', NULL, 100000, 350000, 600000, 20, '2024-07-01', '2024-06-30'),
+--('VOUCHER8', N'Khuyến mãi sinh nhật khách hàng', 0.3, NULL, 400000, 950000, 20, '2024-08-01', '2024-05-31'),
+--('VOUCHER9', N'Khuyến mãi valentine', NULL, 120000, 200000, 700000, 20, '2024-09-01', '2024-04-30'),
+--('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0.35, NULL, 500000, 1000000, 20, '2024-01-01', '2024-03-31');
 
-insert into Voucher (voucher_code, voucher_name, discount_rate, discount_amount, max_discount, min_order_value, quantity, [start_date], end_date)
-values ('VOUCHER0', N'Không', 0, NULL, 0, 0, 0,'2022-12-31' , '2100-12-31')
+insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, [status], max_discount,min_order_value, [start_date], end_date)
+values ('VOUCHER1', N'Khuyến mãi hè', 0, 15, 20, N'Sắp áp dụng', 30, 500000, '2024-02-01', '2024-12-30'),
+insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, [status], max_discount,min_order_value, [start_date], end_date)
+values('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 1, 20000, 20, N'Sắp áp dụng',20000, 500000, '2024-05-01', '2024-11-30'),
+insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, [status], max_discount,min_order_value, [start_date], end_date)
+values('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', 0, 20, 20, N'Sắp áp dụng',20, 300000, '2024-05-01', '2024-10-31'),
+('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 1, 30000, 20, N'Sắp áp dụng', 30000, 600000, '2024-04-01', '2024-09-30'),
+('VOUCHER5', N'Khuyến mãi Black Friday', 0, 15, 20, N'Đang áp dụng', 30, 1000000, '2024-06-01', '2024-08-31'),
+('VOUCHER6', N'Khuyến mãi đầu Xuân', 0, 25, 20, N'Đang áp dụng', 40, 900000, '2024-06-01', '2024-07-31'),
+('VOUCHER7', N'Khuyến mãi sinh nhật shop', 1, 40000, 20, N'Hết hạn', 40000, 400000, '2024-07-01', '2024-06-30'),
+('VOUCHER8', N'Khuyến mãi sinh nhật shop', 1, 15000, 20, N'Hết hạn', 15000, 500000, '2024-08-01', '2024-05-31'),
+('VOUCHER9', N'Khuyến mãi valentine', 0, 10, 20, N'Hết hạn', 20, 300000, '2024-09-01', '2024-04-30'),
+('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0, 35, 20, N'Hết hạn', 50, 800000, '2024-01-01', '2024-03-31')
+
 
 --Nhập dữ liệu bảng Sneaker
 insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name,[status], [description])
@@ -364,16 +356,16 @@ values
 (1,1,1,3,N'Nike Jordan 1 Dior', N'Đang bán', N'Được giới thiệu tại triển lãm “Paris 3020.” của nghệ sĩ đương đại Daniel Arsham'),
 
 --Đen, da, vải, nike
-(1,2,1,5,N'Nike Pegasus 40', N'Chưa mở bán', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
+(1,2,1,5,N'Nike Pegasus 40', N'Đang bán', N'Giày chuyên chạy bộ thiết kế đẹp mắt'),
 
 --trắng, da, nike
-(1,3,5,3,N'Nike Air Force 1', N'Chưa mở bán', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
+(1,3,5,3,N'Nike Air Force 1', N'Ngừng bán', N'Là một trong những form dáng giày thể thao được giới trẻ quan tâm và yêu thích'),
 
 --trắng, da, adidas
 (2,1,3,1,N'Adidas Superstar', N'Đang bán', N'Hiện đã có sẵn tại Sneaker Daily Shop'),
 
 --da suede, trắng, đen, nâu, đế EVA, adidas
-(2,5,2,2,N'Adidas Samba', N'Đang bán', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
+(2,5,2,2,N'Adidas Samba', N'Ngừng bán', N'Giày thể thao cổ điển được thiết kế dành cho phong cách thường ngày'),
 
 --Xanh, adidas, vải
 (2,2,1,4,N'Adidas Ultraboost', N'Đang bán', N'Đã được bày bán trên Sneaker Daily Shop'),
@@ -400,13 +392,13 @@ values
 (6,5,2,3,N'Giày Fila Ranger', N'Đang bán', N'Mức giá hấp dẫn, đừng bỏ lỡ cơ hội'),
 
 --fila, trắng, 2.290.000₫
-(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Đang bán', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
+(6,4,3,2,N'Giày Fila Disruptor 2 Scotch', N'Ngừng bán', N'Là một phiên bản đặc biệt của dòng giày Fila Disruptor 2'),
 
 --mlb, trắng, 2.790.000₫
 (5,3,2,2,N'Giày MLB Chunky Liner', N'Đang bán', N'No description'),
 
 --mlb, trắng, 1.500.000₫
-(5,5,3,2,N'Giày MLB BigBall Chunky', N'Đang bán', N'Phong cách Chunky'),
+(5,5,3,2,N'Giày MLB BigBall Chunky', N'Ngừng bán', N'Phong cách Chunky'),
 
 --mlb, trắng, 3.390.000₫
 (5,2,2,4,N'Giày MLB Chunky Runner SD', N'Đang bán', N'Tạo độ đàn hồi mang lại cảm giác cực kỳ thoải mái, nhẹ nhàng và dễ chịu'),
@@ -430,7 +422,7 @@ values
 (9,4,3,2,N'Giày Puma Mayze', N'Đang bán', N'PUMA bắt tay với MTV để tạo ra một phiên bản RS-X mới'),
 
 --puma, xanh, 2.090.000₫
-(9,5,1,5,N'Giày Puma Suede Classic', N'Đang bán', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
+(9,5,1,5,N'Giày Puma Suede Classic', N'Ngừng bán', N'Khả năng chống thấm nước trên cả tuyệt vời, độ bền màu, chất liệu êm ái'),
 
 --reebok, đen, 1.790.000₫
 (11,5,5,3,N'Giày Reebok Royal Pervader', N'Đang bán', N'No description'),
@@ -442,58 +434,58 @@ values
 (10,5,3,4,N'Giày Vans Old Skool', N'Đang bán', N'No description'),
 
 --vans, trắng, 2.500.000₫
-(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'Đang bán', N'No description'),
+(10,5,2,5,N'Giày Vans checkerboard slip-on classic', N'Ngừng bán', N'No description'),
 
 --vans, đen-lục, 1.690.000₫
 (10,5,3,4,N'Giày Vans classic', N'Đang bán', N'No description')
 
 --Nhập dữ liệu SneakerDetail
 insert into SneakerDetail  (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (1, 2, 1, '2345522', 0, 1500000, 20, N'Đang bán')
+values (1, 2, 1, '2345522', 0, 1500000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (1, 4, 3, '2345530', 1, 1500000, 10, N'Đang bán')
+values (1, 4, 3, '2345530', 1, 1500000, 10, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (1, 7, 2, '2345531', 1, 1500000, 10, N'Đang bán')
+values (1, 7, 2, '2345531', 1, 1500000, 10, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (2, 6, 4, '2345532', 0, 2600000, 20, N'Đang bán')
+values (2, 6, 4, '2345532', 0, 2600000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (2, 8, 5, '2345533', 0, 2600000, 15, N'Đang bán')
+values (2, 8, 5, '2345533', 0, 2600000, 15, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (2, 7, 2, '2345534', 1, 2600000, 5, N'Đang bán')
+values (2, 7, 2, '2345534', 1, 2600000, 5, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (3, 6, 5, '23455305', 1, 2500000, 20, N'Đang bán')
+values (3, 6, 5, '23455305', 1, 2500000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (3, 1, 3, '2345535', 0, 2500000, 20, N'Đang bán')
+values (3, 1, 3, '2345535', 0, 2500000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (3, 6, 2, '2345536', 1, 2500000, 20, N'Đang bán')
+values (3, 6, 2, '2345536', 1, 2500000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (4, 9, 5, '2345537', 0, 1000000, 20, N'Đã ngừng bán')
+values (4, 9, 5, '2345537', 0, 1000000, 20, N'Hết hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (5, 11, 3, '2345538', 1, 1300000, 20, N'Đã ngừng bán')
+values (5, 11, 3, '2345538', 1, 1300000, 20, N'Hết hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (4, 2, 5, '2345539', 0, 1200000, 20, N'Đang bán')
+values (4, 2, 5, '2345539', 0, 1200000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (4, 3, 2, '2345540', 1, 1400000, 20, N'Đang bán')
+values (4, 3, 2, '2345540', 1, 1400000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (5, 5, 7, '23455301', 1, 1200000, 20, N'Đang bán')
+values (5, 5, 7, '23455301', 1, 1200000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (6, 4, 3, '23455302', 0, 1500000, 20, N'Đang bán')
+values (6, 4, 3, '23455302', 0, 1500000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (7, 2, 4, '23455303', 1, 1200000, 20, N'Đang bán')
+values (7, 2, 4, '23455303', 1, 1200000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (8, 5, 1, '23455304', 1, 2000000, 20, N'Đang bán')
+values (8, 5, 1, '23455304', 1, 2000000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (9, 2, 1, '234553054', 0, 1800000, 20, N'Đang bán')
+values (9, 2, 1, '234553054', 0, 1800000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (11, 8, 2, '23455306', 1, 1400000, 20, N'Đã ngừng bán')
+values (11, 8, 2, '23455306', 1, 1400000, 20, N'Hết hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (11, 7, 3, '23455307', 0, 1200000, 20, N'Đã ngừng bán')
+values (11, 7, 3, '23455307', 0, 1200000, 20, N'Hết hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (11, 9, 4, '23455308', 1, 1800000, 20, N'Đang bán')
+values (11, 9, 4, '23455308', 1, 1800000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (12, 12, 5, '23455309', 1, 1500000, 20, N'Đang bán')
+values (12, 12, 5, '23455309', 1, 1500000, 20, N'Còn hàng')
 insert into SneakerDetail (sneaker_id, size_id, color_id, sneaker_detail_code, gender, price, quantity, [status])
-values (12, 4, 7, '2345541', 0, 1500000, 20, N'Đang bán')
+values (12, 4, 7, '2345541', 0, 1500000, 20, N'Còn hàng')
 
 -- Nhập dữ liệu Image
 insert into [Image] (sneaker_detail_id, image_url)
@@ -518,28 +510,18 @@ insert into [Image] (sneaker_detail_id, image_url)
 values (10, 'anh10.jpg')
 
 --Nhập dữ liệu Order
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (2, 2, 1, N'Tiền mặt', '09366432', 1620000, 1620000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method,  order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 1, null, N'Tiền mặt', '09366433', 2000000, 2000000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (2, 3, null, N'Chuyển khoản', '09366434', 1400000, 1500000, 100000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 4, 4, N'Chuyển khoản', '09366435', 2600000, 26000000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 5, 4, N'Tiền mặt', '09366436', 1500000, 1500000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 6, null, N'Chuyển khoản', '09366427', 1200000, 1200000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (5, 7, null, N'Tiền mặt', '09366437', 1800000, 2000000, 200000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (4, 8, 1, N'Tiền mặt', '09366438', 2600000, 2600000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (3, 9, 4, N'Tiền mặt', '09366439', 1200000, 1200000, 0, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (5, 10, null, N'Tiền mặt', '09366410', 1400000, 1500000, 50000, N'Đã thanh toán', null)
-insert into [Order] ([user_id], customer_id, voucher_id, payment_method, order_qr_code, total_cost, received_cash, [change], [status], note)
-values (6, 11, null, N'Chuyển khoản', '09366411', 1000000, 1000000, 0, N'Đã thanh toán', null)
+insert into [Order] ([user_id], customer_id, voucher_id, payment_method, total_cost, [status], note)
+values(2, 2, 3, N'Tiền mặt', 1620000, N'Đã thanh toán', null),
+(3, 1, null, N'Tiền mặt', 2000000, N'Đã thanh toán', null),
+(2, 3, null, N'Chuyển khoản',1400000, N'Đã thanh toán', null),
+(3, 4, 6, N'Chuyển khoản', 2600000, N'Đã thanh toán', null),
+(4, 5, 7, N'Tiền mặt', 1500000, N'Đã thanh toán', null),
+(4, 6, null, N'Chuyển khoản', 1200000,  N'Đã thanh toán', null),
+(5, 7, null, N'Tiền mặt', 1800000,  N'Đã thanh toán', null),
+(4, 8, 8, N'Tiền mặt', 2600000,  N'Đã thanh toán', null),
+(3, 9, 9, N'Tiền mặt', 1200000,  N'Đã thanh toán', null),
+(5, 10, 10, N'Tiền mặt', 1400000,  N'Đã thanh toán', null),
+(6, 11, 11, N'Chuyển khoản', 1000000,  N'Đã thanh toán', null)
 
 -- Nhập dữ liệu Order Detail
 insert into OrderDetail (sneaker_detail_id, order_id, quantity, price, total_cost)
@@ -571,7 +553,7 @@ values (19, 10, 1, 1900000, 1900000)
 
 select * from OrderDetail
 select * from [Order]
-select * from [Image]
+--select * from [Image]
 select * from SneakerDetail
 select * from Sneaker
 select * from Brand
@@ -585,3 +567,47 @@ select * from [Role]
 select * from [User]
 select * from Voucher
 
+
+drop table OrderDetail
+drop table [Image]
+drop table SneakerDetail
+drop table Sneaker
+
+select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id
+                 left join Category on Sneaker.category_id = Category.category_id
+                   left join Brand on Sneaker.brand_id = Brand.brand_id
+                   left join Sole on Sneaker.sole_id = Sole.sole_id
+                    left join Material on Sneaker.material_id = Material.material_id
+                   left join Size on SneakerDetail.size_id = Size.size_id
+                  left join Color on SneakerDetail.color_id = Color.color_id
+CREATE TRIGGER trg_UpdateStatusOnZeroQuantity
+ON SneakerDetail
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE SneakerDetail
+    SET [status] = N'Hết hàng'
+    WHERE quantity = 0
+    AND sneaker_detail_id IN (SELECT sneaker_detail_id FROM inserted);
+END
+GO
+CREATE TRIGGER trg_UpdateSneakerStatusOnZeroQuantity
+ON SneakerDetail
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Cập nhật trạng thái của Sneaker thành "Ngừng bán" nếu tất cả các SneakerDetail có số lượng bằng 0
+    UPDATE Sneaker
+    SET [status] = N'Ngừng bán'
+    WHERE sneaker_id IN (
+        SELECT sneaker_id
+        FROM SneakerDetail
+        GROUP BY sneaker_id
+        HAVING SUM(CASE WHEN quantity > 0 THEN 1 ELSE 0 END) = 0
+    );
+END
+GO

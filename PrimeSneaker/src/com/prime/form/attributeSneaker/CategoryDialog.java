@@ -1,6 +1,7 @@
 
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.ManageSneaker;
 import com.prime.main_model.Model_Category;
 import com.prime.responsitory.CategoryResponsitory;
 import java.util.ArrayList;
@@ -8,13 +9,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
-public class CategoryDialog extends javax.swing.JFrame {
+public class CategoryDialog extends javax.swing.JDialog {
 
     int index;
     DefaultTableModel model = new DefaultTableModel();
     private final CategoryResponsitory ctrs = new CategoryResponsitory();
-
-    public CategoryDialog() {
+    ManageSneaker sneaker = new ManageSneaker();
+    public CategoryDialog(java.awt.Frame parent, boolean modal) {
+        super(parent,modal);
         initComponents();
         setLocationRelativeTo(null);
         model = (DefaultTableModel) tblCategory.getModel();
@@ -172,7 +174,7 @@ public class CategoryDialog extends javax.swing.JFrame {
         }
         ArrayList<Model_Category> lst = ctrs.getALl();
         for (Model_Category cate : lst) {
-            if (txtCategoryName.getText().equals(cate.getCategory_name())) {
+            if (txtCategoryName.getText().trim().equals(cate.getCategory_name())) {
                 JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
                 return;
             }
@@ -181,6 +183,8 @@ public class CategoryDialog extends javax.swing.JFrame {
         if (ctrs.addCategory(cate) != null) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
             loadCategoryToTable();
+            sneaker.loadDataCate();
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
         }
@@ -260,7 +264,14 @@ public class CategoryDialog extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CategoryDialog().setVisible(true);
+                CategoryDialog dialog = new CategoryDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -290,13 +301,13 @@ public class CategoryDialog extends javax.swing.JFrame {
 
     private Model_Category readForm() {
         Model_Category cate = new Model_Category();
-        cate.setCategory_name(txtCategoryName.getText());
+        cate.setCategory_name(txtCategoryName.getText().trim());
         return cate;
     }
 
     private Model_Category readForm1() {
         Model_Category cate = new Model_Category();
-        cate.setCategory_name(txtCategoryName.getText());
+        cate.setCategory_name(txtCategoryName.getText().trim());
         cate.setCategory_id(Integer.parseInt(txtCategoryId.getText()));
         return cate;
     }

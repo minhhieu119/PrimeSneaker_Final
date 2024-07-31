@@ -1,18 +1,21 @@
 package com.prime.form.attributeSneaker;
 
+import com.prime.form.ManageSneaker;
 import com.prime.main_model.Material;
 import com.prime.responsitory.MaterialResponsitory;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class MaterialDialog extends javax.swing.JFrame {
+public class MaterialDialog extends javax.swing.JDialog {
 
     DefaultTableModel model = new DefaultTableModel();
     int index;
     private final MaterialResponsitory mrs = new MaterialResponsitory();
+    ManageSneaker sneaker = new ManageSneaker();
 
-    public MaterialDialog() {
+    public MaterialDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
         model = (DefaultTableModel) tblMaterial.getModel();
@@ -165,7 +168,7 @@ public class MaterialDialog extends javax.swing.JFrame {
         }
         ArrayList<Material> lst = mrs.getAll();
         for (Material co : lst) {
-            if (txtMaterialName.getText().equals(co.getNameMaterial())) {
+            if (txtMaterialName.getText().trim().equals(co.getNameMaterial())) {
                 JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
                 return;
             }
@@ -174,6 +177,8 @@ public class MaterialDialog extends javax.swing.JFrame {
         if (mrs.addMaterial(m) != null) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
             loadMaterialToTable();
+            sneaker.loadDataMaterial();
+            this.dispose();
         } else
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
     }//GEN-LAST:event_btnAddMaterialActionPerformed
@@ -263,7 +268,14 @@ public class MaterialDialog extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MaterialDialog().setVisible(true);
+                MaterialDialog dialog = new MaterialDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -299,13 +311,13 @@ public class MaterialDialog extends javax.swing.JFrame {
 
     private Material readForm() {
         Material m = new Material();
-        m.setNameMaterial(txtMaterialName.getText());
+        m.setNameMaterial(txtMaterialName.getText().trim());
         return m;
     }
 
     private Material readForm1() {
         Material m = new Material();
-        m.setNameMaterial(txtMaterialName.getText());
+        m.setNameMaterial(txtMaterialName.getText().trim());
         m.setMaMaterial(Integer.parseInt(txtMaterialId.getText()));
         return m;
     }

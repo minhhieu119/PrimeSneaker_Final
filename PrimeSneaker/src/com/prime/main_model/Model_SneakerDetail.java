@@ -11,8 +11,9 @@ package com.prime.main_model;
 public class Model_SneakerDetail {
     private int maSPCT;
     private Model_addNameProduct tenSP;
-    private double giaSP;
+    private long giaSP;
     private int soLuong;
+    private String code_sneaker;
     private Model_Category danhMuc;
     private Model_Brand hang;
     private Model_Color mauSac;
@@ -24,11 +25,12 @@ public class Model_SneakerDetail {
     public Model_SneakerDetail() {
     }
 
-    public Model_SneakerDetail(int maSPCT, Model_addNameProduct tenSP, double giaSP, int soLuong, Model_Category danhMuc, Model_Brand hang, Model_Color mauSac, Material chatLieu, SizeModel kichCo, Model_DeGiay deGiay, String trangThai) {
+    public Model_SneakerDetail(int maSPCT, Model_addNameProduct tenSP, long giaSP, int soLuong, String code_sneaker, Model_Category danhMuc, Model_Brand hang, Model_Color mauSac, Material chatLieu, SizeModel kichCo, Model_DeGiay deGiay, String trangThai) {
         this.maSPCT = maSPCT;
         this.tenSP = tenSP;
         this.giaSP = giaSP;
         this.soLuong = soLuong;
+        this.code_sneaker = code_sneaker;
         this.danhMuc = danhMuc;
         this.hang = hang;
         this.mauSac = mauSac;
@@ -54,11 +56,11 @@ public class Model_SneakerDetail {
         this.tenSP = tenSP;
     }
 
-    public double getGiaSP() {
+    public long getGiaSP() {
         return giaSP;
     }
 
-    public void setGiaSP(double giaSP) {
+    public void setGiaSP(long giaSP) {
         this.giaSP = giaSP;
     }
 
@@ -68,6 +70,14 @@ public class Model_SneakerDetail {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+    }
+
+    public String getCode_sneaker() {
+        return code_sneaker;
+    }
+
+    public void setCode_sneaker(String code_sneaker) {
+        this.code_sneaker = code_sneaker;
     }
 
     public Model_Category getDanhMuc() {
@@ -126,12 +136,9 @@ public class Model_SneakerDetail {
         this.trangThai = trangThai;
     }
 
-    
-
     @Override
     public String toString() {
-        return "Model_SneakerDetail{" + "maSPCT=" + maSPCT + ", tenSP=" + tenSP + ", giaSP=" + giaSP + ", soLuong=" + soLuong + ", danhMuc=" + danhMuc + ", hang=" + hang + ", mauSac=" + mauSac + ", chatLieu=" + chatLieu + ", kichCo=" + kichCo + ", deGiay=" + deGiay + ", trangThai=" + trangThai + '}';
+        return "Model_SneakerDetail{" + "maSPCT=" + maSPCT + ", tenSP=" + tenSP + ", giaSP=" + giaSP + ", soLuong=" + soLuong + ", code_sneaker=" + code_sneaker + ", danhMuc=" + danhMuc + ", hang=" + hang + ", mauSac=" + mauSac + ", chatLieu=" + chatLieu + ", kichCo=" + kichCo + ", deGiay=" + deGiay + ", trangThai=" + trangThai + '}';
     }
-    
-   
+ 
 }
