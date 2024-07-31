@@ -167,7 +167,7 @@ public class Properties extends javax.swing.JPanel {
         loadDataColor();
         loadDataSize();
     }
-    
+
     private void showDataBrand(int index) {
         txtBrandID.setText(tblBrand.getValueAt(index, 1).toString());
         txtBrandName.setText(tblBrand.getValueAt(index, 2).toString());
@@ -191,27 +191,32 @@ public class Properties extends javax.swing.JPanel {
         txtMaterial.setText(tblMaterial.getValueAt(index, 2).toString());
         tblMaterial.setRowSelectionInterval(index, index);
     }
+
     private void showDataSole(int index) {
         txtSoleID.setText(tblSole.getValueAt(index, 1).toString());
         txtSoleName.setText(tblSole.getValueAt(index, 2).toString());
         tblSole.setRowSelectionInterval(index, index);
     }
+
     private void showDataSize(int index) {
         txtSizeID.setText(tblSize.getValueAt(index, 1).toString());
         txtSize.setText(tblSize.getValueAt(index, 2).toString());
         tblSize.setRowSelectionInterval(index, index);
     }
+
     private Model_Color readFormCo1() {
         Model_Color br = new Model_Color();
         br.setColor_name(txtColor.getText());
         br.setColor_id(Integer.parseInt(txtColorID.getText()));
         return br;
     }
+
     private SizeModel readFormSi() {
         SizeModel br = new SizeModel();
         br.setSize_Number(Double.parseDouble(txtSize.getText()));
         return br;
     }
+
     private SizeModel readFormSi1() {
         SizeModel br = new SizeModel();
         br.setSize_Number(Double.parseDouble(txtSize.getText()));
@@ -219,6 +224,7 @@ public class Properties extends javax.swing.JPanel {
         return br;
 
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -318,12 +324,12 @@ public class Properties extends javax.swing.JPanel {
         jLabel16.setText("Mã");
 
         txtBrandID.setEditable(false);
-        txtBrandID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtBrandID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtBrandID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
         jLabel17.setText("Tên hãng");
 
-        txtBrandName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtBrandName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -498,12 +504,12 @@ public class Properties extends javax.swing.JPanel {
         jLabel19.setText("Mã");
 
         txtIdCategory.setEditable(false);
-        txtIdCategory.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtIdCategory.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtIdCategory.setSelectionColor(new java.awt.Color(39, 80, 150));
 
         jLabel20.setText("Tên danh mục");
 
-        txtCategory.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtCategory.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -669,12 +675,12 @@ public class Properties extends javax.swing.JPanel {
         jLabel42.setText("Mã");
 
         txtMaterialID.setEditable(false);
-        txtMaterialID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtMaterialID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtMaterialID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
         jLabel43.setText("Tên chất liệu");
 
-        txtMaterial.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtMaterial.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
         jPanel27.setLayout(jPanel27Layout);
@@ -826,18 +832,18 @@ public class Properties extends javax.swing.JPanel {
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
-        jPanel25.setBackground(new java.awt.Color(185, 213, 246));
-        jPanel25.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel25.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel25.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         jLabel40.setText("Mã");
 
         txtSoleID.setEditable(false);
-        txtSoleID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSoleID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtSoleID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
         jLabel41.setText("Tên đế");
 
-        txtSoleName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSoleName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
@@ -852,7 +858,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSoleID, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSoleName, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel25Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtSoleID, txtSoleName});
@@ -868,7 +874,7 @@ public class Properties extends javax.swing.JPanel {
                 .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSoleName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         jPanel26.setBackground(new java.awt.Color(185, 213, 246));
@@ -964,13 +970,11 @@ public class Properties extends javax.swing.JPanel {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 991, Short.MAX_VALUE)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(192, 192, 192)
-                        .addComponent(jPanel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 192, Short.MAX_VALUE)))
+                        .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -982,7 +986,7 @@ public class Properties extends javax.swing.JPanel {
                     .addComponent(jPanel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(136, Short.MAX_VALUE))
         );
 
         tabbedPaneProduct.addTab("Đế giày", jPanel7);
@@ -995,12 +999,12 @@ public class Properties extends javax.swing.JPanel {
         jLabel38.setText("Mã");
 
         txtColorID.setEditable(false);
-        txtColorID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtColorID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtColorID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
         jLabel39.setText("Tên màu");
 
-        txtColor.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtColor.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
         jPanel23.setLayout(jPanel23Layout);
@@ -1153,12 +1157,12 @@ public class Properties extends javax.swing.JPanel {
         jLabel28.setText("Mã");
 
         txtSizeID.setEditable(false);
-        txtSizeID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSizeID.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtSizeID.setSelectionColor(new java.awt.Color(39, 80, 150));
 
         jLabel37.setText("Kích thước");
 
-        txtSize.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSize.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
@@ -1204,6 +1208,11 @@ public class Properties extends javax.swing.JPanel {
         btnSizeAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnSizeAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnSizeAdd.setText("Thêm mới");
+        btnSizeAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSizeAddActionPerformed(evt);
+            }
+        });
 
         btnSizeUpdate.setBackground(new java.awt.Color(39, 80, 150));
         btnSizeUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -1577,30 +1586,30 @@ public class Properties extends javax.swing.JPanel {
 
     private void btnColorAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorAddActionPerformed
         if (txtColor.getText().trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
-                txtColor.requestFocus();
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+            txtColor.requestFocus();
+            return;
+        }
+        if (txtColor.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Color không được nhập số");
+            txtColor.requestFocus();
+            return;
+        }
+        ArrayList<Model_Color> lst = colorRS.getALl();
+        for (Model_Color co : lst) {
+            if (txtColor.getText().equals(co.getColor_name())) {
+                JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
                 return;
             }
-            if (txtColor.getText().trim().matches("[0-9]+")) {
-                JOptionPane.showMessageDialog(this, "Color không được nhập số");
-                txtColor.requestFocus();
-                return;
-            }
-            ArrayList<Model_Color> lst = colorRS.getALl();
-            for (Model_Color co : lst) {
-                if (txtColor.getText().equals(co.getColor_name())) {
-                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
-                    return;
-                }
-            }
-            Model_Color co = readFormCo();
-            if (colorRS.addColor(co) != null) {
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
-                loadDataColor();
+        }
+        Model_Color co = readFormCo();
+        if (colorRS.addColor(co) != null) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            loadDataColor();
 
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm thất bại");
-            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
     }//GEN-LAST:event_btnColorAddActionPerformed
 
     private void btnSoleClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSoleClearActionPerformed
@@ -1640,12 +1649,111 @@ public class Properties extends javax.swing.JPanel {
     }//GEN-LAST:event_tblSizeMouseClicked
 
     private void btnColorUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorUpdateActionPerformed
-        // TODO add your handling code here:
+        if (txtColorID.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 dòng cần sửa");
+            
+            return;
+        }
+        if (txtColor.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+            txtColor.requestFocus();
+            return;
+        }
+        if (txtColor.getText().trim().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Color không được nhập số");
+            txtColor.requestFocus();
+            return;
+        }
+        ArrayList<Model_Color> lst = colorRS.getALl();
+        for (Model_Color co : lst) {
+            if (txtColor.getText().equals(co.getColor_name())) {
+                JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                return;
+            }
+        }
+        Model_Color co = readFormCo1();
+        if (colorRS.upDateColor(co) != null) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+            loadDataColor();
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
+        }
     }//GEN-LAST:event_btnColorUpdateActionPerformed
 
     private void btnSizeUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeUpdateActionPerformed
-        // TODO add your handling code here:
+        if (txtSizeID.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 dòng cần sửa");
+            return;
+        }
+        if (txtSize.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Size giày");
+            txtSize.requestFocus();
+            return;
+        }
+        try {
+            double size_Number = Double.parseDouble(txtSize.getText());
+            if (size_Number < 1 || size_Number > 50) {
+                JOptionPane.showMessageDialog(this, "Size giày nằm trong khoảng 1 -50");
+                txtSize.requestFocus();
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Size giày phải là số");
+            txtSize.requestFocus();
+            return;
+        }
+        ArrayList<SizeModel> lst = sizeRS.getAll();
+        for (SizeModel co : lst) {
+            if (Double.parseDouble(txtSize.getText()) == co.getSize_Number()) {
+                JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                return;
+            }
+        }
+        SizeModel dg = readFormSi1();
+        if (sizeRS.updateSize(dg) != null) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+            loadDataSize();
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
+        }
     }//GEN-LAST:event_btnSizeUpdateActionPerformed
+
+    private void btnSizeAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeAddActionPerformed
+        if (txtSize.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Size giày");
+            txtSize.requestFocus();
+            return;
+        }
+        try {
+            double size_Number = Double.parseDouble(txtSize.getText());
+            if (size_Number < 1 || size_Number > 50) {
+                JOptionPane.showMessageDialog(this, "Size giày nằm trong khoảng 1 -50");
+                txtSize.requestFocus();
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Size giày phải là số");
+            txtSize.requestFocus();
+            return;
+        }
+        ArrayList<SizeModel> lst = sizeRS.getAll();
+        for (SizeModel co : lst) {
+            if (Double.parseDouble(txtSize.getText()) == co.getSize_Number()) {
+                JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                return;
+            }
+        }
+        SizeModel dg = readFormSi();
+        if (sizeRS.addSize(dg) != null) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            loadDataSize();
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
+    }//GEN-LAST:event_btnSizeAddActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBrand;

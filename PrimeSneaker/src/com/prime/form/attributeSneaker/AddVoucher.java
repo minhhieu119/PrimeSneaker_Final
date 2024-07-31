@@ -16,8 +16,9 @@ import javax.swing.JOptionPane;
  * @author ADMIN
  */
 public class AddVoucher extends javax.swing.JFrame {
+
     VoucherService ser = new VoucherService();
-    
+
     /**
      * Creates new form AddVoucher
      */
@@ -25,11 +26,11 @@ public class AddVoucher extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
     }
-    
+
     private void mess(String mess) {
         JOptionPane.showMessageDialog(this, mess);
     }
-    
+
     private VoucherAq getForm() {
         VoucherAq voucher = new VoucherAq();
         voucher.setVoucherCode(txtVoucherId.getText());
@@ -45,8 +46,7 @@ public class AddVoucher extends javax.swing.JFrame {
         return voucher;
 
     }
-    
-    
+
     private boolean checkForm() {
 
         String maVoucher = txtVoucherId.getText();
@@ -60,6 +60,7 @@ public class AddVoucher extends javax.swing.JFrame {
         int soLuong = spfQuantity.getValue();
         String donToiThieu = txtMinOder.getText();
         long donToiThieuLong;
+        float giamToiThieuFloat;
         String giamToiDa = txtMaxMoney.getText();
         float giamToiDaFloat;
         Date ngayBatDau = txtStartDate.getDate();
@@ -152,13 +153,14 @@ public class AddVoucher extends javax.swing.JFrame {
             giamToiDaFloat = Float.parseFloat(giamToiDa);
             if (giamToiDaFloat <= 0) {
                 mess("Điều kiện giá trị giảm tối đa của hoá đơn phải lớn hơn 0!");
-                txtGiaTriGiam.requestFocus();
+                txtMaxMoney.requestFocus();
                 return true;
             } else {
                 if (loaiVC.equals("%")) {
-                    if (giamToiDaFloat < 1 || giamToiDaFloat > 60) {
+                    giamToiThieuFloat = (Float.parseFloat(txtGiaTriGiam.getText()) / 100) * Float.parseFloat(txtMinOder.getText());
+                    if (giamToiDaFloat < giamToiThieuFloat || giamToiDaFloat > Float.parseFloat(txtMinOder.getText())) {
                         txtMaxMoney.setText("1");
-                        mess("Giá trị % giảm phải từ 1-60%");
+                        mess("Giá trị % giảm phải lớn hơn " + giamToiThieuFloat + " và nhỏ hơn " + Float.parseFloat(txtMinOder.getText()));
                         txtMaxMoney.requestFocus();
                         return true;
                     }
@@ -241,8 +243,7 @@ public class AddVoucher extends javax.swing.JFrame {
         return false;
 
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -469,7 +470,7 @@ public class AddVoucher extends javax.swing.JFrame {
             String maVoucher = txtVoucherId.getText().trim().replaceAll("\\s+", "");
             boolean maVoucherTonTai = false;
             for (VoucherAq voucherAq : ser.findAll()) {
-                if(voucherAq.getVoucherCode().trim().equalsIgnoreCase(maVoucher)){
+                if (voucherAq.getVoucherCode().trim().equalsIgnoreCase(maVoucher)) {
                     maVoucherTonTai = true;
                     break;
                 }
@@ -477,7 +478,7 @@ public class AddVoucher extends javax.swing.JFrame {
             String tenVoucher = txtVoucherName.getText().trim().replaceAll("\\s+", "");
             boolean check = false;
             for (VoucherAq voucherAq : ser.findAll()) {
-                if(voucherAq.getVoucherName().trim().equalsIgnoreCase(tenVoucher)){
+                if (voucherAq.getVoucherName().trim().equalsIgnoreCase(tenVoucher)) {
                     check = true;
                     break;
                 }
@@ -490,23 +491,23 @@ public class AddVoucher extends javax.swing.JFrame {
             if (maVoucherTonTai) {
                 mess("Mã voucher này đã tồn tại");
                 txtVoucherId.requestFocus();
-            } else{
+            } else {
                 VoucherAq voucher = getForm();
 //            System.out.println(voucher.toString());
-            int hoi = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm voucher không?");
-            if (hoi != JOptionPane.YES_OPTION) {
-                return;
+                int hoi = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm voucher không?");
+                if (hoi != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                if (ser.addVoucher(voucher) != null) {
+
+                    mess("Thêm voucher thành công");
+                    this.dispose();
+                } else {
+                    mess("Thêm voucher thất bại!");
+                }
             }
 
-            if (ser.addVoucher(voucher) != null) {
-                
-                mess("Thêm voucher thành công");
-                this.dispose();
-            } else {
-                mess("Thêm voucher thất bại!");
-            }
-            }
-            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi thêm");
             e.printStackTrace();

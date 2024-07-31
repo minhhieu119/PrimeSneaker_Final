@@ -89,6 +89,7 @@ create table Voucher
 	min_order_value money check(min_order_value >= 0),
 	[start_date] date,
 	end_date date,
+	[status] nvarchar(50),
 	created_at date default getdate(),
 	updated_at date default getdate(),
 	created_by int,
@@ -238,7 +239,7 @@ alter table [User] add foreign key (role_id) references [Role] (role_id)
 --alter table Exchange add foreign key (order_id) references [Order] (order_id)
 --alter table Exchange add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
---drop table OrderDetail
+drop table OrderDetail
 --drop table SneakerDetail
 --drop table Sneaker
 --drop table [Image]
@@ -248,13 +249,13 @@ alter table [User] add foreign key (role_id) references [Role] (role_id)
 --drop table Customer
 --drop table Exchange
 --drop table Material
---drop table [Order]
+drop table [Order]
 --drop table PaymentMethod
 --drop table [Role]
 --drop table [User]
 --drop table Size
 --drop table Sole
---drop table Voucher
+drop table Voucher
 
 
 
@@ -318,17 +319,17 @@ values (N'Nguyễn Văn Hiếu', 1, '1990-05-10', N'123 Trịnh Văn Bô, Nam T�
 (N'Nguyễn Văn Phương', 1, '1996-05-22', N'20 Trần Hưng Đạo, Hà Giang', '0918273645'),
 (N'Bùi Huy Hoàng', 1, '2003-02-26', N'30 Lê Lai, Thái Bình', '0354172896')
 
-insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, max_discount,min_order_value, [start_date], end_date)
-values ('VOUCHER1', N'Khuyến mãi hè', 0, 15, 20, 30, 500000, '2024-02-01', '2024-12-30'),
-('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 1, 20000, 20, 20000, 500000, '2024-05-01', '2024-11-30'),
-('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', 0, 20, 20, 20, 300000, '2024-05-01', '2024-10-31'),
-('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 1, 30000, 20, 30000, 600000, '2024-04-01', '2024-09-30'),
-('VOUCHER5', N'Khuyến mãi Black Friday', 0, 15, 20, 30, 1000000, '2024-06-01', '2024-08-31'),
-('VOUCHER6', N'Khuyến mãi đầu Xuân', 0, 25, 20, 40, 900000, '2024-06-01', '2024-07-31'),
-('VOUCHER7', N'Khuyến mãi sinh nhật shop lần 1', 1, 40000, 20, 40000, 400000, '2024-07-01', '2024-10-30'),
-('VOUCHER8', N'Khuyến mãi sinh nhật shop lần 2', 1, 15000, 20, 15000, 500000, '2024-08-01', '2024-09-21'),
-('VOUCHER9', N'Khuyến mãi valentine', 0, 10, 20, 20, 300000, '2024-05-01', '2024-10-30'),
-('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0, 35, 20, 50, 800000, '2024-01-01', '2024-03-31')
+insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, max_discount,min_order_value, [start_date], end_date, [status])
+values ('VOUCHER1', N'Khuyến mãi hè', 0, 15, 20, 30, 500000, '2024-02-01', '2024-12-30', N'Đang áp dụng'),
+('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 1, 20000, 20, 20000, 500000, '2024-05-01', '2024-11-30', N'Đang áp dụng'),
+('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', 0, 20, 20, 20, 300000, '2024-05-01', '2024-10-31', N'Đang áp dụng'),
+('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 1, 30000, 20, 30000, 600000, '2024-04-01', '2024-09-30', N'Đang áp dụng'),
+('VOUCHER5', N'Khuyến mãi Black Friday', 0, 15, 20, 30, 1000000, '2024-06-01', '2024-08-31', N'Đang áp dụng'),
+('VOUCHER6', N'Khuyến mãi đầu Xuân', 0, 25, 20, 40, 900000, '2024-06-01', '2024-07-31', N'Đang áp dụng'),
+('VOUCHER7', N'Khuyến mãi sinh nhật shop lần 1', 1, 40000, 20, 40000, 400000, '2024-07-01', '2024-10-30', N'Đang áp dụng'),
+('VOUCHER8', N'Khuyến mãi sinh nhật shop lần 2', 1, 15000, 20, 15000, 500000, '2024-08-01', '2024-09-21', N'Sắp áp dụng'),
+('VOUCHER9', N'Khuyến mãi valentine', 0, 10, 20, 20, 300000, '2024-05-01', '2024-10-30', N'Đang áp dụng'),
+('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0, 35, 20, 50, 800000, '2024-01-01', '2024-03-31',N'Hết hạn')
 
 --Nhập dữ liệu bảng Sneaker
 insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name,[status], [description])
@@ -591,193 +592,13 @@ BEGIN
     );
 END
 GO
+select * from Voucher
 
+SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity, [status]
+FROM dbo.Voucher
+WHERE ([status] like N'Đang áp dụng') and ([start_date] between '2024-06-01' and '2024-10-30' and end_date between '2024-06-01' and '2024-10-30')
 
-select * from SneakerDetail
-
-
-SELECT [Order].order_id,
-           Sneaker.sneaker_name,
-		   SneakerDetail.sneaker_detail_code,
-           OrderDetail.quantity,
-           OrderDetail.price
-FROM [Order]
-           JOIN OrderDetail ON [Order].order_id = OrderDetail.order_id
-           JOIN SneakerDetail ON OrderDetail.sneaker_detail_id = SneakerDetail.sneaker_detail_id
-           JOIN Sneaker ON SneakerDetail.sneaker_id = Sneaker.sneaker_id
-Where [Order].order_id = 12
-
-select * from SneakerDetail
-
-
-delete from SneakerDetail
-where [status] like N'Hết hàng'
-
-update SneakerDetail
-set size_id=2,color_id=3,price=1000000,quantity=0,[status]= N'Hết hàng'
-where sneaker_detail_code = 2345537
-
-
-select user_code, role_id, full_name, gender, date_of_birth,phone_number, [address], email, id_card_number, account_name, [password], [status]
-from [User] where account_name like 'hieu119'
-
-select * from [User]
-
-select COUNT([user_id])
-from [User]
-where [status] like N'Đang làm việc'
-
-select * from Customer
-
-select COUNT(customer_id) as quantity
-from Customer
-
-
-select * from SneakerDetail
-select COUNT(sneaker_detail_id) as quantity
-from SneakerDetail
-
-select * from [Order]
-
-select SUM(total_cost) as total_cost
-from [Order]
-where [status] like N'Đã thanh toán'
-
-SELECT 
-    updated_at,
-    SUM(total_cost) AS total_cost
-FROM 
-    [Order]
-WHERE 
-    updated_at >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE))
-GROUP BY 
-    updated_at
-ORDER BY 
-    updated_at DESC;
-
-	select * from [Order]
-	select * from OrderDetail
-
-	select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost)
-	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-	join Sneaker s on sd.sneaker_id = s.sneaker_id
-	group by sd.sneaker_detail_code, sneaker_name
-	order by quantity desc
-
-
-
-		select * from OrderDetail
-	select top 1 sneaker_detail_code, s.sneaker_name, sum(od.quantity) as quantity, sum(od.total_cost) as total_cost
-	from OrderDetail od join SneakerDetail sd on od.sneaker_detail_id = sd.sneaker_detail_id
-	join Sneaker s on sd.sneaker_id = s.sneaker_id
-	where MONTH(od.created_at) = 7
-	group by sd.sneaker_detail_code, sneaker_name
-	order by quantity asc
-	
-
-	SELECT o.updated_at, SUM(o.total_cost) AS total_cost, SUM(od.quantity) as quantity
-              FROM [Order] o join OrderDetail od on o.order_id = od.order_id
-              WHERE year(o.updated_at) = 2024
-              GROUP BY o.updated_at
-              ORDER BY updated_at DESC;
-
-SELECT 
-    MONTH(o.updated_at) AS month,
-    SUM(o.total_cost) AS total_cost, 
-    SUM(od.quantity) AS quantity
-FROM 
-    [Order] o 
-JOIN 
-    OrderDetail od 
-ON 
-    o.order_id = od.order_id
-WHERE 
-    YEAR(o.updated_at) = 2024
-GROUP BY 
-    MONTH(o.updated_at)
-ORDER BY 
-    month DESC;
-
-	SELECT MONTH(o.updated_at) AS month,
-    SUM(o.total_cost) AS total_cost, 
-    SUM(od.quantity) AS quantity
-FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-WHERE YEAR(o.updated_at) = 2024
-GROUP BY MONTH(o.updated_at)
-ORDER BY month ASC;
-
-WITH RankedOrders AS (
-    SELECT CAST(o.updated_at AS DATE) AS order_date, SUM(o.total_cost) AS total_cost
-    FROM [Order] o
-    GROUP BY CAST(o.updated_at AS DATE)
-),
-RankedDays AS (SELECT order_date, total_cost, ROW_NUMBER() OVER (ORDER BY order_date DESC) AS rn
-    FROM RankedOrders)
-SELECT order_date AS updated_at, total_cost
-FROM RankedDays
-WHERE rn <= 7
-ORDER BY order_date DESC;
-
-SELECT DAY(o.updated_at) as dayss,  SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
-FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-WHERE YEAR(o.updated_at) = 2024 AND MONTH(o.updated_at) = 7
-GROUP BY CAST(o.updated_at AS DATE)
-ORDER BY dayss;
-
-SELECT MONTH(o.updated_at) AS month,
-                  SUM(o.total_cost) AS total_cost, 
-                  SUM(od.quantity) AS quantity
-              FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-              WHERE YEAR(o.updated_at) = 2024
-              GROUP BY MONTH(o.updated_at)
-              ORDER BY month ASC;
-
-
-
-SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
-FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-WHERE YEAR(o.updated_at) = 2024 AND MONTH(o.updated_at) = 7
-GROUP BY DAY(o.updated_at)
-ORDER BY day ASC;
-
-
-SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
-FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-WHERE YEAR(o.updated_at) = 2024 AND MONTH(o.updated_at) = 7 AND DAY(o.updated_at) BETWEEN 23 AND 27
-GROUP BY DAY(o.updated_at)
-ORDER BY day ASC;
-
-
-SELECT 
-    DAY(o.updated_at) AS day,
-    SUM(o.total_cost) AS total_cost,
-    SUM(od.quantity) AS quantity
-FROM 
-    [Order] o
-JOIN 
-    OrderDetail od ON o.order_id = od.order_id
-WHERE 
-    o.updated_at BETWEEN '2024-07-23' AND '2024-07-27'
-GROUP BY 
-    DAY(o.updated_at)
-ORDER BY 
-    day ASC;
-
-	SELECT 
-    o.updated_at AS day,
-    SUM(o.total_cost) AS total_cost, 
-    SUM(od.quantity) AS quantity
-FROM 
-    [Order] o
-JOIN 
-    OrderDetail od 
-ON 
-    o.order_id = od.order_id
-WHERE 
-    YEAR(o.updated_at) = 2024
-    AND MONTH(o.updated_at) = 7
-    AND CAST(o.updated_at AS DATE) BETWEEN '2024-07-23' AND '2024-07-27'
-GROUP BY 
-   o.updated_at
-ORDER BY 
-    day ASC;
+SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity, [status]
+                     FROM dbo.Voucher
+ WHERE (null is null or [status] like N'Sắp áp dụng') and ([start_date] between '2024-06-01' and '2025-06-01' and end_date between '2024-06-01' and '2025-06-01')
+ and (null is null or voucher_code like 'dsdsd' or voucher_name like N'dsad')

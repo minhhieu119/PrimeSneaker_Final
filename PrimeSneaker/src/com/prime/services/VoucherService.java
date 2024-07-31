@@ -4,6 +4,7 @@
  */
 package com.prime.services;
 
+import static com.itextpdf.kernel.xmp.PdfConst.Date;
 import com.prime.main_model.Voucher;
 import com.prime.main_model.VoucherAq;
 import com.prime.untilities.ConnectionJDBC;
@@ -12,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -123,16 +125,49 @@ public class VoucherService {
         return row;
     }
 
-    public List<VoucherAq> timKiem(String timKiem, String trangThai, String ngayBatDau, String ngayKetThuc ){
-        List<VoucherAq> listVoucherSearch = new ArrayList<>();
-        
-        String sql = "";
+    public List<VoucherAq> timKiem(String timKiem, String trangThai, String ngayBatDau, String ngayKetThuc) throws SQLException {
+        List<VoucherAq> list = new ArrayList<>();
+        Connection con = null;
+        String sql = """
+                     SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity, [status]
+                     FROM dbo.Voucher
+                     WHERE (? is null or [status] like ?) and ([start_date] between ? and ? and end_date between ? and ?) and (? is null or voucher_code like ? or voucher_name like ?)
+                     """;
         try {
-            return listVoucherSearch;
+            con = ConnectionJDBC.getConnection();
+            pstm = con.prepareStatement(sql);
+
+            pstm.setString(1, trangThai);
+            pstm.setString(2, trangThai);
+            pstm.setString(3, ngayBatDau);
+            pstm.setString(4, ngayKetThuc);
+            pstm.setString(5, ngayBatDau);
+            pstm.setString(6, ngayKetThuc);
+            pstm.setString(7, timKiem);
+            pstm.setString(8,"%" + timKiem + "%");
+            pstm.setString(9, "%" + timKiem + "%");
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                VoucherAq v = new VoucherAq();
+                v.setVoucherCode(rs.getString("voucher_code"));
+                v.setVoucherName(rs.getString("voucher_name"));
+                v.setVoucherType(rs.getBoolean("voucher_type"));
+                v.setVoucherValue(rs.getInt("voucher_value"));
+                v.setMinOrderValue(rs.getLong("min_order_value"));
+                v.setMaxDiscount(rs.getFloat("max_discount"));
+                v.setStartDate(rs.getDate("start_date"));
+                v.setEndDate(rs.getDate("end_date"));
+                v.setQuantity(rs.getInt("quantity"));
+                v.setStatus(rs.getString("status"));
+                list.add(v);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+        } finally {
+            rs.close();
+            pstm.close();
+            con.close();
         }
-        
+        return list;
     }
 }

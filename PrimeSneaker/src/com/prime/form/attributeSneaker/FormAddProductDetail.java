@@ -12,6 +12,7 @@ import com.prime.responsitory.TeSPResponsitory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Random;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import net.glxn.qrgen.image.ImageType;
@@ -40,6 +41,23 @@ public class FormAddProductDetail extends javax.swing.JDialog {
             txtQuantity.setText("0");
             txtQuantity.setEditable(false);
         }
+        txtCodeSneaker.setText(generateCode());
+        txtCodeSneaker.setEnabled(false);
+    }
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int CODE_LENGTH = 8;
+
+    public static String generateCode() {
+        Random random = new Random();
+        StringBuilder code = new StringBuilder(CODE_LENGTH);
+
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            code.append(CHARACTERS.charAt(index));
+        }
+
+        return code.toString();
     }
 
     private void loadDataSize() {
@@ -79,10 +97,12 @@ public class FormAddProductDetail extends javax.swing.JDialog {
             txtQuantity.requestFocus();
             return false;
         }
-        
+
         for (Model_SneakerDetail sn : snDetailRS.getALl()) {
             if (sn.getCode_sneaker().equals(txtCodeSneaker.getText())) {
                 JOptionPane.showMessageDialog(this, "Code_Sneaker đã tồn tại");
+                txtCodeSneaker.setText(generateCode());
+                txtCodeSneaker.setEnabled(false);
                 return false;
             }
         }
@@ -93,7 +113,7 @@ public class FormAddProductDetail extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Số lượng và giá phải lớn hơn hoặc bằng 0 và giá lớn hơn hoặc = 100000");
                 return false;
             }
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Số lượng và giá phải là số");
             return false;
@@ -108,7 +128,7 @@ public class FormAddProductDetail extends javax.swing.JDialog {
         for (Model_SneakerDetail sn : snDetailRS.getALl()) {
             if (sn.getTenSP().getProduct_name().equals(cboNameProduct.getSelectedItem().toString())
                     && (sn.getKichCo().getSize_Number() == Double.valueOf(cboSize.getSelectedItem().toString()))
-                    && sn.getMauSac().getColor_name().equals(cboColor.getSelectedItem().toString())     
+                    && sn.getMauSac().getColor_name().equals(cboColor.getSelectedItem().toString())
                     && sn.getCode_sneaker().equals(txtCodeSneaker.getText())) {
                 JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại");
                 return false;
@@ -123,7 +143,7 @@ public class FormAddProductDetail extends javax.swing.JDialog {
         System.out.println(name);
         Model_Color color = colorRS.getColor(cboColor.getSelectedItem().toString());
         SizeModel size = sizeRS.getSize(cboSize.getSelectedItem().toString());
-        sn.setGiaSP( Long.valueOf(txtPrice.getText()));
+        sn.setGiaSP(Long.valueOf(txtPrice.getText()));
         sn.setSoLuong(Integer.valueOf(txtQuantity.getText()));
         sn.setCode_sneaker(txtCodeSneaker.getText());
         sn.setTenSP(name);
@@ -335,7 +355,7 @@ public class FormAddProductDetail extends javax.swing.JDialog {
         if (rdoHethang.isSelected()) {
             txtQuantity.setText("0");
             txtQuantity.setEditable(false);
-        } 
+        }
     }//GEN-LAST:event_rdoHethangActionPerformed
 
     private void rdoSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSellActionPerformed

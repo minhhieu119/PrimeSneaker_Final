@@ -145,6 +145,7 @@ public class Statistic extends javax.swing.JPanel {
         CategoryPlot plot = barChart.getCategoryPlot();
         BarRenderer renderer = new BarRenderer();
         renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        renderer.setMaximumBarWidth(0.03);
         plot.setRenderer(renderer);
         ChartPanel c = new ChartPanel(barChart);
         c.setPreferredSize(new Dimension(jpn.getWidth(), 300));
@@ -165,6 +166,7 @@ public class Statistic extends javax.swing.JPanel {
         CategoryPlot plot = barChart.getCategoryPlot();
         BarRenderer renderer = new BarRenderer();
         renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        renderer.setMaximumBarWidth(0.03);
         plot.setRenderer(renderer);
         ChartPanel c = new ChartPanel(barChart);
         c.setPreferredSize(new Dimension(jpn.getWidth(), 300));
@@ -185,6 +187,7 @@ public class Statistic extends javax.swing.JPanel {
         CategoryPlot plot = barChart.getCategoryPlot();
         BarRenderer renderer = new BarRenderer();
         renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        renderer.setMaximumBarWidth(0.03);
         plot.setRenderer(renderer);
         ChartPanel c = new ChartPanel(barChart);
         c.setPreferredSize(new Dimension(jpn.getWidth(), 300));
@@ -205,6 +208,7 @@ public class Statistic extends javax.swing.JPanel {
         CategoryPlot plot = barChart.getCategoryPlot();
         BarRenderer renderer = new BarRenderer();
         renderer.setSeriesPaint(0, new Color(39, 80, 150));
+        renderer.setMaximumBarWidth(0.03);
         plot.setRenderer(renderer);
         ChartPanel c = new ChartPanel(barChart);
         c.setPreferredSize(new Dimension(jpn.getWidth(), 300));

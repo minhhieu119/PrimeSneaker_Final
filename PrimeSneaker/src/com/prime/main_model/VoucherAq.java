@@ -19,7 +19,7 @@ public class VoucherAq {
     private boolean voucherType;
     private int voucherValue;
     private int quantity;
-//    private String status;
+    private String status;
     private float maxDiscount;
     private long minOrderValue;
     private Date startDate;
@@ -54,18 +54,18 @@ public class VoucherAq {
 //
 //    
 //
-//    public VoucherAq(String voucherCode, String voucherName, boolean voucherType, int voucherValue, int quantity, String status, float maxDiscount, long minOrderValue, Date startDate, Date endDate) {
-//        this.voucherCode = voucherCode;
-//        this.voucherName = voucherName;
-//        this.voucherType = voucherType;
-//        this.voucherValue = voucherValue;
-//        this.quantity = quantity;
-//        this.status = status;
-//        this.maxDiscount = maxDiscount;
-//        this.minOrderValue = minOrderValue;
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//    }
+    public VoucherAq(String voucherCode, String voucherName, boolean voucherType, int voucherValue, int quantity, String status, float maxDiscount, long minOrderValue, Date startDate, Date endDate) {
+        this.voucherCode = voucherCode;
+        this.voucherName = voucherName;
+        this.voucherType = voucherType;
+        this.voucherValue = voucherValue;
+        this.quantity = quantity;
+        this.status = status;
+        this.maxDiscount = maxDiscount;
+        this.minOrderValue = minOrderValue;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
     public String getVoucherCode() {
         return voucherCode;
     }
@@ -106,13 +106,13 @@ public class VoucherAq {
         this.quantity = quantity;
     }
 
-//    public String getStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(String status) {
-//        this.status = status;
-//    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public float getMaxDiscount() {
         return maxDiscount;
     }

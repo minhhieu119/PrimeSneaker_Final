@@ -247,7 +247,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     private void showMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showMouseClicked
-        txtPassword.setEchoChar((char) 8226);
+//        txtPassword.setEchoChar((char) 8226);
+        txtPassword.setEchoChar('*');
         disable.setVisible(true);
         disable.setEnabled(true);
         show.setVisible(false);

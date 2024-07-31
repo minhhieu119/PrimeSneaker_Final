@@ -147,7 +147,7 @@ public class ManageOrder extends javax.swing.JPanel {
         jLabel1.setText("Tìm kiếm");
 
         txtSearchBill.setToolTipText("");
-        txtSearchBill.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSearchBill.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
         txtSearchBill.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtSearchBillKeyPressed(evt);
@@ -449,8 +449,9 @@ public class ManageOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXuatExcelActionPerformed
 
     private void btnInHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHoaDonActionPerformed
-        int orderId = (int) tblManagerOder.getValueAt(tblManagerOder.getSelectedRow(), 1);
-        if (orderId != -1) {
+
+        if (tblManagerOder.getSelectedRow() != -1) {
+            int orderId = (int) tblManagerOder.getValueAt(tblManagerOder.getSelectedRow(), 1);
             if (Desktop.isDesktopSupported()) {
                 try {
                     File pdfFile = new File("C:\\Users\\MSII\\Desktop\\PDF\\hoa_don" + orderId + ".pdf");
@@ -459,7 +460,7 @@ public class ManageOrder extends javax.swing.JPanel {
                     if (pdfFile.exists() && pdfFile.canRead()) {
                         Desktop.getDesktop().open(pdfFile);
                     } else {
-                        System.out.println("File không tồn tại hoặc không thể đọc.");
+                        JOptionPane.showMessageDialog(this, "Hóa đơn chưa được in");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
