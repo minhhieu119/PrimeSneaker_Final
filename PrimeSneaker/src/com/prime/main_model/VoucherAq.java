@@ -147,8 +147,10 @@ public class VoucherAq {
 
     @Override
     public String toString() {
-        return "VoucherAq{" + "voucherCode=" + voucherCode + ", voucherName=" + voucherName + ", voucherType=" + voucherType + ", voucherValue=" + voucherValue + ", quantity=" + quantity + ", maxDiscount=" + maxDiscount + ", minOrderValue=" + minOrderValue + ", startDate=" + startDate + ", endDate=" + endDate + '}';
+        return "VoucherAq{" + "voucherCode=" + voucherCode + ", voucherName=" + voucherName + ", voucherType=" + voucherType + ", voucherValue=" + voucherValue + ", quantity=" + quantity + ", status=" + status + ", maxDiscount=" + maxDiscount + ", minOrderValue=" + minOrderValue + ", startDate=" + startDate + ", endDate=" + endDate + '}';
     }
+
+    
 
     public String getTrangThaiByDate() {
         Date currentDate = new Date();

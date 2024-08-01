@@ -11,9 +11,20 @@ import javax.swing.table.DefaultTableModel;
 import com.prime.form.attributeSneaker.AddVoucher;
 import com.prime.form.attributeSneaker.UpdateVoucher;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import jdk.jfr.consumer.EventStream;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class VoucherForm extends javax.swing.JPanel {
 
@@ -51,8 +62,7 @@ public class VoucherForm extends javax.swing.JPanel {
         }
 
     }
-    
-    
+
     private void loadDataToTableVoucher2(List<VoucherAq> list) {
         model.setRowCount(0);
         int stt = 1;
@@ -97,6 +107,7 @@ public class VoucherForm extends javax.swing.JPanel {
         jdcStartDate.setDate(dateStart);
         jdcEndDate.setDate(dateEnd);
         spfQuantity.setValue(Integer.parseInt(tblVoucher.getValueAt(index, 9).toString()));
+        cboStatus.setSelectedItem(tblVoucher.getValueAt(index, 10));
     }
 
     private VoucherAq getForm() {
@@ -110,6 +121,7 @@ public class VoucherForm extends javax.swing.JPanel {
         voucher.setMinOrderValue(Long.parseLong(txtMinOder.getText()));
         voucher.setStartDate(jdcStartDate.getDate());
         voucher.setEndDate(jdcEndDate.getDate());
+        voucher.setStatus(cboStatus.getSelectedItem() + "");
 //        System.out.println(voucher.toString());
         return voucher;
 
@@ -306,11 +318,12 @@ public class VoucherForm extends javax.swing.JPanel {
             calendar.add(Calendar.DATE, -1);
             Date tomorrow = calendar.getTime();
 //            System.out.println(tomorrow.toString());
-            if (dateStart.before(tomorrow)) {
-                JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được trước ngày hôm nay !");
-                jdcStartDate.requestFocus();
-                return true;
-            } else if (dateEnd.before(dateStart)) {
+//            if (dateStart.before(tomorrow)) {
+//                JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được trước ngày hôm nay !");
+//                jdcStartDate.requestFocus();
+//                return true;
+//            } else 
+            if (dateEnd.before(dateStart)) {
                 JOptionPane.showMessageDialog(this, "Ngày kết thúc phải cùng hoặc sau ngày bắt đầu");
                 jdcEndDate.requestFocus();
                 return true;
@@ -323,8 +336,8 @@ public class VoucherForm extends javax.swing.JPanel {
         return false;
 
     }
-    
-    private void search () throws SQLException{
+
+    private void search() throws SQLException {
         String status;
         String startDate;
         String endDate;
@@ -353,11 +366,11 @@ public class VoucherForm extends javax.swing.JPanel {
         }
         startDate = sdf.format(ngayBatDau);
         endDate = sdf.format(ngayKetThuc);
-        
+
         if (key.isEmpty()) {
             key = null;
         }
-        
+
         System.out.println(key);
         System.out.println(status);
         System.out.println(startDate);
@@ -410,7 +423,7 @@ public class VoucherForm extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jdcEndDate = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboStatus = new javax.swing.JComboBox<>();
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Quản lý voucher"));
@@ -672,6 +685,7 @@ public class VoucherForm extends javax.swing.JPanel {
         jLabel12.setText("Số lượng");
 
         spfQuantity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        spfQuantity.setMinimum(0);
 
         jdcStartDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
@@ -683,7 +697,7 @@ public class VoucherForm extends javax.swing.JPanel {
 
         jLabel1.setText("Trạng thái");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Sắp áp dụng", "Đang áp dụng", "Hết hạn" }));
+        cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sắp áp dụng", "Đang áp dụng", "Hết hạn" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -735,7 +749,7 @@ public class VoucherForm extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jdcEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -769,7 +783,7 @@ public class VoucherForm extends javax.swing.JPanel {
                         .addGap(13, 13, 13)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel14))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -862,8 +876,16 @@ public class VoucherForm extends javax.swing.JPanel {
     }//GEN-LAST:event_tblVoucherMouseClicked
 
     private void btnAddVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddVoucherActionPerformed
-        new AddVoucher().setVisible(true);
-        loadDataToTableVoucher(vrs.findAll());
+        AddVoucher addVou = new AddVoucher();
+        addVou.setVisible(true);
+        addVou.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                loadDataToTableVoucher(vrs.findAll());
+            }
+
+        });
+
 //        try {
 //            if (checkForm()) {
 //                return;
@@ -895,19 +917,16 @@ public class VoucherForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddVoucherActionPerformed
 
     private void btnUpdateVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateVoucherMouseClicked
-
+        System.out.println(getForm());
         try {
-
             index = tblVoucher.getSelectedRow();
             if (index < 0) {
                 mess("Hãy chọn dòng trong bảng để cập nhật");
                 return;
             }
-
             if (checkForm()) {
                 return;
             }
-
 //            if (checkTrungMaVoucher(txtVoucherId.getText())) {
 //
 //                JOptionPane.showMessageDialog(this, "Mã voucher đã tồn tại!");
@@ -921,9 +940,15 @@ public class VoucherForm extends javax.swing.JPanel {
                 return;
             }
 
-            if (vrs.updateVoucher(voucher) != null) {
+            int quantity = spfQuantity.getValue();
+            if (quantity < 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0");
+                return;
+            }
+
+            if (vrs.updateVoucher(voucher) > 0) {
                 clearForm();
-                loadDataToTableVoucher(vrs.findAll());
+                loadDataToTableVoucher2(vrs.findAll());
                 mess("Cập nhật voucher thành công");
             } else {
                 mess("Cập nhật voucher thất bại!");
@@ -939,7 +964,39 @@ public class VoucherForm extends javax.swing.JPanel {
     }//GEN-LAST:event_txtMaxMoneyActionPerformed
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
-        // TODO add your handling code here:
+        try {
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.showSaveDialog(this);
+            File saveFile = jFileChooser.getSelectedFile();
+            if (saveFile != null) {
+                saveFile = new File(saveFile.toString() + ".xlsx");
+                Workbook wb = new XSSFWorkbook();
+                Sheet sheet = wb.createSheet("Account");
+
+                Row rowCol = sheet.createRow(0);
+                for (int i = 0; i < tblVoucher.getColumnCount(); i++) {
+                    Cell cell = rowCol.createCell(i);
+                    cell.setCellValue(tblVoucher.getColumnName(i));
+                }
+                for (int j = 0; j < tblVoucher.getRowCount(); j++) {
+                    Row row = sheet.createRow(j + 1);
+                    for (int k = 0; k < tblVoucher.getColumnCount(); k++) {
+                        Cell cell = row.createCell(k);
+                        if (tblVoucher.getValueAt(j, k) != null) {
+                            cell.setCellValue(tblVoucher.getValueAt(j, k).toString());
+                        }
+                    }
+                }
+                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                wb.write(out);
+                wb.close();
+                out.close();
+                EventStream.openFile(saveFile.toPath());
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnExcelActionPerformed
 
     private void txtSearchVoucherKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchVoucherKeyPressed
@@ -989,7 +1046,7 @@ public class VoucherForm extends javax.swing.JPanel {
     private javax.swing.JButton btnUpdateVoucher;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cboSearchStatus;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cboStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;

@@ -15,6 +15,7 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.prime.main_model.Bill;
 import com.prime.main_model.BillDetail;
 import com.prime.main_model.Order;
+import com.prime.model.Admin;
 import com.prime.services.BillService;
 import com.prime.services.OrderService;
 import java.awt.Desktop;
@@ -449,28 +450,32 @@ public class ManageOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXuatExcelActionPerformed
 
     private void btnInHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHoaDonActionPerformed
+        if (Admin.isAdmin()) {
+            if (tblManagerOder.getSelectedRow() != -1) {
+                int orderId = (int) tblManagerOder.getValueAt(tblManagerOder.getSelectedRow(), 1);
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        File pdfFile = new File("C:\\Users\\MSII\\Desktop\\PDF\\hoa_don" + orderId + ".pdf");
 
-        if (tblManagerOder.getSelectedRow() != -1) {
-            int orderId = (int) tblManagerOder.getValueAt(tblManagerOder.getSelectedRow(), 1);
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    File pdfFile = new File("C:\\Users\\MSII\\Desktop\\PDF\\hoa_don" + orderId + ".pdf");
-
-                    // Kiểm tra xem tệp có tồn tại và có thể đọc được không
-                    if (pdfFile.exists() && pdfFile.canRead()) {
-                        Desktop.getDesktop().open(pdfFile);
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Hóa đơn chưa được in");
+                        // Kiểm tra xem tệp có tồn tại và có thể đọc được không
+                        if (pdfFile.exists() && pdfFile.canRead()) {
+                            Desktop.getDesktop().open(pdfFile);
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Hóa đơn chưa được in");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    System.out.println("Desktop API không được hỗ trợ.");
                 }
             } else {
-                System.out.println("Desktop API không được hỗ trợ.");
+                JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 0);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 0);
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền in lại hóa đơn!", "Thông báo", 0);
         }
+
 
     }//GEN-LAST:event_btnInHoaDonActionPerformed
 

@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +27,12 @@ import javax.swing.RowFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import jdk.jfr.consumer.EventStream;
 import org.apache.commons.compress.compressors.FileNameUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -794,54 +800,87 @@ public class ManageStaff extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBlockStaffActionPerformed
 
     private void btnExportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportExcelActionPerformed
-        // TODO add your handling code here:
-        FileOutputStream output = null;
-        BufferedOutputStream buffer = null;
-        XSSFWorkbook excelExporter = null;
+//        // TODO add your handling code here:
+//        FileOutputStream output = null;
+//        BufferedOutputStream buffer = null;
+//        XSSFWorkbook excelExporter = null;
+//
+//        JFileChooser excelFileChooser = new JFileChooser("Desktop");
+//        excelFileChooser.setDialogTitle("Save As");
+//        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
+//        excelFileChooser.setFileFilter(fnef);
+//        int excelChooser = excelFileChooser.showSaveDialog(null);
+//
+//        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+//
+//            try {
+//                excelExporter = new XSSFWorkbook();
+//                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
+//                for (int i = 0; i < model.getRowCount(); i++) {
+//                    XSSFRow excelRow = sheet.createRow(i);
+//                    for (int j = 0; j < model.getColumnCount()-1; j++) {
+//                        XSSFCell excelCell = excelRow.createCell(j);
+//                        excelCell.setCellValue(model.getValueAt(i, j).toString());
+////                            System.out.println(model.getValueAt(i, j));
+//                    }
+//                }
+//                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
+//                buffer = new BufferedOutputStream(output);
+//                excelExporter.write(buffer);
+//                showMess("Xuất file thành công!");
+//            } catch (FileNotFoundException ex) {
+//                ex.printStackTrace();
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            } finally {
+//                try {
+//                    if (buffer != null) {
+//                        buffer.close();
+//                    }
+//                    if (output != null) {
+//                        output.close();
+//                    }
+//                    if (excelExporter != null) {
+//                        excelExporter.close();
+//                    }
+//
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        }
+        try {
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.showSaveDialog(this);
+            File saveFile = jFileChooser.getSelectedFile();
+            if (saveFile != null) {
+                saveFile = new File(saveFile.toString() + ".xlsx");
+                Workbook wb = new XSSFWorkbook();
+                Sheet sheet = wb.createSheet("Account");
 
-        JFileChooser excelFileChooser = new JFileChooser("Desktop");
-        excelFileChooser.setDialogTitle("Save As");
-        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
-        excelFileChooser.setFileFilter(fnef);
-        int excelChooser = excelFileChooser.showSaveDialog(null);
-
-        if (excelChooser == JFileChooser.APPROVE_OPTION) {
-
-            try {
-                excelExporter = new XSSFWorkbook();
-                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
-                for (int i = 0; i < model.getRowCount(); i++) {
-                    XSSFRow excelRow = sheet.createRow(i);
-                    for (int j = 0; j < model.getColumnCount()-1; j++) {
-                        XSSFCell excelCell = excelRow.createCell(j);
-                        excelCell.setCellValue(model.getValueAt(i, j).toString());
-//                            System.out.println(model.getValueAt(i, j));
+                Row rowCol = sheet.createRow(0);
+                for (int i = 0; i < tblStaff.getColumnCount(); i++) {
+                    Cell cell = rowCol.createCell(i);
+                    cell.setCellValue(tblStaff.getColumnName(i));
+                }
+                for (int j = 0; j < tblStaff.getRowCount(); j++) {
+                    Row row = sheet.createRow(j + 1);
+                    for (int k = 0; k < tblStaff.getColumnCount(); k++) {
+                        Cell cell = row.createCell(k);
+                        if (tblStaff.getValueAt(j, k) != null) {
+                            cell.setCellValue(tblStaff.getValueAt(j, k).toString());
+                        }
                     }
                 }
-                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
-                buffer = new BufferedOutputStream(output);
-                excelExporter.write(buffer);
-                showMess("Xuất file thành công!");
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                try {
-                    if (buffer != null) {
-                        buffer.close();
-                    }
-                    if (output != null) {
-                        output.close();
-                    }
-                    if (excelExporter != null) {
-                        excelExporter.close();
-                    }
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                wb.write(out);
+                wb.close();
+                out.close();
+                EventStream.openFile(saveFile.toPath());
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnExportExcelActionPerformed
 

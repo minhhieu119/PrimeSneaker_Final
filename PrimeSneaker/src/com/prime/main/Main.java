@@ -60,7 +60,11 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new ManageOrder());
                 }
                 if (menuIndex == 2) {
-                    main.showForm(new VoucherForm());
+                    if (Admin.isAdmin()) {
+                        main.showForm(new VoucherForm());
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép!", "Thông báo", 1);
+                    }
                 }
                 if (menuIndex == 3) {
                     main.showForm(new ManageSneaker());
@@ -76,7 +80,7 @@ public class Main extends javax.swing.JFrame {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép xem nhân viên!", "Thông báo", 1);
+                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép!", "Thông báo", 1);
                     }
                 }
                 if (menuIndex == 6) {
@@ -94,7 +98,7 @@ public class Main extends javax.swing.JFrame {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép xem thống kê!", "Thông báo", 1);
+                        JOptionPane.showMessageDialog(rootPane, "Bạn không được phép!", "Thông báo", 1);
                     }
                 }
             }

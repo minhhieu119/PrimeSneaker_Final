@@ -240,21 +240,21 @@ alter table [User] add foreign key (role_id) references [Role] (role_id)
 --alter table Exchange add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
 
 drop table OrderDetail
---drop table SneakerDetail
---drop table Sneaker
---drop table [Image]
---drop table Brand
---drop table Category
---drop table Color
---drop table Customer
---drop table Exchange
---drop table Material
+drop table SneakerDetail
+drop table Sneaker
+drop table [Image]
+drop table Brand
+drop table Category
+drop table Color
+drop table Customer
+drop table Exchange
+drop table Material
 drop table [Order]
---drop table PaymentMethod
---drop table [Role]
---drop table [User]
---drop table Size
---drop table Sole
+drop table PaymentMethod
+drop table [Role]
+drop table [User]
+drop table Size
+drop table Sole
 drop table Voucher
 
 

@@ -1803,7 +1803,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                 wb.close();
                 out.close();
                 EventStream.openFile(saveFile.toPath());
-                JOptionPane.showMessageDialog(this, "Export succesfully!!");
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
             }
         } catch (Exception e) {
             e.printStackTrace();

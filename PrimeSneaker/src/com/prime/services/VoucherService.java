@@ -37,7 +37,7 @@ public class VoucherService {
                             max_discount,
                             start_date,
                             end_date,
-                            quantity
+                            quantity, [status]
                      FROM dbo.Voucher
                      """;
         try {
@@ -55,6 +55,7 @@ public class VoucherService {
                 voucher.setStartDate(rs.getDate("start_date"));
                 voucher.setEndDate(rs.getDate("end_date"));
                 voucher.setQuantity(rs.getInt("quantity"));
+                voucher.setStatus(rs.getString("status"));
                 listVoucher.add(voucher);
             }
         } catch (Exception e) {
@@ -67,8 +68,8 @@ public class VoucherService {
     public Integer addVoucher(VoucherAq voucher) throws SQLException {
         Integer row = null;
         sql = """
-              INSERT INTO Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, max_discount,min_order_value, [start_date], end_date) 
-              VALUES (?,?,?,?,?,?,?,?,?)
+              INSERT INTO Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, max_discount,min_order_value, [start_date], end_date, [status])
+              VALUES (?,?,?,?,?,?,?,?,?,?)
               """;
         try {
             Connection con = ConnectionJDBC.getConnection();
@@ -82,7 +83,7 @@ public class VoucherService {
             pstm.setObject(7, voucher.getMinOrderValue());
             pstm.setObject(8, voucher.getStartDate());
             pstm.setObject(9, voucher.getEndDate());
-
+            pstm.setObject(10, voucher.getStatus());
             row = pstm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,7 +102,8 @@ public class VoucherService {
               	max_discount =?,
               	min_order_value =?,
               	[start_date] = ?,
-              	end_date = ?
+              	end_date = ?,
+                [status] = ?
               WHERE voucher_code = ?
               """;
         Connection con = ConnectionJDBC.getConnection();
@@ -116,8 +118,8 @@ public class VoucherService {
             pstm.setObject(6, voucher.getMinOrderValue());
             pstm.setObject(7, voucher.getStartDate());
             pstm.setObject(8, voucher.getEndDate());
-            pstm.setObject(9, voucher.getVoucherCode());
-
+            pstm.setObject(9, voucher.getStatus());
+            pstm.setObject(10, voucher.getVoucherCode());
             row = pstm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,7 +146,7 @@ public class VoucherService {
             pstm.setString(5, ngayBatDau);
             pstm.setString(6, ngayKetThuc);
             pstm.setString(7, timKiem);
-            pstm.setString(8,"%" + timKiem + "%");
+            pstm.setString(8, "%" + timKiem + "%");
             pstm.setString(9, "%" + timKiem + "%");
             rs = pstm.executeQuery();
             while (rs.next()) {

@@ -41,8 +41,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class OrderForm extends javax.swing.JPanel {
 
@@ -64,6 +64,8 @@ public class OrderForm extends javax.swing.JPanel {
             tblInvoice.setRowSelectionInterval(0, 0);
             invoiceId = (int) tblInvoice.getValueAt(tblInvoice.getSelectedRow(), 1);
             showDetail();
+        } else {
+            txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
         }
         fillToListCart(os.getToCart(invoiceId));
         fillToListSneakerDetail(os.getAllSneakerDetail());
@@ -143,15 +145,15 @@ public class OrderForm extends javax.swing.JPanel {
         invoiceId = (int) tblInvoice.getValueAt(indexOrder, 1);
         Order o = os.getOneOrder(invoiceId);
         Integer userId = (Integer) tblInvoice.getValueAt(indexOrder, 2);
-        if (userId == 0) {
-            txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
-        }
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         if ((Integer) tblInvoice.getValueAt(indexOrder, 3) == 0) {
             txtOrderCost.setText("0");
             lbnTotalCost.setText("0");
         }
+        txtChange.setText("0");
         if (userId == 0) {
             txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
+            txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
             txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
             txtOrderCost.setText(o.getTotalCost() + "");
             if (o.getVoucherName() == null) {
@@ -188,7 +190,7 @@ public class OrderForm extends javax.swing.JPanel {
     private void clearForm() {
         txtPhoneNumber.setText("");
         txtInvoiceId.setText("");
-        txtStaffId.setText("");
+        txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
         cboVoucher.setSelectedIndex(0);
         txtStartDateCreated.setText("");
         txtOrderCost.setText("");
@@ -1154,7 +1156,8 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void tblSneakerDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSneakerDetailMouseClicked
         try {
-            int id = tblInvoice.getSelectedRow();
+            indexOrder = tblInvoice.getSelectedRow();
+            indexSneaker = tblSneakerDetail.getSelectedRow();
             boolean vali = false;
             if (evt.getClickCount() == 2) {
                 if (invoiceId == -1) {
@@ -1173,17 +1176,16 @@ public class OrderForm extends javax.swing.JPanel {
                     if (!vali) {
                         os.addToCart(os.getSneakerDetail(sneakerCode), invoiceId, 1);
                         fillToListInvoice(os.getOrder());
-                        tblInvoice.setRowSelectionInterval(id, id);
                         fillToListCart(os.getToCart(invoiceId));
                         os.updateQuantityAddSneaker(sneakerCode, 1);
                         fillToListSneakerDetail(os.getAllSneakerDetail());
+                        tblInvoice.setRowSelectionInterval(indexOrder, indexOrder);
+                        tblSneakerDetail.setRowSelectionInterval(indexSneaker, indexSneaker);
                         showDetail();
                     } else {
                         JOptionPane.showMessageDialog(this, "Bạn đã thêm loại này", "Thông báo", 1);
                     }
-
                 }
-
             }
         } catch (Exception e) {
         }
@@ -1339,10 +1341,11 @@ public class OrderForm extends javax.swing.JPanel {
                             if ((CartQuantity.getQuantity() - Integer.parseInt(tblCart.getValueAt(indexSneaker, 4) + "")) <= squantity) {
                                 if (os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != null || os.updateOrderDetailQuantity(CartQuantity.getQuantity(), invoiceId, sdId) != 0) {
                                     JOptionPane.showMessageDialog(null, "Sửa số lượng thành công");
+                                    os.updateQuantityAddSneaker(sneakerCode, CartQuantity.getQuantity() - cartQuantity);
                                     fillToListInvoice(os.getOrder());
                                     fillToListCart(os.getToCart(invoiceId));
                                     tblInvoice.setRowSelectionInterval(id, id);
-                                    os.updateQuantityAddSneaker(sneakerCode, CartQuantity.getQuantity() - 1);
+                                    
                                     fillToListSneakerDetail(os.getAllSneakerDetail());
                                     showDetail();
                                 }
@@ -1709,13 +1712,18 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void txtMoneyCashKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMoneyCashKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            long cash;
+            long cash = 0;
             long totalCost;
+            try {
+                cash = Long.parseLong(txtMoneyCash.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền!", "Thông báo", 1);
+                return;
+            }
             if (txtMoneyCash.getText().trim().isEmpty()) {
                 txtChange.setText("0");
             } else {
                 totalCost = Long.parseLong(lbnTotalCost.getText());
-                cash = Long.parseLong(txtMoneyCash.getText());
                 txtChange.setText((cash - totalCost) + "");
             }
         }
