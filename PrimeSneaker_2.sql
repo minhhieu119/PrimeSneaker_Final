@@ -592,13 +592,74 @@ BEGIN
     );
 END
 GO
-select * from Voucher
 
-SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity, [status]
-FROM dbo.Voucher
-WHERE ([status] like N'Đang áp dụng') and ([start_date] between '2024-06-01' and '2024-10-30' and end_date between '2024-06-01' and '2024-10-30')
 
-SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity, [status]
-                     FROM dbo.Voucher
- WHERE (null is null or [status] like N'Sắp áp dụng') and ([start_date] between '2024-06-01' and '2025-06-01' and end_date between '2024-06-01' and '2025-06-01')
- and (null is null or voucher_code like 'dsdsd' or voucher_name like N'dsad')
+WITH RankedOrders AS (
+                  SELECT CAST(o.updated_at AS DATE) AS order_date, SUM(o.total_cost) AS total_cost
+                  FROM [Order] o
+                  GROUP BY CAST(o.updated_at AS DATE)
+              ),
+              RankedDays AS (SELECT order_date, total_cost, ROW_NUMBER() OVER (ORDER BY order_date DESC) AS rn
+                  FROM RankedOrders)
+              SELECT order_date AS updated_at, total_cost
+              FROM RankedDays
+              WHERE rn <= 7
+              ORDER BY order_date DESC;
+
+			  WITH RankedOrders AS (
+    SELECT 
+        CAST(o.updated_at AS DATE) AS order_date, 
+        SUM(o.total_cost) AS total_cost
+    FROM 
+        [Order] o
+    WHERE 
+        o.[status] like N'Đã thanh toán' -- Lọc theo trạng thái "Đã thanh toán"
+    GROUP BY 
+        CAST(o.updated_at AS DATE)
+),
+RankedDays AS (
+    SELECT 
+        order_date, 
+        total_cost, 
+        ROW_NUMBER() OVER (ORDER BY order_date DESC) AS rn
+    FROM 
+        RankedOrders
+)
+SELECT 
+    order_date AS updated_at, 
+    total_cost
+FROM 
+    RankedDays
+WHERE 
+    rn <= 7
+ORDER BY 
+    order_date DESC;
+
+	select * from [Order]
+	SELECT MONTH(o.updated_at) AS month,
+                  SUM(o.total_cost) AS total_cost, 
+                  SUM(od.quantity) AS quantity
+              FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
+              WHERE YEAR(o.updated_at) = 2024 and o.[status] like N'Đã thanh toán'
+              GROUP BY MONTH(o.updated_at)
+              ORDER BY month ASC;
+
+			  select * from OrderDetail
+
+			  select r.role_id, u.account_name, u.[password], r.role_name
+                     from [User] u join [Role] r on u.role_id = r.role_id
+
+					 select user_code, role_id, full_name, gender, date_of_birth,phone_number, [address], email, id_card_number, account_name, [password], [status]
+                     from [User] where account_name like N'lananh2003'
+
+
+					 select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+              from Sneaker s join Brand b on s.brand_id = b.brand_id
+              join Category c on s.category_id = c.category_id
+              join Sole so on s.sole_id = so.sole_id
+              join Material m on s.material_id = m.material_id
+              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+              join Size si on sd.size_id = si.size_id
+              join Color co on sd.color_id = co.color_id
+              where quantity > 0 and (? is null or sneaker_detail_code like ? or sneaker_name like ? or brand_name like ?
+              or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?) and (? is null or price = ?)

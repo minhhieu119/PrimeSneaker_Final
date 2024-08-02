@@ -8,6 +8,7 @@ public class Header extends javax.swing.JPanel {
     public Header() {
         initComponents();
         lbUserName.setText(Admin.user.getStaffName());
+        System.out.println(Admin.user.getStaffName());
         lbRole.setText(Admin.user.getRoleId() == 1 ? "Quản lý" : "Nhân viên");
     }
 

@@ -58,6 +58,7 @@ public class OrderForm extends javax.swing.JPanel {
     public OrderForm() throws SQLException {
         initComponents();
         setOpaque(false);
+        sliderPrice.setValue(0);
         addVoucher();
         fillToListInvoice(os.getOrder());
         if (tblInvoice.getRowCount() > 0) {
@@ -69,6 +70,7 @@ public class OrderForm extends javax.swing.JPanel {
         }
         fillToListCart(os.getToCart(invoiceId));
         fillToListSneakerDetail(os.getAllSneakerDetail());
+        System.out.println(sliderPrice.getValue());
     }
 
     private void addVoucher() throws SQLException {
@@ -245,23 +247,6 @@ public class OrderForm extends javax.swing.JPanel {
                     lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
                 }
             }
-//            if (discountRate == 0) {
-//                if (orderCost >= minOrderValue) {
-//                    txtDiscoutCost.setText(discountAmount + "");
-//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
-//                } else {
-//                    txtDiscoutCost.setText("0");
-//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
-//                }
-//            } else {
-//                if (orderCost >= minOrderValue) {
-//                    txtDiscoutCost.setText((long) (orderCost * discountRate) + "");
-//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
-//                } else {
-//                    txtDiscoutCost.setText("0");
-//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
-//                }
-//            }
         }
     }
 
@@ -274,6 +259,22 @@ public class OrderForm extends javax.swing.JPanel {
             }
         }
         return count;
+    }
+
+    public void search() throws SQLException {
+        String key = txtSearchProdDetail.getText().trim();
+        if (key.isEmpty() || key.equalsIgnoreCase("Tìm kiếm theo mã, tên , thuộc tính sản phẩm")) {
+            key = null;
+        }
+        long price;
+        if (sliderPrice.getValue() == 0) {
+            price = Long.MAX_VALUE;
+        } else {
+            price = (long) sliderPrice.getValue();
+            lbnGia.setText(price+"");
+        }
+        modelSneaker.setRowCount(0);
+        fillToListSneakerDetail(os.searchSD(key, price));
     }
 
     @SuppressWarnings("unchecked")
@@ -847,7 +848,7 @@ public class OrderForm extends javax.swing.JPanel {
         });
 
         txtSearchProdDetail.setForeground(new java.awt.Color(153, 153, 153));
-        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên , thuộc tính sản phẩm");
         txtSearchProdDetail.setToolTipText("");
         txtSearchProdDetail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSearchProdDetail.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -861,6 +862,9 @@ public class OrderForm extends javax.swing.JPanel {
         txtSearchProdDetail.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSearchProdDetailKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSearchProdDetailKeyTyped(evt);
             }
         });
 
@@ -1073,8 +1077,8 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnScanQRActionPerformed
 
     private void txtSearchProdDetailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusGained
-        sliderPrice.setValue(0);
-        if (txtSearchProdDetail.getText().equals("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm")) {
+//        sliderPrice.setValue(0);
+        if (txtSearchProdDetail.getText().equals("Tìm kiếm theo mã, tên , thuộc tính sản phẩm")) {
             txtSearchProdDetail.setText("");
             setForeground(Color.BLACK);
         }
@@ -1082,7 +1086,7 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void txtSearchProdDetailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusLost
         if (txtSearchProdDetail.getText().equals("")) {
-            txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+            txtSearchProdDetail.setText("Tìm kiếm theo mã, tên , thuộc tính sản phẩm");
             setForeground(new Color(39, 80, 150));
         }
     }//GEN-LAST:event_txtSearchProdDetailFocusLost
@@ -1118,25 +1122,18 @@ public class OrderForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddInvoiceActionPerformed
 
     private void txtSearchProdDetailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProdDetailKeyReleased
-
-        String key = txtSearchProdDetail.getText().trim();
         try {
-            if (key.isBlank()) {
-                fillToListSneakerDetail(os.getAllSneakerDetail());
-            } else {
-                fillToListSneakerDetail(os.searchSD(key));
-            }
-        } catch (Exception e) {
+            search();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtSearchProdDetailKeyReleased
 
     private void sliderPriceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderPriceStateChanged
-        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
-        int price = sliderPrice.getValue();
         try {
-            lbnGia.setText("" + price);
-            fillToListSneakerDetail(os.searchPrice(price));
-        } catch (Exception e) {
+            search();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_sliderPriceStateChanged
 
@@ -1345,7 +1342,7 @@ public class OrderForm extends javax.swing.JPanel {
                                     fillToListInvoice(os.getOrder());
                                     fillToListCart(os.getToCart(invoiceId));
                                     tblInvoice.setRowSelectionInterval(id, id);
-                                    
+
                                     fillToListSneakerDetail(os.getAllSneakerDetail());
                                     showDetail();
                                 }
@@ -1690,7 +1687,8 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         sliderPrice.setValue(0);
-        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+        lbnGia.setText("");
+        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên , thuộc tính sản phẩm");
         try {
             fillToListSneakerDetail(os.getAllSneakerDetail());
         } catch (SQLException ex) {
@@ -1730,6 +1728,10 @@ public class OrderForm extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_txtMoneyCashKeyPressed
+
+    private void txtSearchProdDetailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProdDetailKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchProdDetailKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInvoice;

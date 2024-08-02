@@ -917,7 +917,7 @@ public class VoucherForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddVoucherActionPerformed
 
     private void btnUpdateVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateVoucherMouseClicked
-        System.out.println(getForm());
+//        System.out.println(getForm());
         try {
             index = tblVoucher.getSelectedRow();
             if (index < 0) {

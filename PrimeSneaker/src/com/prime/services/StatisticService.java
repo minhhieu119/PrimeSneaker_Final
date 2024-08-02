@@ -156,7 +156,7 @@ public class StatisticService {
                   SUM(o.total_cost) AS total_cost, 
                   SUM(od.quantity) AS quantity
               FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-              WHERE YEAR(o.updated_at) = ?
+              WHERE YEAR(o.updated_at) = ? and o.[status] like N'Đã thanh toán'
               GROUP BY MONTH(o.updated_at)
               ORDER BY month ASC;
               """;
@@ -188,7 +188,7 @@ public class StatisticService {
         sql = """
               SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
               FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-              WHERE YEAR(o.updated_at) = ? AND MONTH(o.updated_at) = ?
+              WHERE YEAR(o.updated_at) = ? AND MONTH(o.updated_at) = ? and o.[status] like N'Đã thanh toán'
               GROUP BY DAY(o.updated_at)
               ORDER BY day ASC;
               """;
@@ -221,7 +221,7 @@ public class StatisticService {
         sql = """
               SELECT o.updated_at AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
               FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
-              WHERE o.updated_at BETWEEN ? AND ?
+              WHERE o.updated_at BETWEEN ? AND ?  and o.[status] like N'Đã thanh toán'
               GROUP BY o.updated_at
               ORDER BY day ASC;
               """;

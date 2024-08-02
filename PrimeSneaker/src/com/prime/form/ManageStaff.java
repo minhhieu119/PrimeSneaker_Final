@@ -1,19 +1,24 @@
 package com.prime.form;
 
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
 import com.prime.constant.Role;
 import com.prime.main_model.ModelUser;
 import com.prime.services.UserService;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -23,23 +28,17 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import jdk.jfr.consumer.EventStream;
-import org.apache.commons.compress.compressors.FileNameUtil;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import javax.swing.table.TableColumn;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ManageStaff extends javax.swing.JPanel {
-
+    private WebcamPanel panel = null;
+    private Webcam webcam = null;
     DefaultTableModel model = new DefaultTableModel();
     UserService svc = new UserService();
     int index;
@@ -50,6 +49,11 @@ public class ManageStaff extends javax.swing.JPanel {
         model = (DefaultTableModel) tblStaff.getModel();
         ArrayList<ModelUser> listUser = svc.getAllUsers();
         fillToTable(listUser);
+
+        tblStaff.getColumnModel().getColumn(6).setMinWidth(0);
+        tblStaff.getColumnModel().getColumn(6).setMaxWidth(0);
+        tblStaff.getColumnModel().getColumn(6).setWidth(0);
+
         if (tblStaff.getRowCount() > 0) {
             index = 0;
             showDetail(listUser);
@@ -63,6 +67,7 @@ public class ManageStaff extends javax.swing.JPanel {
             txtUserAccount.setEditable(false);
             txtUserAccount.setBackground(Color.lightGray);
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -94,7 +99,6 @@ public class ManageStaff extends javax.swing.JPanel {
         jLabel17 = new javax.swing.JLabel();
         txtUserAccount = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        txtPsw = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
@@ -106,6 +110,8 @@ public class ManageStaff extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtAddress = new javax.swing.JTextArea();
         cboStatusForm = new javax.swing.JComboBox<>();
+        chkShowPsw = new javax.swing.JCheckBox();
+        txtPsw = new javax.swing.JPasswordField();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         txtSearchStaff = new javax.swing.JTextField();
@@ -202,7 +208,7 @@ public class ManageStaff extends javax.swing.JPanel {
 
         btnClearStaff.setBackground(new java.awt.Color(39, 80, 150));
         btnClearStaff.setForeground(new java.awt.Color(255, 255, 255));
-        btnClearStaff.setText("Reset");
+        btnClearStaff.setText("Làm mới");
         btnClearStaff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearStaffActionPerformed(evt);
@@ -253,8 +259,6 @@ public class ManageStaff extends javax.swing.JPanel {
 
         jLabel18.setText("Mật khẩu");
 
-        txtPsw.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
-
         jLabel19.setText("Địa chỉ");
 
         jLabel20.setText("Email");
@@ -279,6 +283,13 @@ public class ManageStaff extends javax.swing.JPanel {
         cboStatusForm.setBackground(new java.awt.Color(39, 80, 150));
         cboStatusForm.setForeground(new java.awt.Color(255, 255, 255));
         cboStatusForm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm việc", "Đã nghỉ việc" }));
+
+        chkShowPsw.setText("Hiện mật khẩu");
+        chkShowPsw.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkShowPswActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -305,16 +316,20 @@ public class ManageStaff extends javax.swing.JPanel {
                                         .addComponent(rdoMale)
                                         .addGap(18, 18, 18)
                                         .addComponent(rdoFemale))
-                                    .addComponent(txtUserAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                                    .addComponent(txtPsw)
-                                    .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtPsw)
+                                            .addComponent(txtUserAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                                        .addGap(12, 12, 12)
+                                        .addComponent(chkShowPsw))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(134, 134, 134)
                                 .addComponent(rdoStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rdoAdmin))
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -343,7 +358,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addGap(19, 19, 19))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane3, txtDob, txtEmail, txtIDCardNumber, txtPsw, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane3, txtDob, txtEmail, txtIDCardNumber, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,8 +391,9 @@ public class ManageStaff extends javax.swing.JPanel {
                             .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPsw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkShowPsw)
+                            .addComponent(txtPsw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdoStaff)
@@ -411,7 +427,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboStatusForm, txtDob, txtEmail, txtIDCardNumber, txtPsw, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboStatusForm, txtDob, txtEmail, txtIDCardNumber, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -458,23 +474,16 @@ public class ManageStaff extends javax.swing.JPanel {
 
         tblStaff.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã NV", "Tên NV", "Số điện thoại", "Giới tính", "Tài khoản", "Mật khẩu", "Vai trò", "Địa chỉ", "Email", "Số CCCD", "Ngày sinh", "Trạng thái", "Hành động"
+                "STT", "Mã NV", "Tên NV", "Số điện thoại", "Giới tính", "Tài khoản", "Mật khẩu", "Vai trò", "Địa chỉ", "Email", "Số CCCD", "Ngày sinh", "Trạng thái"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -489,10 +498,10 @@ public class ManageStaff extends javax.swing.JPanel {
 
         cboGender.setBackground(new java.awt.Color(39, 80, 150));
         cboGender.setForeground(new java.awt.Color(255, 255, 255));
-        cboGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ" }));
-        cboGender.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cboGenderItemStateChanged(evt);
+        cboGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Nam", "Nữ" }));
+        cboGender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboGenderActionPerformed(evt);
             }
         });
 
@@ -502,19 +511,19 @@ public class ManageStaff extends javax.swing.JPanel {
 
         cboRole.setBackground(new java.awt.Color(39, 80, 150));
         cboRole.setForeground(new java.awt.Color(255, 255, 255));
-        cboRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Nhân viên" }));
-        cboRole.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cboRoleItemStateChanged(evt);
+        cboRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Quản lý", "Nhân viên" }));
+        cboRole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboRoleActionPerformed(evt);
             }
         });
 
         cboStatus.setBackground(new java.awt.Color(39, 80, 150));
         cboStatus.setForeground(new java.awt.Color(255, 255, 255));
-        cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm việc", "Đã nghỉ việc" }));
-        cboStatus.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cboStatusItemStateChanged(evt);
+        cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Đang làm việc", "Đã nghỉ việc" }));
+        cboStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboStatusActionPerformed(evt);
             }
         });
 
@@ -529,11 +538,14 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(cboGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(108, 108, 108)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(130, 130, 130))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(cboGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(87, 87, 87)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cboRole, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13))
@@ -560,10 +572,11 @@ public class ManageStaff extends javax.swing.JPanel {
                                     .addComponent(jLabel13)
                                     .addComponent(jLabel16))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cboGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cboRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -605,15 +618,23 @@ public class ManageStaff extends javax.swing.JPanel {
     private void btnAddNewStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewStaffActionPerformed
         // TODO add your handling code here:
         checkNull();
-        if (!checkEmail()) {
-            showMess("Email không đúng định dạng");
-            txtEmail.requestFocus();
-            return;
-        }
+
         if (!checkDate()) {
             showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
             txtDob.requestFocus();
             return;
+        }
+        if (!checkAge()) {
+            showMess("Độ tuổi không cho phép");
+            return;
+        }
+
+        if (!txtEmail.getText().trim().equals("")) {
+            if (!checkEmail()) {
+                showMess("Email không đúng định dạng");
+                txtEmail.requestFocus();
+                return;
+            }
         }
         if (!checkPhone()) {
             showMess("Số điện thoại không đúng định dạng");
@@ -674,15 +695,22 @@ public class ManageStaff extends javax.swing.JPanel {
 
         checkNull();
         //check định dạng
-        if (!checkEmail()) {
-            showMess("Email không đúng định dạng");
-            txtEmail.requestFocus();
-            return;
-        }
+
         if (!checkDate()) {
             showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
             txtDob.requestFocus();
             return;
+        }
+        if (!checkAge()) {
+            showMess("Độ tuổi không cho phép");
+            return;
+        }
+        if (!txtEmail.getText().trim().equals("")) {
+            if (!checkEmail()) {
+                showMess("Email không đúng định dạng");
+                txtEmail.requestFocus();
+                return;
+            }
         }
         if (!checkPhone()) {
             showMess("Số điện thoại không đúng định dạng");
@@ -694,23 +722,7 @@ public class ManageStaff extends javax.swing.JPanel {
             txtIDCardNumber.requestFocus();
             return;
         }
-        //check tồn tại
-//        try {
-//
-//            if (checkExistAccount()) {
-//                showMess("Đã tồn tại tên tài khoản này");
-//                txtUserAccount.requestFocus();
-//                return;
-//            }
-//            if (checkExistIDNumber()) {
-//                showMess("Đã tồn tại số căn cước công dân này");
-//                txtIDCardNumber.requestFocus();
-//                return;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        //sửa
+
         try {
             ModelUser user = readForm();
             if (checkExistAccount() && checkExistID()) {
@@ -747,11 +759,7 @@ public class ManageStaff extends javax.swing.JPanel {
             txtUserAccount.setBackground(Color.lightGray);
         }
 
-        try {
-            showDetail(svc.getAllUsers());
-        } catch (SQLException ex) {
-            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        showDetailSearch();
     }//GEN-LAST:event_tblStaffMouseClicked
 
     private void txtSearchStaffKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchStaffKeyReleased
@@ -776,6 +784,28 @@ public class ManageStaff extends javax.swing.JPanel {
 
     private void btnScanCitizenQRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanCitizenQRActionPerformed
         // TODO add your handling code here:
+//       QRCodeReader reader = new QRCodeReader(null, true);
+//        reader.setVisible(true);
+//        reader.addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosed(WindowEvent e) {
+//                System.out.println("window closing");
+//                txtIDCardNumber.setText(QRCodeReader.idCardNumber);
+//                txtAddress.setText(QRCodeReader.address);
+//                txtStaffName.setText(QRCodeReader.stfName);
+//                SimpleDateFormat sdfInput = new SimpleDateFormat("ddMMyyyy");
+//                SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
+//                try {
+//                    Date date = sdfInput.parse(QRCodeReader.dob);
+//                    String formattedDate = sdfOutput.format(date);
+//                    txtDob.setText(sdfOutput.parse(formattedDate)+"");
+//                    System.out.println("Formatted Date: " + formattedDate);
+//                } catch (Exception e1) {
+//                    e1.printStackTrace();
+//                }
+//                reader.dispose();
+//            }
+//        });
     }//GEN-LAST:event_btnScanCitizenQRActionPerformed
 
     private void btnBlockStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockStaffActionPerformed
@@ -800,107 +830,104 @@ public class ManageStaff extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBlockStaffActionPerformed
 
     private void btnExportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportExcelActionPerformed
-//        // TODO add your handling code here:
-//        FileOutputStream output = null;
-//        BufferedOutputStream buffer = null;
-//        XSSFWorkbook excelExporter = null;
-//
-//        JFileChooser excelFileChooser = new JFileChooser("Desktop");
-//        excelFileChooser.setDialogTitle("Save As");
-//        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
-//        excelFileChooser.setFileFilter(fnef);
-//        int excelChooser = excelFileChooser.showSaveDialog(null);
-//
-//        if (excelChooser == JFileChooser.APPROVE_OPTION) {
-//
-//            try {
-//                excelExporter = new XSSFWorkbook();
-//                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
-//                for (int i = 0; i < model.getRowCount(); i++) {
-//                    XSSFRow excelRow = sheet.createRow(i);
-//                    for (int j = 0; j < model.getColumnCount()-1; j++) {
-//                        XSSFCell excelCell = excelRow.createCell(j);
-//                        excelCell.setCellValue(model.getValueAt(i, j).toString());
-////                            System.out.println(model.getValueAt(i, j));
-//                    }
-//                }
-//                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
-//                buffer = new BufferedOutputStream(output);
-//                excelExporter.write(buffer);
-//                showMess("Xuất file thành công!");
-//            } catch (FileNotFoundException ex) {
-//                ex.printStackTrace();
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            } finally {
-//                try {
-//                    if (buffer != null) {
-//                        buffer.close();
-//                    }
-//                    if (output != null) {
-//                        output.close();
-//                    }
-//                    if (excelExporter != null) {
-//                        excelExporter.close();
-//                    }
-//
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }
-        try {
-            JFileChooser jFileChooser = new JFileChooser();
-            jFileChooser.showSaveDialog(this);
-            File saveFile = jFileChooser.getSelectedFile();
-            if (saveFile != null) {
-                saveFile = new File(saveFile.toString() + ".xlsx");
-                Workbook wb = new XSSFWorkbook();
-                Sheet sheet = wb.createSheet("Account");
+        // TODO add your handling code here:
+        FileOutputStream output = null;
+        BufferedOutputStream buffer = null;
+        XSSFWorkbook excelExporter = null;
 
-                Row rowCol = sheet.createRow(0);
-                for (int i = 0; i < tblStaff.getColumnCount(); i++) {
-                    Cell cell = rowCol.createCell(i);
-                    cell.setCellValue(tblStaff.getColumnName(i));
-                }
-                for (int j = 0; j < tblStaff.getRowCount(); j++) {
-                    Row row = sheet.createRow(j + 1);
-                    for (int k = 0; k < tblStaff.getColumnCount(); k++) {
-                        Cell cell = row.createCell(k);
-                        if (tblStaff.getValueAt(j, k) != null) {
-                            cell.setCellValue(tblStaff.getValueAt(j, k).toString());
-                        }
+        JFileChooser excelFileChooser = new JFileChooser("Desktop");
+        excelFileChooser.setDialogTitle("Save As");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showSaveDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+
+            try {
+                excelExporter = new XSSFWorkbook();
+                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    XSSFRow excelRow = sheet.createRow(i);
+                    for (int j = 0; j < model.getColumnCount() - 1; j++) {
+                        XSSFCell excelCell = excelRow.createCell(j);
+                        excelCell.setCellValue(model.getValueAt(i, j).toString());
+//                            System.out.println(model.getValueAt(i, j));
                     }
                 }
-                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
-                wb.write(out);
-                wb.close();
-                out.close();
-                EventStream.openFile(saveFile.toPath());
-                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
+                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
+                buffer = new BufferedOutputStream(output);
+                excelExporter.write(buffer);
+                showMess("Xuất file thành công!");
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    if (buffer != null) {
+                        buffer.close();
+                    }
+                    if (output != null) {
+                        output.close();
+                    }
+                    if (excelExporter != null) {
+                        excelExporter.close();
+                    }
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }//GEN-LAST:event_btnExportExcelActionPerformed
 
-    private void cboGenderItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboGenderItemStateChanged
+    private void chkShowPswActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowPswActionPerformed
         // TODO add your handling code here:
-//        String item = cboGender.getSelectedItem().toString();
-//        filter(item);
-    }//GEN-LAST:event_cboGenderItemStateChanged
+        TableColumn column = tblStaff.getColumnModel().getColumn(6);
+        if (chkShowPsw.isSelected()) {
 
-    private void cboRoleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboRoleItemStateChanged
-        // TODO add your handling code here:
-        String item = cboRole.getSelectedItem().toString();
-        filter(item);
-    }//GEN-LAST:event_cboRoleItemStateChanged
+            column.setMinWidth(100);
+            column.setMaxWidth(100);
+            column.setPreferredWidth(100);
+            tblStaff.getTableHeader().repaint();
+            txtPsw.setEchoChar((char) 0);
 
-    private void cboStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboStatusItemStateChanged
+        } else {
+            column.setMinWidth(0);
+            column.setMaxWidth(0);
+            column.setPreferredWidth(0);
+            txtPsw.setEchoChar('*');
+        }
+    }//GEN-LAST:event_chkShowPswActionPerformed
+
+    private void cboGenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboGenderActionPerformed
+        try {
+            // TODO add your handling code here:
+            dataFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboGenderActionPerformed
+
+    private void cboRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboRoleActionPerformed
         // TODO add your handling code here:
-        String item = cboStatus.getSelectedItem().toString();
-        filter(item);
-    }//GEN-LAST:event_cboStatusItemStateChanged
+        try {
+            // TODO add your handling code here:
+            dataFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboRoleActionPerformed
+
+    private void cboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboStatusActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            dataFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboStatusActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNewStaff;
@@ -915,6 +942,7 @@ public class ManageStaff extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cboRole;
     private javax.swing.JComboBox<String> cboStatus;
     private javax.swing.JComboBox<String> cboStatusForm;
+    private javax.swing.JCheckBox chkShowPsw;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
@@ -946,7 +974,7 @@ public class ManageStaff extends javax.swing.JPanel {
     private javax.swing.JTextField txtDob;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtIDCardNumber;
-    private javax.swing.JTextField txtPsw;
+    private javax.swing.JPasswordField txtPsw;
     private javax.swing.JTextField txtSearchStaff;
     private javax.swing.JTextField txtStaffId;
     private javax.swing.JTextField txtStaffName;
@@ -966,7 +994,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 user.isGender() ? "Nam" : "Nữ",
                 user.getAccountName(),
                 user.getPsw(),
-                user.getRoleId() == Role.ADMIN ?"Quản lý":"Nhân viên",
+                user.getRoleId() == Role.ADMIN ? "Quản lý" : "Nhân viên",
                 user.getAddress(),
                 user.getEmail(),
                 user.getIdCardNumber(),
@@ -1071,22 +1099,7 @@ public class ManageStaff extends javax.swing.JPanel {
             showMess("Mật khẩu không được để trống");
             txtPsw.requestFocus();
             return;
-        }
-        if (txtAddress.getText().trim().equals("")) {
-            showMess("Địa chỉ không được để trống");
-            txtAddress.requestFocus();
-            return;
-        }
-        if (txtIDCardNumber.getText().trim().equals("")) {
-            showMess("CCCD không được để trống");
-            txtIDCardNumber.requestFocus();
-            return;
-        }
-        if (txtDob.getText().trim().equals("")) {
-            showMess("Ngày sinh không được để trống");
-            txtDob.requestFocus();
-            return;
-        }
+        }       
     }
 
     private void showMess(String message) {
@@ -1101,6 +1114,18 @@ public class ManageStaff extends javax.swing.JPanel {
     private boolean checkDate() {
         String datePattern = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
         return validateString(txtDob.getText(), datePattern);
+    }
+
+    private boolean checkAge() {
+        if (checkDate()) {
+            String text = txtDob.getText().trim();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(text, dtf);
+            if (LocalDate.now().getYear() - date.getYear() < 18) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean checkPhone() {
@@ -1169,15 +1194,56 @@ public class ManageStaff extends javax.swing.JPanel {
         return false;
     }
 
-    private void filter(String item) {
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter(model);
-        tblStaff.setRowSorter(sorter);
-        
-        if (!item.equals("None")) {
-            sorter.setRowFilter(RowFilter.regexFilter(item));
+
+    private void showDetailSearch() {
+        index = tblStaff.getSelectedRow();
+        txtStaffId.setText(tblStaff.getValueAt(index, 1).toString());
+        txtStaffName.setText(tblStaff.getValueAt(index, 2).toString());
+        txtStaffPhone.setText(tblStaff.getValueAt(index, 3).toString());
+        rdoMale.setSelected(tblStaff.getValueAt(index, 4).toString().equals("Nam") ? true : false);
+        rdoFemale.setSelected(tblStaff.getValueAt(index, 4).toString().equals("Nữ") ? true : false);
+        txtUserAccount.setText(tblStaff.getValueAt(index, 5).toString());
+        txtPsw.setText(tblStaff.getValueAt(index, 6).toString());
+        txtAddress.setText(tblStaff.getValueAt(index, 7).toString());
+        txtEmail.setText(tblStaff.getValueAt(index, 8).toString());
+        txtIDCardNumber.setText(tblStaff.getValueAt(index, 9).toString());
+        txtStaffPhone.setText(tblStaff.getValueAt(index, 10).toString());
+        txtDob.setText(tblStaff.getValueAt(index, 11).toString());
+        cboStatusForm.setSelectedItem(tblStaff.getValueAt(index, 12).toString());
+        tblStaff.setRowSelectionInterval(index, index);
+    }
+
+    private void dataFilter() throws SQLException {
+        int gender;
+        if (cboGender.getSelectedItem().equals("Tất cả")) {
+            gender = 2;
+        } else if (cboGender.getSelectedItem().equals("Nam")) {
+            gender = 1;
         } else {
-            tblStaff.setRowSorter(sorter);
+            gender = 0;
         }
+
+        String role = null;
+        if (cboRole.getSelectedItem().equals("Tất cả")) {
+            role = null;
+        } else if (cboRole.getSelectedItem().equals("Quản lý")) {
+            role = "Quản lý";
+        } else {
+            role = "Nhân viên";
+        }
+
+        String status = null;
+        if (cboStatus.getSelectedItem().equals("Tất cả")) {
+            status = null;
+        } else if (cboStatus.getSelectedItem().equals("Đang làm việc")) {
+            status = "Đang làm việc";
+        } else {
+            status = "Đã nghỉ việc";
+        }
+
+//        model.setRowCount(0);
+        this.fillToTable(svc.filteredData(gender, role, status));
+//        
     }
 
 }

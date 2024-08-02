@@ -83,9 +83,15 @@
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="rdoFemale" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="txtUserAccount" linkSize="5" alignment="0" pref="235" max="32767" attributes="0"/>
-                                      <Component id="txtPsw" linkSize="5" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtStaffId" linkSize="5" alignment="0" min="-2" pref="283" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="txtPsw" max="32767" attributes="0"/>
+                                              <Component id="txtUserAccount" linkSize="5" alignment="1" pref="235" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                          <Component id="chkShowPsw" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -96,7 +102,7 @@
                               </Group>
                               <Component id="jLabel6" alignment="0" min="-2" pref="97" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="102" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
@@ -176,8 +182,9 @@
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtPsw" linkSize="6" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel18" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="chkShowPsw" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPsw" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -444,7 +451,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Reset"/>
+                <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearStaffActionPerformed"/>
@@ -471,17 +478,6 @@
         <Component class="javax.swing.JLabel" name="jLabel18">
           <Properties>
             <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtPsw">
-          <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder>
-                  <Color PropertyName="color" blue="96" green="50" red="27" type="rgb"/>
-                </LineBorder>
-              </Border>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel19">
@@ -583,6 +579,16 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="chkShowPsw">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Hi&#x1ec7;n m&#x1ead;t kh&#x1ea9;u"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkShowPswActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="txtPsw">
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanel3">
@@ -607,12 +613,17 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="151" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <Component id="cboGender" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="130" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="cboGender" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="cboRole" alignment="0" min="-2" pref="96" max="-2" attributes="0"/>
                               <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -650,10 +661,12 @@
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cboGender" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cboRole" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cboStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="cboGender" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="cboRole" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -745,7 +758,7 @@
             <Component class="javax.swing.JTable" name="tblStaff">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="14" rowCount="2">
+                  <Table columnCount="13" rowCount="2">
                     <Column editable="false" title="STT" type="java.lang.Object"/>
                     <Column editable="false" title="M&#xe3; NV" type="java.lang.Object"/>
                     <Column editable="false" title="T&#xea;n NV" type="java.lang.Object"/>
@@ -759,7 +772,6 @@
                     <Column editable="false" title="S&#x1ed1; CCCD" type="java.lang.Object"/>
                     <Column editable="false" title="Ng&#xe0;y sinh" type="java.lang.Object"/>
                     <Column editable="false" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
-                    <Column editable="true" title="H&#xe0;nh &#x111;&#x1ed9;ng" type="java.lang.Boolean"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -855,14 +867,15 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Nam"/>
-                <StringItem index="1" value="N&#x1eef;"/>
+              <StringArray count="3">
+                <StringItem index="0" value="T&#x1ea5;t c&#x1ea3;"/>
+                <StringItem index="1" value="Nam"/>
+                <StringItem index="2" value="N&#x1eef;"/>
               </StringArray>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboGenderItemStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboGenderActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -887,14 +900,15 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Qu&#x1ea3;n l&#xfd;"/>
-                <StringItem index="1" value="Nh&#xe2;n vi&#xea;n"/>
+              <StringArray count="3">
+                <StringItem index="0" value="T&#x1ea5;t c&#x1ea3;"/>
+                <StringItem index="1" value="Qu&#x1ea3;n l&#xfd;"/>
+                <StringItem index="2" value="Nh&#xe2;n vi&#xea;n"/>
               </StringArray>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboRoleItemStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboRoleActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -909,14 +923,15 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="&#x110;ang l&#xe0;m vi&#x1ec7;c"/>
-                <StringItem index="1" value="&#x110;&#xe3; ngh&#x1ec9; vi&#x1ec7;c"/>
+              <StringArray count="3">
+                <StringItem index="0" value="T&#x1ea5;t c&#x1ea3;"/>
+                <StringItem index="1" value="&#x110;ang l&#xe0;m vi&#x1ec7;c"/>
+                <StringItem index="2" value="&#x110;&#xe3; ngh&#x1ec9; vi&#x1ec7;c"/>
               </StringArray>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboStatusItemStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboStatusActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

@@ -9,6 +9,8 @@ import com.prime.swing.icon.IconFontSwing;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,9 +18,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import jdk.jfr.consumer.EventStream;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -234,6 +243,7 @@ public class Statistic extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDoanhThuTuan = new javax.swing.JTable();
         pnlChart = new javax.swing.JPanel();
+        btnExcel = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -250,6 +260,7 @@ public class Statistic extends javax.swing.JPanel {
         pnlStatistic = new javax.swing.JPanel();
         cboYear = new javax.swing.JComboBox<>();
         cboMonth = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
 
         tabTong.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -300,7 +311,9 @@ public class Statistic extends javax.swing.JPanel {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pnlChart.setBackground(new java.awt.Color(255, 255, 255));
@@ -313,8 +326,18 @@ public class Statistic extends javax.swing.JPanel {
         );
         pnlChartLayout.setVerticalGroup(
             pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 235, Short.MAX_VALUE)
+            .addGap(0, 234, Short.MAX_VALUE)
         );
+
+        btnExcel.setBackground(new java.awt.Color(39, 80, 150));
+        btnExcel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnExcel.setForeground(new java.awt.Color(255, 255, 255));
+        btnExcel.setText("Xuất Excel");
+        btnExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -331,7 +354,11 @@ public class Statistic extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -339,15 +366,17 @@ public class Statistic extends javax.swing.JPanel {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(card4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(card4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcel, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(207, 207, 207))
+                .addGap(86, 86, 86))
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -364,7 +393,7 @@ public class Statistic extends javax.swing.JPanel {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         tabTong.addTab("Tổng quan", jPanel6);
@@ -467,6 +496,16 @@ public class Statistic extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(39, 80, 150));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Xuất Excel");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -503,7 +542,10 @@ public class Statistic extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(pnlStatistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(pnlStatistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -532,9 +574,11 @@ public class Statistic extends javax.swing.JPanel {
                             .addComponent(lblEndDate)
                             .addComponent(jdcEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblStartDate))))
-                .addGap(44, 44, 44)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlStatistic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(60, Short.MAX_VALUE))
         );
@@ -657,7 +701,80 @@ public class Statistic extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cboMonthActionPerformed
 
+    private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
+        try {
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.showSaveDialog(this);
+            File saveFile = jFileChooser.getSelectedFile();
+            if (saveFile != null) {
+                saveFile = new File(saveFile.toString() + ".xlsx");
+                Workbook wb = new XSSFWorkbook();
+                Sheet sheet = wb.createSheet("Account");
+
+                Row rowCol = sheet.createRow(0);
+                for (int i = 0; i < tblDoanhThuTuan.getColumnCount(); i++) {
+                    Cell cell = rowCol.createCell(i);
+                    cell.setCellValue(tblDoanhThuTuan.getColumnName(i));
+                }
+                for (int j = 0; j < tblDoanhThuTuan.getRowCount(); j++) {
+                    Row row = sheet.createRow(j + 1);
+                    for (int k = 0; k < tblDoanhThuTuan.getColumnCount(); k++) {
+                        Cell cell = row.createCell(k);
+                        if (tblDoanhThuTuan.getValueAt(j, k) != null) {
+                            cell.setCellValue(tblDoanhThuTuan.getValueAt(j, k).toString());
+                        }
+                    }
+                }
+                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                wb.write(out);
+                wb.close();
+                out.close();
+                EventStream.openFile(saveFile.toPath());
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnExcelActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.showSaveDialog(this);
+            File saveFile = jFileChooser.getSelectedFile();
+            if (saveFile != null) {
+                saveFile = new File(saveFile.toString() + ".xlsx");
+                Workbook wb = new XSSFWorkbook();
+                Sheet sheet = wb.createSheet("Account");
+
+                Row rowCol = sheet.createRow(0);
+                for (int i = 0; i < tblStatistic.getColumnCount(); i++) {
+                    Cell cell = rowCol.createCell(i);
+                    cell.setCellValue(tblStatistic.getColumnName(i));
+                }
+                for (int j = 0; j < tblStatistic.getRowCount(); j++) {
+                    Row row = sheet.createRow(j + 1);
+                    for (int k = 0; k < tblStatistic.getColumnCount(); k++) {
+                        Cell cell = row.createCell(k);
+                        if (tblStatistic.getValueAt(j, k) != null) {
+                            cell.setCellValue(tblStatistic.getValueAt(j, k).toString());
+                        }
+                    }
+                }
+                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                wb.write(out);
+                wb.close();
+                out.close();
+                EventStream.openFile(saveFile.toPath());
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcel;
     private com.prime.component.Card card1;
     private com.prime.component.Card card2;
     private com.prime.component.Card card3;
@@ -665,6 +782,7 @@ public class Statistic extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cboMonth;
     private javax.swing.JComboBox<String> cboStatisticOption;
     private javax.swing.JComboBox<String> cboYear;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

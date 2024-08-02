@@ -4,7 +4,6 @@
  */
 package com.prime.services;
 
-
 import com.prime.main_model.ModelUser;
 import com.prime.untilities.ConnectionJDBC;
 import java.sql.Connection;
@@ -13,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -146,7 +146,7 @@ public class UserService {
     }
 
     public ArrayList<ModelUser> getUsersByKey(String key) throws SQLException {
-        ArrayList<ModelUser> resulList = new ArrayList<>();
+        ArrayList<ModelUser> resultList = new ArrayList<>();
         String query = "SELECT user_code, role_id, full_name, gender, date_of_birth, phone_number, "
                 + "address, email, id_card_number, account_name, password, status\n"
                 + " FROM [User]\n"
@@ -163,10 +163,10 @@ public class UserService {
             connect = ConnectionJDBC.getConnection();
             ps = connect.prepareStatement(query);
             for (int i = 1; i < 10; i++) {
-                ps.setString(i, "%" + key + "%");  
+                ps.setString(i, "%" + key + "%");
             }
             result = ps.executeQuery();
-            while (result.next()) {                
+            while (result.next()) {
                 ModelUser user = new ModelUser();
                 user.setUserCode(result.getString("user_code"));
                 user.setRoleId(result.getInt("role_id"));
@@ -181,7 +181,7 @@ public class UserService {
                 user.setIdCardNumber(result.getString("id_card_number"));
                 user.setStatus(result.getString("status"));
                 user.setPsw(result.getString("password"));
-                resulList.add(user);
+                resultList.add(user);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,8 +190,51 @@ public class UserService {
             ps.close();
             connect.close();
         }
-        return resulList;
+        return resultList;
     }
-    
-    
+
+    public ArrayList<ModelUser> filteredData(Integer gender, String role, String status) throws SQLException {
+        ArrayList<ModelUser> resultList = new ArrayList<>();
+        String query = "SELECT user_code, Role.role_name, Role.role_id, full_name, gender, date_of_birth, phone_number, "
+                + "address, email, id_card_number, account_name, password, status\n"
+                + " FROM [User]  INNER JOIN Role ON Role.role_id = [User].role_id\n"
+                + "WHERE (? LIKE 2 OR gender LIKE ?)"
+                + "AND (? IS NULL OR Role.role_name LIKE ?)"
+                + "AND (? IS NULL OR status LIKE ?)";
+        try {
+            connect = ConnectionJDBC.getConnection();
+            ps = connect.prepareStatement(query);
+            ps.setInt(1, gender);
+            ps.setInt(2, gender);
+            ps.setString(3, role);
+            ps.setString(4, role);
+            ps.setString(5, status);
+            ps.setString(6, status);
+            result = ps.executeQuery();
+            while (result.next()) {                
+                ModelUser user = new ModelUser();
+                user.setUserCode(result.getString("user_code"));
+                user.setRoleId(result.getInt("role_id"));
+                user.setStaffName(result.getString("full_name"));
+                user.setGender(result.getBoolean("gender"));
+                user.setDob(result.getDate("date_of_birth"));
+                user.setPhone(result.getString("phone_number"));
+                user.setAccountName(result.getString("account_name"));
+                user.setAddress(result.getString("address"));
+                user.setEmail(result.getString("email"));
+                user.setIdCardNumber(result.getString("id_card_number"));
+                user.setStatus(result.getString("status"));
+                user.setPsw(result.getString("password"));
+                resultList.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            result.close();
+            ps.close();
+            connect.close();
+        }
+        return resultList;
+    }
+
 }

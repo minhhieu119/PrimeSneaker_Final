@@ -200,28 +200,42 @@ public class OrderService {
         return null;
     }
 
-    public List<SneakerDetail> searchSD(String key) throws SQLException {
+    public List<SneakerDetail> searchSD(String key, long price) throws SQLException {
         List<SneakerDetail> listSD = new ArrayList<>();
-        sql = """
-              select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
-              from Sneaker s join Brand b on s.brand_id = b.brand_id
-              join Category c on s.category_id = c.category_id
-              join Sole so on s.sole_id = so.sole_id
-              join Material m on s.material_id = m.material_id
-              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
-              join Size si on sd.size_id = si.size_id
-              join Color co on sd.color_id = co.color_id
-              where quantity > 0 and (sneaker_detail_code like ? or sneaker_name like ? or quantity like ? or brand_name like ?
-              or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?)
-              """;
+//        sql = """
+//              select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+//              from Sneaker s join Brand b on s.brand_id = b.brand_id
+//              join Category c on s.category_id = c.category_id
+//              join Sole so on s.sole_id = so.sole_id
+//              join Material m on s.material_id = m.material_id
+//              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+//              join Size si on sd.size_id = si.size_id
+//              join Color co on sd.color_id = co.color_id
+//              where quantity > 0 and (sneaker_detail_code like ? or sneaker_name like ? or quantity like ? or brand_name like ?
+//              or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?)
+//              """;
+sql = """
+      select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+                    from Sneaker s join Brand b on s.brand_id = b.brand_id
+                    join Category c on s.category_id = c.category_id
+                    join Sole so on s.sole_id = so.sole_id
+                    join Material m on s.material_id = m.material_id
+                    right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
+                    join Size si on sd.size_id = si.size_id
+                    join Color co on sd.color_id = co.color_id
+                    where quantity > 0 and (? is null or sneaker_detail_code like ? or sneaker_name like ? or brand_name like ?
+                    or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?) and (price < ? or price < ?)
+      """;
 
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
-
-            for (int i = 1; i <= 9; i++) {
+ps.setString(1, key);
+            for (int i = 2; i <= 9; i++) {
                 ps.setString(i, "%" + key + "%");
             }
+            ps.setLong(10, price);
+            ps.setLong(11, price);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -249,7 +263,7 @@ public class OrderService {
         return listSD;
     }
 
-    public List<SneakerDetail> searchPrice(int price) throws SQLException {
+    public List<SneakerDetail> searchPrice(long price) throws SQLException {
         List<SneakerDetail> listSD = new ArrayList<>();
         sql = """
               select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
@@ -268,7 +282,7 @@ public class OrderService {
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
-            ps.setInt(1, price);
+            ps.setLong(1, price);
 
             rs = ps.executeQuery();
             while (rs.next()) {

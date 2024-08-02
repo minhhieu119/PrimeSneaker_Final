@@ -130,4 +130,33 @@ public class CustomerService {
        }
        return listOrder;
    }
+
+    public ArrayList<ModelCustomer> CustomerByPhone(String phone) throws SQLException {
+        ArrayList<ModelCustomer> resultList = new ArrayList<>();
+        String query = "SELECT customer_id, full_name, gender, date_of_birth, address, phone_number FROM Customer\n"
+                + "WHERE phone_number LIKE ?";
+        try {
+            connect = ConnectionJDBC.getConnection();
+            ps = connect.prepareStatement(query);
+            ps.setString(1, "%"+phone+"%");
+            result = ps.executeQuery();
+            while (result.next()) {                
+                ModelCustomer customer = new ModelCustomer();
+                customer.setCustomerID(result.getInt("customer_id"));
+                customer.setCustomerName(result.getString("full_name"));
+                customer.setPhoneNumber(result.getString("phone_number"));
+                customer.setGender(result.getBoolean("gender"));
+                customer.setAddress(result.getString("address"));
+                customer.setDob(result.getDate("date_of_birth"));
+                resultList.add(customer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            result.close();
+            ps.close();
+            connect.close();
+        }
+        return resultList;
+    }
 }
