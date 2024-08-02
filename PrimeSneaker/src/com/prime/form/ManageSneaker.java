@@ -19,6 +19,7 @@ import com.prime.main_model.Model_Sneaker;
 import com.prime.main_model.Model_SneakerDetail;
 import com.prime.main_model.Model_addNameProduct;
 import com.prime.main_model.SizeModel;
+import com.prime.main_model.SneakerDetail;
 import com.prime.responsitory.BrandResponsitory;
 import com.prime.responsitory.CategoryResponsitory;
 import com.prime.responsitory.ColorResponsitory;
@@ -28,6 +29,7 @@ import com.prime.responsitory.SneakerDetailResponsitory;
 import com.prime.responsitory.SneakerResponsitory;
 import com.prime.responsitory.SoleResponsitory;
 import com.prime.responsitory.TeSPResponsitory;
+import com.prime.services.OrderService;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -36,8 +38,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -53,10 +58,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ManageSneaker extends javax.swing.JPanel {
 
-    public interface QRCallback {
-
-        void getQRdata(String qrCode);
-    }
+//    public interface QRCallback {
+//
+//        void getQRdata(String qrCode);
+//    }
     private final BrandResponsitory brs = new BrandResponsitory();
     private final CategoryResponsitory cateRS = new CategoryResponsitory();
     private final ColorResponsitory colorRS = new ColorResponsitory();
@@ -66,6 +71,7 @@ public class ManageSneaker extends javax.swing.JPanel {
     private final TeSPResponsitory trs = new TeSPResponsitory();
     private final SneakerDetailResponsitory sdetailRS = new SneakerDetailResponsitory();
     private final SneakerResponsitory sneakerRS = new SneakerResponsitory();
+    private final OrderService os = new OrderService();
     DefaultComboBoxModel dcboBrand = new DefaultComboBoxModel();
     DefaultComboBoxModel dcboCate = new DefaultComboBoxModel();
     DefaultComboBoxModel dcboMaterial = new DefaultComboBoxModel();
@@ -137,6 +143,27 @@ public class ManageSneaker extends javax.swing.JPanel {
                 ms.getDeGiay().getTenDeGiay(),
                 ms.getSoLuong(),
                 ms.getTrangThai()
+            });
+        }
+    }
+    
+    private void fillToListSneakerDetail(List<SneakerDetail> list) throws SQLException {
+        modelSneaker = (DefaultTableModel) tblProductDetail.getModel();
+        modelSneaker.setRowCount(0);
+        int index = 0;
+        for (SneakerDetail sd : list) {
+            modelSneaker.addRow(new Object[]{
+                index += 1,
+                sd.getSneakerCode(),
+                sd.getSneakerName(),
+                sd.getPrice(),
+                sd.getQuantity(),
+                sd.getBrand(),
+                sd.getCategory(),
+                sd.getMaterial(),
+                sd.getSole(),
+                sd.getColor(),
+                sd.getSize()
             });
         }
     }
@@ -220,7 +247,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         }
         return true;
     }
-    
+
     private boolean validateFormUpdateDetail() {
 
         if (txtQuantity.getText().isEmpty()) {
@@ -377,6 +404,42 @@ public class ManageSneaker extends javax.swing.JPanel {
             sn.setTrangThai("Hết hàng");
         }
         return sn;
+    }
+
+    private void search() {
+        String key = null;
+        if (txtSearchProduct.getText().trim().isEmpty() || txtSearchProduct.getText().equalsIgnoreCase("Tìm kiếm theo mã sản phẩm, tên sản phẩm, thuộc tính")) {
+            key = null;
+        } else {
+            key = txtSearchProduct.getText();
+        }
+
+        String status = null;
+        if (rdoAllProduct.isSelected()) {
+            status = null;
+        } else if (rdoOnSell.isSelected()) {
+            status = "Đang bán";
+        } else {
+            status = "Ngừng bán";
+        }
+        modelSneaker.setRowCount(0);
+        loadSneakerToTable(sneakerRS.foundByText(key, status));
+    }
+
+    public void searchSneakerDetail() throws SQLException {
+        String key = txtSearchProdDetail.getText().trim();
+        if (key.isEmpty() || key.equalsIgnoreCase("Tìm kiếm theo mã, tên, trạng thái , thuộc tính sản phẩm")) {
+            key = null;
+        }
+        long price;
+        if (sliderPrice.getValue() == 100000) {
+            price = Long.MAX_VALUE;
+        } else {
+            price = (long) sliderPrice.getValue();
+            lbnPrice.setText(price+"");
+        }
+        modelDetail.setRowCount(0);
+        fillToListSneakerDetail(os.searchSD(key, price));
     }
 
     @SuppressWarnings("unchecked")
@@ -597,7 +660,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         jLabel28.setText("Tìm kiếm:");
 
         txtSearchProduct.setForeground(new java.awt.Color(153, 153, 153));
-        txtSearchProduct.setText("Tìm kiếm theo mã sản phẩm, tên sản phẩm, danh mục, số lượng");
+        txtSearchProduct.setText("Tìm kiếm theo mã sản phẩm, tên sản phẩm, thuộc tính");
         txtSearchProduct.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSearchProduct.setSelectionColor(new java.awt.Color(39, 80, 150));
         txtSearchProduct.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1239,7 +1302,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         });
 
         txtSearchProdDetail.setForeground(new java.awt.Color(153, 153, 153));
-        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái , thuộc tính sản phẩm");
         txtSearchProdDetail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
         txtSearchProdDetail.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1278,10 +1341,10 @@ public class ManageSneaker extends javax.swing.JPanel {
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lbnPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(165, 165, 165)
-                        .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbnPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 71, Short.MAX_VALUE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
             .addGroup(jPanel15Layout.createSequentialGroup()
@@ -1313,10 +1376,12 @@ public class ManageSneaker extends javax.swing.JPanel {
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sliderPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(lbnPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addGap(0, 3, Short.MAX_VALUE)
+                                .addComponent(jLabel1))
+                            .addComponent(lbnPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1427,7 +1492,7 @@ public class ManageSneaker extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, 985, Short.MAX_VALUE)
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1492,7 +1557,7 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddProdSizeActionPerformed
 
     private void txtSearchProductFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProductFocusGained
-        if (txtSearchProduct.getText().equals("Tìm kiếm theo mã sản phẩm, tên sản phẩm, danh mục, số lượng")) {
+        if (txtSearchProduct.getText().equals("Tìm kiếm theo mã sản phẩm, tên sản phẩm, thuộc tính")) {
             txtSearchProduct.setText("");
             setForeground(Color.BLACK);
         }
@@ -1500,7 +1565,7 @@ public class ManageSneaker extends javax.swing.JPanel {
 
     private void txtSearchProductFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProductFocusLost
         if (txtSearchProduct.getText().equals("")) {
-            txtSearchProduct.setText("Tìm kiếm theo mã sản phẩm, tên sản phẩm, danh mục, số lượng");
+            txtSearchProduct.setText("Tìm kiếm theo mã sản phẩm, tên sản phẩm, thuộc tính");
             setForeground(new Color(39, 80, 150));
         }
     }//GEN-LAST:event_txtSearchProductFocusLost
@@ -1517,27 +1582,30 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_tblProductsMouseClicked
 
     private void rdoAllProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoAllProductActionPerformed
-        if (rdoAllProduct.isSelected()) {
-            btnStopSell.setVisible(false);
-            btnOnSell.setVisible(false);
-            loadSneakerToTable(sneakerRS.getAll());
-        }
+//        if (rdoAllProduct.isSelected()) {
+//            btnStopSell.setVisible(false);
+//            btnOnSell.setVisible(false);
+//            loadSneakerToTable(sneakerRS.getAll());
+//        }
+        search();
     }//GEN-LAST:event_rdoAllProductActionPerformed
 
     private void rdoOnSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoOnSellActionPerformed
-        if (rdoOnSell.isSelected()) {
-            btnStopSell.setVisible(true);
-            btnOnSell.setVisible(false);
-            loadSneakerToTable(sneakerRS.getAllSPOnSell());
-        }
+//        if (rdoOnSell.isSelected()) {
+//            btnStopSell.setVisible(true);
+//            btnOnSell.setVisible(false);
+//            loadSneakerToTable(sneakerRS.getAllSPOnSell());
+//        }
+        search();
     }//GEN-LAST:event_rdoOnSellActionPerformed
 
     private void rdoStopSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoStopSellActionPerformed
-        if (rdoStopSell.isSelected()) {
-            btnStopSell.setVisible(false);
-            btnOnSell.setVisible(true);
-            loadSneakerToTable(sneakerRS.getAllSPStopSell());
-        }
+//        if (rdoStopSell.isSelected()) {
+//            btnStopSell.setVisible(false);
+//            btnOnSell.setVisible(true);
+//            loadSneakerToTable(sneakerRS.getAllSPStopSell());
+//        }
+        search();
     }//GEN-LAST:event_rdoStopSellActionPerformed
 
     private void tblProductDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductDetailMouseClicked
@@ -1546,7 +1614,7 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_tblProductDetailMouseClicked
 
     private void txtSearchProdDetailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusGained
-        if (txtSearchProdDetail.getText().equals("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm")) {
+        if (txtSearchProdDetail.getText().equals("Tìm kiếm theo mã, tên, trạng thái , thuộc tính sản phẩm")) {
             txtSearchProdDetail.setText("");
             setForeground(Color.BLACK);
         }
@@ -1554,7 +1622,7 @@ public class ManageSneaker extends javax.swing.JPanel {
 
     private void txtSearchProdDetailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProdDetailFocusLost
         if (txtSearchProduct.getText().equals("")) {
-            txtSearchProduct.setText("Tìm kiếm theo mã, tên, trạng thái ,số lượng, thuộc tính sản phẩm");
+            txtSearchProduct.setText("Tìm kiếm theo mã, tên, trạng thái , thuộc tính sản phẩm");
             setForeground(new Color(53, 153, 153));
         }
     }//GEN-LAST:event_txtSearchProdDetailFocusLost
@@ -1643,14 +1711,19 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_rdoSoldOutActionPerformed
 
     private void sliderPriceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderPriceStateChanged
-        lbnPrice.setText(sliderPrice.getValue() + "");
-        loadSneakerDetailToTable(sdetailRS.getSneakerByGia(Double.parseDouble(sliderPrice.getValue() + "")));
+        try {
+            //        lbnPrice.setText(sliderPrice.getValue() + "");
+//        loadSneakerDetailToTable(sdetailRS.getSneakerByGia(Double.parseDouble(sliderPrice.getValue() + "")));
+searchSneakerDetail();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageSneaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_sliderPriceStateChanged
 
     private void btnAddNewProd2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewProd2ActionPerformed
         new FormAddProductDetail(null, true).setVisible(true);
         loadSneakerDetailToTable(sdetailRS.getALl());
-        index = sdetailRS.getALl().size()-1;
+        index = sdetailRS.getALl().size() - 1;
         showProductDetail(index);
     }//GEN-LAST:event_btnAddNewProd2ActionPerformed
 
@@ -1667,6 +1740,9 @@ public class ManageSneaker extends javax.swing.JPanel {
         lbnCategory.setText("");
         cboSize.setSelectedIndex(0);
         sliderPrice.setValue(100000);
+        txtSearchProdDetail.setText("Tìm kiếm theo mã, tên, trạng thái , thuộc tính sản phẩm");
+        sliderPrice.setValue(100000);
+        lbnPrice.setText("");
         loadSneakerDetailToTable(sdetailRS.getALl());
     }//GEN-LAST:event_btnRefresh2ActionPerformed
 
@@ -1731,7 +1807,7 @@ public class ManageSneaker extends javax.swing.JPanel {
             if (sneakerRS.addSneaker(sn) != null) {
                 JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
                 loadSneakerToTable(sneakerRS.getAll());
-                int index = sneakerRS.getAll().size()-1;
+                int index = sneakerRS.getAll().size() - 1;
                 showDataProduct(index);
             } else {
                 JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại");
@@ -1759,18 +1835,24 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_btnUpdateProd2ActionPerformed
 
     private void txtSearchProductKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProductKeyReleased
-        if (txtSearchProduct.getText().isBlank()) {
-            loadSneakerToTable(sneakerRS.getAll());
-        } else {
-            loadSneakerToTable(sneakerRS.foundByText(txtSearchProduct.getText().trim()));
-        }
+//        if (txtSearchProduct.getText().isBlank()) {
+//            loadSneakerToTable(sneakerRS.getAll());
+//        } else {
+//            loadSneakerToTable(sneakerRS.foundByText(txtSearchProduct.getText().trim()));
+//        }
+        search();
     }//GEN-LAST:event_txtSearchProductKeyReleased
 
     private void txtSearchProdDetailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchProdDetailKeyReleased
-        if (txtSearchProdDetail.getText().isBlank()) {
-            loadSneakerDetailToTable(sdetailRS.getALl());
-        } else {
-            loadSneakerDetailToTable(sdetailRS.foundSneakerDetailByText(txtSearchProdDetail.getText().trim()));
+        try {
+            //        if (txtSearchProdDetail.getText().isBlank()) {
+//            loadSneakerDetailToTable(sdetailRS.getALl());
+//        } else {
+//            loadSneakerDetailToTable(sdetailRS.foundSneakerDetailByText(txtSearchProdDetail.getText().trim()));
+//        }
+            searchSneakerDetail();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageSneaker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtSearchProdDetailKeyReleased
 
@@ -1832,9 +1914,9 @@ public class ManageSneaker extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Dowload QR thành công");
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this, "Lỗi khi lưu file: " + e.getMessage());
-                }                
+                }
             } else {
-                JOptionPane.showMessageDialog(this,"Người dùng đã hủy lưu QR");
+                JOptionPane.showMessageDialog(this, "Người dùng đã hủy lưu QR");
             }
         } catch (Exception e) {
             System.out.println(e);

@@ -229,22 +229,34 @@ public class SneakerDetailResponsitory {
         return row;
     }
 
-    public ArrayList<Model_SneakerDetail> foundSneakerDetailByText(String key) {
+    public ArrayList<Model_SneakerDetail> foundSneakerDetailByText(String key, long price) {
         ArrayList<Model_SneakerDetail> lst = new ArrayList<>();
         try {
             Connection con = ConnectionJDBC.getConnection();
 
-            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
-                    + "                         left join Category on Sneaker.category_id = Category.category_id\n"
-                    + "           				left join Brand on Sneaker.brand_id = Brand.brand_id\n"
-                    + "                		left join Sole on Sneaker.sole_id = Sole.sole_id\n"
-                    + "                		left join Material on Sneaker.material_id = Material.material_id\n"
-                    + "           				left join Size on SneakerDetail.size_id = Size.size_id\n"
-                    + "          				left join Color on SneakerDetail.color_id = Color.color_id\n"
-                    + "                       where(SneakerDetail.sneaker_detail_id like ? or sneaker_detail_code like ? or sneaker_name like ? or  brand_name like ? or category_name like ? \n"
-                    + "					 or  material_name like ? or quantity like ? or price like ? or size_number like ? or color_name like ? ) \n";
+//            String sql = "select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id\n"
+//                    + "                         left join Category on Sneaker.category_id = Category.category_id\n"
+//                    + "           				left join Brand on Sneaker.brand_id = Brand.brand_id\n"
+//                    + "                		left join Sole on Sneaker.sole_id = Sole.sole_id\n"
+//                    + "                		left join Material on Sneaker.material_id = Material.material_id\n"
+//                    + "           				left join Size on SneakerDetail.size_id = Size.size_id\n"
+//                    + "          				left join Color on SneakerDetail.color_id = Color.color_id\n"
+//                    + "                       where(SneakerDetail.sneaker_detail_id like ? or sneaker_detail_code like ? or sneaker_name like ? or  brand_name like ? or category_name like ? \n"
+//                    + "					 or  material_name like ? or quantity like ? or price like ? or size_number like ? or color_name like ? ) \n";
+            String sql = """
+             select SneakerDetail.sneaker_detail_id,sneaker_detail_code,sneaker_name,price,quantity,category_name,brand_name,color_name,material_name,size_number,sole_name,SneakerDetail.[status] from Sneaker right join SneakerDetail on Sneaker.sneaker_id= SneakerDetail.sneaker_id
+                                 left join Category on Sneaker.category_id = Category.category_id
+                                 left join Brand on Sneaker.brand_id = Brand.brand_id
+                                 left join Sole on Sneaker.sole_id = Sole.sole_id
+                                 left join Material on Sneaker.material_id = Material.material_id
+                                 left join Size on SneakerDetail.size_id = Size.size_id
+                                 left join Color on SneakerDetail.color_id = Color.color_id
+                                 where(? is null or SneakerDetail.sneaker_detail_id like ? or sneaker_detail_code like ? or sneaker_name like ? or  brand_name like ? or category_name like ?
+                                 or  material_name like ? or size_number like ? or color_name like ? ) and (SneakerDetail.price < ? or SneakerDetail.price < ?)
+             """;
             PreparedStatement prsm = con.prepareCall(sql);
-            prsm.setObject(1, '%' + key + '%');
+            
+            prsm.setObject(1, key);
             prsm.setObject(2, '%' + key + '%');
             prsm.setObject(3, '%' + key + '%');
             prsm.setObject(4, '%' + key + '%');
@@ -253,7 +265,8 @@ public class SneakerDetailResponsitory {
             prsm.setObject(7, '%' + key + '%');
             prsm.setObject(8, '%' + key + '%');
             prsm.setObject(9, '%' + key + '%');
-            prsm.setObject(10, '%' + key + '%');
+            prsm.setLong(10, price);
+            prsm.setLong(11, price);
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
                 Model_SneakerDetail sd = new Model_SneakerDetail();

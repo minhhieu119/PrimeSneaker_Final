@@ -168,28 +168,39 @@ public class SneakerResponsitory {
         return row;
     }
 
-    public ArrayList<Model_Sneaker> foundByText(String key) {
+    public ArrayList<Model_Sneaker> foundByText(String key, String status) {
         ArrayList<Model_Sneaker> lst = new ArrayList<>();
         try {
             Connection con = ConnectionJDBC.getConnection();
-            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status] \n"
-                    + "             							from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id\n"
-                    + "                                      				 left join Category on Sneaker.category_id = Category.category_id\n"
-                    + "           							left join Brand on Sneaker.brand_id = Brand.brand_id\n"
-                    + "                            					left join Sole on Sneaker.sole_id = Sole.sole_id\n"
-                    + "                           					left join Material on Sneaker.material_id = Material.material_id \n"
-                    + "        								where (Sneaker.sneaker_id like ? or sneaker_name like ? or  brand_name like ? or category_name like ? or material_name like ? or sole_name like ?) or quantity like ?	\n"
-                    + "                         					 group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name"
-                    + "                                                                      having sum(quantity) like ?";
+//            String sql = "select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status] \n"
+//                    + "             							from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id\n"
+//                    + "                                      				 left join Category on Sneaker.category_id = Category.category_id\n"
+//                    + "           							left join Brand on Sneaker.brand_id = Brand.brand_id\n"
+//                    + "                            					left join Sole on Sneaker.sole_id = Sole.sole_id\n"
+//                    + "                           					left join Material on Sneaker.material_id = Material.material_id \n"
+//                    + "        								where (Sneaker.sneaker_id like ? or sneaker_name like ? or  brand_name like ? or category_name like ? or material_name like ? or sole_name like ?) or quantity like ?	\n"
+//                    + "                         					 group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name"
+//                    + "                                                                      having sum(quantity) like ?";
+            String sql = """
+                          select distinct Sneaker.sneaker_id,sneaker_name,brand_name,category_name,material_name,sole_name,sum(quantity) as quantity,Sneaker.[status]
+                          from Sneaker left join SneakerDetail on Sneaker.sneaker_id = SneakerDetail.sneaker_id
+                          left join Category on Sneaker.category_id = Category.category_id
+                          left join Brand on Sneaker.brand_id = Brand.brand_id
+                          left join Sole on Sneaker.sole_id = Sole.sole_id
+                          left join Material on Sneaker.material_id = Material.material_id
+                          where (? is null or Sneaker.sneaker_id like ? or sneaker_name like ? or  brand_name like ? or category_name like ? or material_name like ? or sole_name like ?) and (? is null or Sneaker.[status] like ?)
+                          group by Sneaker.sneaker_id,sneaker_name,category_name,Sneaker.[status],material_name,sole_name,brand_name
+                        """;
             PreparedStatement prsm = con.prepareStatement(sql);
-            prsm.setObject(1, '%' + key + '%');
+            prsm.setObject(1, key);
             prsm.setObject(2, '%' + key + '%');
             prsm.setObject(3, '%' + key + '%');
             prsm.setObject(4, '%' + key + '%');
             prsm.setObject(5, '%' + key + '%');
             prsm.setObject(6, '%' + key + '%');
             prsm.setObject(7, '%' + key + '%');
-            prsm.setObject(8, '%' + key + '%');
+            prsm.setObject(8, status);
+            prsm.setObject(9, status);
             ResultSet rs = prsm.executeQuery();
             while (rs.next()) {
                 Model_Sneaker sn = new Model_Sneaker();
