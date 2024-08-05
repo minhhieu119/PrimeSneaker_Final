@@ -93,7 +93,6 @@ public class ManageStaff extends javax.swing.JPanel {
         btnAddNewStaff = new javax.swing.JButton();
         btnUpdateStaff = new javax.swing.JButton();
         btnBlockStaff = new javax.swing.JButton();
-        btnScanCitizenQR = new javax.swing.JButton();
         btnExportExcel = new javax.swing.JButton();
         btnClearStaff = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
@@ -128,11 +127,11 @@ public class ManageStaff extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
-        txtStaffId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtStaffId.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
-        txtStaffName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtStaffName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
-        txtStaffPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtStaffPhone.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         buttonGroup2.add(rdoStaff);
         rdoStaff.setSelected(true);
@@ -188,15 +187,6 @@ public class ManageStaff extends javax.swing.JPanel {
             }
         });
 
-        btnScanCitizenQR.setBackground(new java.awt.Color(39, 80, 150));
-        btnScanCitizenQR.setForeground(new java.awt.Color(255, 255, 255));
-        btnScanCitizenQR.setText("Quét CCCD");
-        btnScanCitizenQR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnScanCitizenQRActionPerformed(evt);
-            }
-        });
-
         btnExportExcel.setBackground(new java.awt.Color(39, 80, 150));
         btnExportExcel.setForeground(new java.awt.Color(255, 255, 255));
         btnExportExcel.setText("Xuất Excel");
@@ -220,22 +210,20 @@ public class ManageStaff extends javax.swing.JPanel {
         jPanel17Layout.setHorizontalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(63, 63, 63)
                 .addComponent(btnAddNewStaff)
-                .addGap(43, 43, 43)
+                .addGap(101, 101, 101)
                 .addComponent(btnUpdateStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(44, 44, 44)
+                .addGap(104, 104, 104)
                 .addComponent(btnBlockStaff)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnClearStaff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(41, 41, 41)
-                .addComponent(btnScanCitizenQR)
-                .addGap(39, 39, 39)
+                .addGap(106, 106, 106)
                 .addComponent(btnExportExcel)
-                .addGap(27, 27, 27))
+                .addGap(62, 62, 62))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddNewStaff, btnBlockStaff, btnClearStaff, btnExportExcel, btnScanCitizenQR, btnUpdateStaff});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddNewStaff, btnBlockStaff, btnClearStaff, btnExportExcel, btnUpdateStaff});
 
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,17 +233,16 @@ public class ManageStaff extends javax.swing.JPanel {
                     .addComponent(btnUpdateStaff)
                     .addComponent(btnBlockStaff)
                     .addComponent(btnClearStaff)
-                    .addComponent(btnScanCitizenQR)
                     .addComponent(btnExportExcel)
                     .addComponent(btnAddNewStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddNewStaff, btnBlockStaff, btnClearStaff, btnExportExcel, btnScanCitizenQR, btnUpdateStaff});
+        jPanel17Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddNewStaff, btnBlockStaff, btnClearStaff, btnExportExcel, btnUpdateStaff});
 
         jLabel17.setText("Tài khoản");
 
-        txtUserAccount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtUserAccount.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         jLabel18.setText("Mật khẩu");
 
@@ -263,17 +250,17 @@ public class ManageStaff extends javax.swing.JPanel {
 
         jLabel20.setText("Email");
 
-        txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtEmail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         jLabel21.setText("CCCD");
 
-        txtIDCardNumber.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtIDCardNumber.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         jLabel22.setText("Ngày sinh");
 
         jLabel23.setText("Trạng thái");
 
-        txtDob.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        txtDob.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         txtAddress.setColumns(20);
         txtAddress.setRows(5);
@@ -290,6 +277,8 @@ public class ManageStaff extends javax.swing.JPanel {
                 chkShowPswActionPerformed(evt);
             }
         });
+
+        txtPsw.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -318,11 +307,10 @@ public class ManageStaff extends javax.swing.JPanel {
                                         .addComponent(rdoFemale))
                                     .addComponent(txtStaffId, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtPsw)
-                                            .addComponent(txtUserAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                                        .addComponent(txtPsw, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(12, 12, 12)
-                                        .addComponent(chkShowPsw))))
+                                        .addComponent(chkShowPsw))
+                                    .addComponent(txtUserAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(134, 134, 134)
                                 .addComponent(rdoStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -385,11 +373,11 @@ public class ManageStaff extends javax.swing.JPanel {
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(rdoMale)
                             .addComponent(rdoFemale))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(chkShowPsw)
@@ -433,7 +421,6 @@ public class ManageStaff extends javax.swing.JPanel {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(39, 80, 150)));
 
         txtSearchStaff.setForeground(new java.awt.Color(153, 153, 153));
         txtSearchStaff.setText("Mã NV - Tên NV - SĐT - CCCD - Địa chỉ");
@@ -782,32 +769,6 @@ public class ManageStaff extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnBlockActionPerformed
 
-    private void btnScanCitizenQRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanCitizenQRActionPerformed
-        // TODO add your handling code here:
-//       QRCodeReader reader = new QRCodeReader(null, true);
-//        reader.setVisible(true);
-//        reader.addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosed(WindowEvent e) {
-//                System.out.println("window closing");
-//                txtIDCardNumber.setText(QRCodeReader.idCardNumber);
-//                txtAddress.setText(QRCodeReader.address);
-//                txtStaffName.setText(QRCodeReader.stfName);
-//                SimpleDateFormat sdfInput = new SimpleDateFormat("ddMMyyyy");
-//                SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
-//                try {
-//                    Date date = sdfInput.parse(QRCodeReader.dob);
-//                    String formattedDate = sdfOutput.format(date);
-//                    txtDob.setText(sdfOutput.parse(formattedDate)+"");
-//                    System.out.println("Formatted Date: " + formattedDate);
-//                } catch (Exception e1) {
-//                    e1.printStackTrace();
-//                }
-//                reader.dispose();
-//            }
-//        });
-    }//GEN-LAST:event_btnScanCitizenQRActionPerformed
-
     private void btnBlockStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockStaffActionPerformed
         // TODO add your handling code here:
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn khóa tài khoản này?");
@@ -934,7 +895,6 @@ public class ManageStaff extends javax.swing.JPanel {
     private javax.swing.JButton btnBlockStaff;
     private javax.swing.JButton btnClearStaff;
     private javax.swing.JButton btnExportExcel;
-    private javax.swing.JButton btnScanCitizenQR;
     private javax.swing.JButton btnUpdateStaff;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
@@ -1203,11 +1163,12 @@ public class ManageStaff extends javax.swing.JPanel {
         rdoMale.setSelected(tblStaff.getValueAt(index, 4).toString().equals("Nam") ? true : false);
         rdoFemale.setSelected(tblStaff.getValueAt(index, 4).toString().equals("Nữ") ? true : false);
         txtUserAccount.setText(tblStaff.getValueAt(index, 5).toString());
+        rdoAdmin.setSelected(tblStaff.getValueAt(index, 7).equals("Quản lý") ? true : false);
+        rdoStaff.setSelected(tblStaff.getValueAt(index, 7).equals("Nhân viên") ? true : false);
         txtPsw.setText(tblStaff.getValueAt(index, 6).toString());
-        txtAddress.setText(tblStaff.getValueAt(index, 7).toString());
-        txtEmail.setText(tblStaff.getValueAt(index, 8).toString());
-        txtIDCardNumber.setText(tblStaff.getValueAt(index, 9).toString());
-        txtStaffPhone.setText(tblStaff.getValueAt(index, 10).toString());
+        txtAddress.setText(tblStaff.getValueAt(index, 8).toString());
+        txtEmail.setText(tblStaff.getValueAt(index, 9).toString());
+        txtIDCardNumber.setText(tblStaff.getValueAt(index, 10).toString());
         txtDob.setText(tblStaff.getValueAt(index, 11).toString());
         cboStatusForm.setSelectedItem(tblStaff.getValueAt(index, 12).toString());
         tblStaff.setRowSelectionInterval(index, index);

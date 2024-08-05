@@ -12,18 +12,27 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/MainForm.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/services/OrderService.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/component/Header.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/main_model/ModelUser.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/services/CustomerService.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/attributeSneaker/AddVoucher.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/ManageStaff.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/services/LoginService.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/component/Menu.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/ManageSneaker.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/model/Admin.java</file>
             <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/Login.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/model/Logout.java</file>
             <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/OrderForm.java</file>
-            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/services/VoucherService.java</file>
             <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/VoucherForm.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/Statistic.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/Properties.java</file>
             <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/main/Main.java</file>
             <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/model/CartQuantity.java</file>
             <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/main_model/VoucherAq.java</file>
-            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/attributeSneaker/AddVoucher.java</file>
-            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/ManageOrder.java</file>
-            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/ManageStaff.java</file>
-            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/ManageSneaker.java</file>
-            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/model/Admin.java</file>
+            <file>file:/D:/PRO1041/PrimeSneaker_Final/PrimeSneaker/src/com/prime/form/ManageCustomer.java</file>
         </group>
     </open-files>
 </project-private>

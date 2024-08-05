@@ -310,15 +310,16 @@ ps.setString(1, key);
         return listSD;
     }
 
-    public Integer addInvoice() {
+    public Integer addInvoice(int username) {
         sql = """
-              insert into [Order] ([status])
-              values (N'Chờ thanh toán')
+              insert into [Order] (user_id, [status])
+              values (?,N'Chờ thanh toán')
               """;
 
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
+            ps.setInt(1, username);
             return ps.executeUpdate();
         } catch (Exception e) {
             return null;

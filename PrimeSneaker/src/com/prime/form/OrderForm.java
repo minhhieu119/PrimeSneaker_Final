@@ -70,7 +70,7 @@ public class OrderForm extends javax.swing.JPanel {
         }
         fillToListCart(os.getToCart(invoiceId));
         fillToListSneakerDetail(os.getAllSneakerDetail());
-        System.out.println(sliderPrice.getValue());
+//        System.out.println(sliderPrice.getValue());
     }
 
     private void addVoucher() throws SQLException {
@@ -108,7 +108,7 @@ public class OrderForm extends javax.swing.JPanel {
             modelInvoice.addRow(new Object[]{
                 stt += 1,
                 o.getOrderId(),
-                o.getUserId(),
+                Admin.user.getUserCode(),
                 o.getQuantity(),
                 o.getStatus(),
                 o.getCreated_at()
@@ -146,46 +146,61 @@ public class OrderForm extends javax.swing.JPanel {
         indexOrder = tblInvoice.getSelectedRow();
         invoiceId = (int) tblInvoice.getValueAt(indexOrder, 1);
         Order o = os.getOneOrder(invoiceId);
-        Integer userId = (Integer) tblInvoice.getValueAt(indexOrder, 2);
+//        Integer userId = (Integer) tblInvoice.getValueAt(indexOrder, 2);
         NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         if ((Integer) tblInvoice.getValueAt(indexOrder, 3) == 0) {
             txtOrderCost.setText("0");
             lbnTotalCost.setText("0");
         }
         txtChange.setText("0");
-        if (userId == 0) {
-            txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
-            txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
-            txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
-            txtOrderCost.setText(o.getTotalCost() + "");
-            if (o.getVoucherName() == null) {
-                cboVoucher.setSelectedIndex(0);
-            } else {
-                cboVoucher.setSelectedItem(o.getVoucherName());
-            }
-            if (o.getPaymentMethod() == null) {
-                cboPaymentMethod.setSelectedIndex(0);
-            } else {
-                cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
-            }
-            voucherProcess();
+        txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
+        txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
+        txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
+        txtOrderCost.setText(o.getTotalCost() + "");
+        if (o.getVoucherName() == null) {
+            cboVoucher.setSelectedIndex(0);
         } else {
-            txtInvoiceId.setText(o.getOrderId() + "");
-            txtStaffId.setText(os.getOneUser(userId).getUserCode() + " - " + os.getOneUser(userId).getStaffName());
-            txtStartDateCreated.setText(o.getCreated_at() + "");
-            txtOrderCost.setText(o.getTotalCost() + "");
-            if (o.getVoucherName() == null) {
-                cboVoucher.setSelectedIndex(0);
-            } else {
-                cboVoucher.setSelectedItem(o.getVoucherName());
-            }
-            if (o.getPaymentMethod() == null) {
-                cboPaymentMethod.setSelectedIndex(0);
-            } else {
-                cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
-            }
-            voucherProcess();
+            cboVoucher.setSelectedItem(o.getVoucherName());
         }
+        if (o.getPaymentMethod() == null) {
+            cboPaymentMethod.setSelectedIndex(0);
+        } else {
+            cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
+        }
+        voucherProcess();
+//        if (userId == 0) {
+//            txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
+//            txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
+//            txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
+//            txtOrderCost.setText(o.getTotalCost() + "");
+//            if (o.getVoucherName() == null) {
+//                cboVoucher.setSelectedIndex(0);
+//            } else {
+//                cboVoucher.setSelectedItem(o.getVoucherName());
+//            }
+//            if (o.getPaymentMethod() == null) {
+//                cboPaymentMethod.setSelectedIndex(0);
+//            } else {
+//                cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
+//            }
+//            voucherProcess();
+//        } else {
+//            txtInvoiceId.setText(o.getOrderId() + "");
+//            txtStaffId.setText(os.getOneUser(userId).getUserCode() + " - " + os.getOneUser(userId).getStaffName());
+//            txtStartDateCreated.setText(o.getCreated_at() + "");
+//            txtOrderCost.setText(o.getTotalCost() + "");
+//            if (o.getVoucherName() == null) {
+//                cboVoucher.setSelectedIndex(0);
+//            } else {
+//                cboVoucher.setSelectedItem(o.getVoucherName());
+//            }
+//            if (o.getPaymentMethod() == null) {
+//                cboPaymentMethod.setSelectedIndex(0);
+//            } else {
+//                cboPaymentMethod.setSelectedItem(o.getPaymentMethod());
+//            }
+//            voucherProcess();
+//        }
 
     }
 
@@ -271,7 +286,7 @@ public class OrderForm extends javax.swing.JPanel {
             price = Long.MAX_VALUE;
         } else {
             price = (long) sliderPrice.getValue();
-            lbnGia.setText(price+"");
+            lbnGia.setText(price + "");
         }
         modelSneaker.setRowCount(0);
         fillToListSneakerDetail(os.searchSD(key, price));
@@ -1102,7 +1117,7 @@ public class OrderForm extends javax.swing.JPanel {
                 return;
             }
 
-            if (os.addInvoice() > 0) {
+            if (os.addInvoice(Admin.user.getUser_id()) > 0) {
                 fillToListInvoice(os.getOrder());
                 tblInvoice.setRowSelectionInterval(0, 0);
                 fillToListCart(os.getToCart((int) tblInvoice.getValueAt(0, 1)));

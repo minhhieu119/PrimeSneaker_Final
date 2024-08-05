@@ -371,10 +371,10 @@ public class VoucherForm extends javax.swing.JPanel {
             key = null;
         }
 
-        System.out.println(key);
-        System.out.println(status);
-        System.out.println(startDate);
-        System.out.println(endDate);
+//        System.out.println(key);
+//        System.out.println(status);
+//        System.out.println(startDate);
+//        System.out.println(endDate);
         model.setRowCount(0);
         loadDataToTableVoucher2(vrs.timKiem(key, status, startDate, endDate));
     }

@@ -43,7 +43,7 @@ public class LoginService {
     public ModelUser getOneUser (String accountName) throws SQLException{
         ModelUser mu = new ModelUser();
         String sql = """
-                     select user_code, role_id, full_name, gender, date_of_birth,phone_number, [address], email, id_card_number, account_name, [password], [status]
+                     select user_code, user_id, role_id, full_name, gender, date_of_birth,phone_number, [address], email, id_card_number, account_name, [password], [status]
                      from [User] where account_name like ?
                      """;
         Connection connect = null;
@@ -56,6 +56,7 @@ public class LoginService {
             result = ps.executeQuery();
             if (result.next()) {
                 mu.setUserCode(result.getString("user_code"));
+                mu.setUser_id(result.getInt("user_id"));
                 mu.setRoleId(result.getInt("role_id"));
                 mu.setStaffName(result.getString("full_name"));
                 mu.setGender(result.getBoolean("gender"));

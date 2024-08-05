@@ -66,6 +66,7 @@ public class VoucherAq {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
     public String getVoucherCode() {
         return voucherCode;
     }
@@ -113,6 +114,7 @@ public class VoucherAq {
     public void setStatus(String status) {
         this.status = status;
     }
+
     public float getMaxDiscount() {
         return maxDiscount;
     }
@@ -150,24 +152,21 @@ public class VoucherAq {
         return "VoucherAq{" + "voucherCode=" + voucherCode + ", voucherName=" + voucherName + ", voucherType=" + voucherType + ", voucherValue=" + voucherValue + ", quantity=" + quantity + ", status=" + status + ", maxDiscount=" + maxDiscount + ", minOrderValue=" + minOrderValue + ", startDate=" + startDate + ", endDate=" + endDate + '}';
     }
 
-    
-
     public String getTrangThaiByDate() {
         Date currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
-    calendar.setTime(currentDate);
-    calendar.add(Calendar.DATE,-1);
-    Date tomorrow = calendar.getTime();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DATE, -1);
+        Date tomorrow = calendar.getTime();
 
-    if (quantity <= 0) {
-        return "Hết hạn";
-    } else if (endDate.before(tomorrow)) { // Nếu ngày kết thúc trước ngày mai thì chắc chắn là hết hạn
-        return "Hết hạn";
-    } else if (currentDate.before(startDate)) { // Nếu ngày hiện tại trước ngày bắt đầu thì sắp áp dụng
-        return "Sắp áp dụng";
-    } else { // Các trường hợp còn lại đều là "Đang áp dụng"
-        return "Đang áp dụng";
+        if (quantity <= 0) {
+            return "Hết hạn";
+        } else if (endDate.before(tomorrow)) { // Nếu ngày kết thúc trước ngày mai thì chắc chắn là hết hạn
+            return "Hết hạn";
+        } else if (currentDate.before(startDate)) { // Nếu ngày hiện tại trước ngày bắt đầu thì sắp áp dụng
+            return "Sắp áp dụng";
+        } else { // Các trường hợp còn lại đều là "Đang áp dụng"
+            return "Đang áp dụng";
+        }
     }
-    }
-
 }

@@ -61,7 +61,7 @@ public class ManageOrder extends javax.swing.JPanel {
         for (Bill bill : list) {
             i++;
             model.addRow(bill.toDataRow(i));
-            System.out.println(bill.getTotalCost());
+//            System.out.println(bill.getTotalCost());
         }
     }
 
@@ -312,10 +312,7 @@ public class ManageOrder extends javax.swing.JPanel {
 
         tblBillDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "STT", "MÃ SPCT", "TÊN SẢN PHẨM", "GIÁ", "SỐ LƯỢNG"

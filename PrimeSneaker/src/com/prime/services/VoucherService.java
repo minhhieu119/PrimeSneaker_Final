@@ -83,7 +83,7 @@ public class VoucherService {
             pstm.setObject(7, voucher.getMinOrderValue());
             pstm.setObject(8, voucher.getStartDate());
             pstm.setObject(9, voucher.getEndDate());
-            pstm.setObject(10, voucher.getStatus());
+            pstm.setObject(10, "Sắp áp dụng");
             row = pstm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

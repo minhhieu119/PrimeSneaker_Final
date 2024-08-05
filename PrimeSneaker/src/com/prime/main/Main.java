@@ -156,7 +156,7 @@ public class Main extends javax.swing.JFrame {
         bg = new javax.swing.JLayeredPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Quản lý Bán Hàng Giày");
+        setTitle("Ứng dụng bán Giày Prime Sneaker");
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
         bg.setOpaque(true);

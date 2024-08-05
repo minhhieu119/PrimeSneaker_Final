@@ -1,30 +1,20 @@
-﻿create database PrimeSneaker2
+﻿create database PrimeSneaker_OK
 go
 
-use PrimeSneaker2
+use PrimeSneaker_OK
 go
 
 create table Brand
 (
 	brand_id int identity(1,1) primary key,
-	brand_name nvarchar(20),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
+	brand_name nvarchar(20)
 )
 go
 
 create table Category
 (
 	category_id int identity(1,1) primary key,
-	category_name nvarchar(50),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
+	category_name nvarchar(50)
 )
 go
 
@@ -32,11 +22,6 @@ create table Size
 (
 	size_id int identity(1,1) primary key,
 	size_number float,
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1,
 	check (size_number > 0)
 )
 go
@@ -44,36 +29,21 @@ go
 create table Color
 (
 	color_id int identity(1,1) primary key,
-	color_name nvarchar(20),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
+	color_name nvarchar(20)
 )
 go
 
 create table Sole
 (
 	sole_id int identity(1,1) primary key,
-	sole_name nvarchar(50),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
+	sole_name nvarchar(50)
 )
 go
 
 create table Material
 (
 	material_id int identity(1,1) primary key,
-	material_name nvarchar(50),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
+	material_name nvarchar(50)
 )
 go
 
@@ -90,11 +60,6 @@ create table Voucher
 	[start_date] date,
 	end_date date,
 	[status] nvarchar(50),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1,
 	check(end_date >= [start_date])
 )
 
@@ -119,12 +84,7 @@ create table [User]
 	id_card_number varchar(15),
 	account_name varchar(30),
 	[password] varchar(20),
-	[status] nvarchar(50),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
-	deleted bit default 1
+	[status] nvarchar(50)
 )
 go
 
@@ -135,11 +95,7 @@ create table Customer
 	gender bit,
 	date_of_birth date check(date_of_birth <= getdate()),
 	[address] nvarchar(150),
-	phone_number varchar(15),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int
+	phone_number varchar(15)
 )
 go
 
@@ -152,11 +108,7 @@ create table Sneaker
 	material_id int,
 	sneaker_name nvarchar(100),
 	[status] nvarchar(150),
-	[description] nvarchar(200),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int
+	[description] nvarchar(200)
 )
 go
 
@@ -170,11 +122,7 @@ create table SneakerDetail
 	gender nvarchar(20),
 	price money check(price > 0),
 	quantity int check(quantity >= 0),
-	[status] nvarchar(50),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int
+	[status] nvarchar(50)
 )
 go
 
@@ -189,9 +137,7 @@ create table [Order]
 	[status] nvarchar(50),
 	note nvarchar(255),
 	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int
+	updated_at date default getdate()
 )
 go
 
@@ -202,10 +148,6 @@ create table OrderDetail
 	quantity int check(quantity >= 0),
 	price money check(price > 0),
 	total_cost money check(total_cost > 0),
-	created_at date default getdate(),
-	updated_at date default getdate(),
-	created_by int,
-	updated_by int,
 	primary key(sneaker_detail_id, order_id)
 )
 go
@@ -228,34 +170,23 @@ alter table [Order] add foreign key (voucher_id) references Voucher (voucher_id)
 
 alter table [User] add foreign key (role_id) references [Role] (role_id)
 
---alter table SneakerDetail add foreign key (collar_id) references Collar (collar_id)
---alter table SneakerDetail add foreign key (brand_id) references Brand (brand_id)
---alter table SneakerDetail add foreign key (category_id) references Category (category_id)
---alter table SneakerDetail add foreign key (sole_id) references Sole (sole_id)
---alter table SneakerDetail add foreign key (material_id) references Material (material_id)
-
---alter table OrderDetail add foreign key (exchange_id) references Exchange (exchange_id)
-
---alter table Exchange add foreign key (order_id) references [Order] (order_id)
---alter table Exchange add foreign key (sneaker_detail_id) references SneakerDetail (sneaker_detail_id)
-
-drop table OrderDetail
-drop table SneakerDetail
-drop table Sneaker
-drop table [Image]
-drop table Brand
-drop table Category
-drop table Color
-drop table Customer
-drop table Exchange
-drop table Material
-drop table [Order]
-drop table PaymentMethod
-drop table [Role]
-drop table [User]
-drop table Size
-drop table Sole
-drop table Voucher
+--drop table OrderDetail
+--drop table SneakerDetail
+--drop table Sneaker
+--drop table [Image]
+--drop table Brand
+--drop table Category
+--drop table Color
+--drop table Customer
+--drop table Exchange
+--drop table Material
+--drop table [Order]
+--drop table PaymentMethod
+--drop table [Role]
+--drop table [User]
+--drop table Size
+--drop table Sole
+--drop table Voucher
 
 
 
@@ -494,20 +425,6 @@ values (12, 4, 7, '2345541', 0, 1500000, 20, N'Còn hàng')
 --insert into [Image] (sneaker_detail_id, image_url)
 --values (10, 'anh10.jpg')
 
---Nhập dữ liệu Order
---insert into [Order] ([user_id], customer_id, voucher_id, payment_method, total_cost, [status], note)
---values(2, 2, 3, N'Tiền mặt', 1620000, N'Đã thanh toán', null),
---(3, 1, null, N'Tiền mặt', 2000000, N'Đã thanh toán', null),
---(2, 3, null, N'Chuyển khoản',1400000, N'Đã thanh toán', null),
---(3, 4, 6, N'Chuyển khoản', 2600000, N'Đã thanh toán', null),
---(4, 5, 7, N'Tiền mặt', 1500000, N'Đã thanh toán', null),
---(4, 6, null, N'Chuyển khoản', 1200000,  N'Đã thanh toán', null),
---(5, 7, null, N'Tiền mặt', 1800000,  N'Đã thanh toán', null),
---(4, 8, 8, N'Tiền mặt', 2600000,  N'Đã thanh toán', null),
---(3, 9, 9, N'Tiền mặt', 1200000,  N'Đã thanh toán', null),
---(5, 10, 10, N'Tiền mặt', 1400000,  N'Đã thanh toán', null),
---(6, 11, 11, N'Chuyển khoản', 1000000,  N'Đã thanh toán', null)
-
 insert into [Order] ([user_id], customer_id, voucher_id, payment_method, total_cost, [status], note)
 values(2, 2, 1, N'Tiền mặt', 1620000, N'Đã thanh toán', null),
 (3, 1, null, N'Tiền mặt', 2000000, N'Đã thanh toán', null),
@@ -592,5 +509,4 @@ BEGIN
     );
 END
 GO
-
 

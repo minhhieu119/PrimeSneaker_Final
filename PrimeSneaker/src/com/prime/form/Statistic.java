@@ -600,7 +600,7 @@ public class Statistic extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jdcStartPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jdcStartPropertyChange
-        System.out.println();
+//        System.out.println();
     }//GEN-LAST:event_jdcStartPropertyChange
 
     private void jdcEndPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jdcEndPropertyChange

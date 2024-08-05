@@ -202,7 +202,7 @@ public class SneakerDetailResponsitory {
         try {
             Connection con = ConnectionJDBC.getConnection();
             String sql = "update Sneaker \n"
-                    + "set status = N'Đã ngừng bán'"
+                    + "set status = N'Ngừng bán'"
                     + "where sneaker_id =? ";
             PreparedStatement prsm = con.prepareStatement(sql);
             prsm.setObject(1, id);
@@ -304,19 +304,39 @@ public class SneakerDetailResponsitory {
         return lst;
     }
 
+//    public Integer updateSneakerDetail(Model_SneakerDetail md) {
+//        Integer row = null;
+//        try {
+//            Connection con = ConnectionJDBC.getConnection();
+////            String sql = "update SneakerDetail \n"
+////                    + "	set size_id=?,color_id=?,price=?,quantity=?,[status]=?\n"
+////                    + " where sneaker_detail_id = ?";
+//
+//            String sql = """
+//                  update SneakerDetail
+//                  set size_id=?,color_id=?,price=?,quantity=?,[status]= ?
+//                  where sneaker_detail_code = ?
+//                  """;
+//            PreparedStatement prsm = con.prepareStatement(sql);
+//            prsm.setObject(1, md.getKichCo().getId_Size());
+//            prsm.setObject(2, md.getMauSac().getColor_id());
+//            prsm.setObject(3, md.getGiaSP());
+//            prsm.setObject(4, md.getSoLuong());
+//            prsm.setObject(5, md.getTrangThai());
+//            prsm.setObject(6, md.getCode_sneaker());
+//            row = prsm.executeUpdate();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(SneakerDetailResponsitory.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return row;
+//    }
     public Integer updateSneakerDetail(Model_SneakerDetail md) {
         Integer row = null;
         try {
             Connection con = ConnectionJDBC.getConnection();
-//            String sql = "update SneakerDetail \n"
-//                    + "	set size_id=?,color_id=?,price=?,quantity=?,[status]=?\n"
-//                    + " where sneaker_detail_id = ?";
-
-            String sql = """
-                  update SneakerDetail
-                  set size_id=?,color_id=?,price=?,quantity=?,[status]= ?
-                  where sneaker_detail_code = ?
-                  """;
+            String sql = "update SneakerDetail \n"
+                    + "	set size_id=?,color_id=?,price=?,quantity=?,[status]=?\n"
+                    + " where sneaker_detail_code = ?";
             PreparedStatement prsm = con.prepareStatement(sql);
             prsm.setObject(1, md.getKichCo().getId_Size());
             prsm.setObject(2, md.getMauSac().getColor_id());

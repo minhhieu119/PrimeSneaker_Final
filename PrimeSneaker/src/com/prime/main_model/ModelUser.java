@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class ModelUser {
     private String userCode;
+    private int user_id;
     private int roleId;
 //    private String role;
     private String staffName;
@@ -37,6 +38,15 @@ public class ModelUser {
         this.psw = psw;
         this.status = status;
     }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+    
 
     public String getUserCode() {
         return userCode;

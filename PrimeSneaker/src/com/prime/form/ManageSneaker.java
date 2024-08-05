@@ -146,7 +146,7 @@ public class ManageSneaker extends javax.swing.JPanel {
             });
         }
     }
-    
+
     private void fillToListSneakerDetail(List<SneakerDetail> list) throws SQLException {
         modelSneaker = (DefaultTableModel) tblProductDetail.getModel();
         modelSneaker.setRowCount(0);
@@ -387,13 +387,31 @@ public class ManageSneaker extends javax.swing.JPanel {
         return sn;
     }
 
+//    private Model_SneakerDetail getFormDetailProduct() {
+//        Model_SneakerDetail sn = new Model_SneakerDetail();
+//        sn.setMaSPCT(Integer.parseInt(txtProdDetail.getText()));
+//        sn.setCode_sneaker(txtProdDetail.getText());
+//        Model_Color color = colorRS.getColor(cboColor.getSelectedItem().toString());
+//        SizeModel size = sizeRS.getSize(cboSize.getSelectedItem().toString());
+//        sn.setGiaSP((long) Float.parseFloat(txtPrice.getText()));
+//        sn.setSoLuong(Integer.valueOf(txtQuantity.getText()));
+//        sn.setKichCo(size);
+//        sn.setMauSac(color);
+//        if (rdoStock.isSelected()) {
+//            sn.setTrangThai("Còn hàng");
+//        }
+//        if (rdoSoldOut.isSelected()) {
+//            sn.setTrangThai("Hết hàng");
+//        }
+//        return sn;
+//    }
+    
     private Model_SneakerDetail getFormDetailProduct() {
         Model_SneakerDetail sn = new Model_SneakerDetail();
-        sn.setMaSPCT(Integer.parseInt(txtProdDetail.getText()));
         sn.setCode_sneaker(txtProdDetail.getText());
         Model_Color color = colorRS.getColor(cboColor.getSelectedItem().toString());
         SizeModel size = sizeRS.getSize(cboSize.getSelectedItem().toString());
-        sn.setGiaSP((long) Float.parseFloat(txtPrice.getText()));
+        sn.setGiaSP((long)Float.parseFloat(txtPrice.getText()));
         sn.setSoLuong(Integer.valueOf(txtQuantity.getText()));
         sn.setKichCo(size);
         sn.setMauSac(color);
@@ -436,7 +454,7 @@ public class ManageSneaker extends javax.swing.JPanel {
             price = Long.MAX_VALUE;
         } else {
             price = (long) sliderPrice.getValue();
-            lbnPrice.setText(price+"");
+            lbnPrice.setText(price + "");
         }
         modelDetail.setRowCount(0);
         fillToListSneakerDetail(os.searchSD(key, price));
@@ -1582,30 +1600,33 @@ public class ManageSneaker extends javax.swing.JPanel {
     }//GEN-LAST:event_tblProductsMouseClicked
 
     private void rdoAllProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoAllProductActionPerformed
-//        if (rdoAllProduct.isSelected()) {
-//            btnStopSell.setVisible(false);
-//            btnOnSell.setVisible(false);
+        if (rdoAllProduct.isSelected()) {
+            btnStopSell.setVisible(false);
+            btnOnSell.setVisible(false);
 //            loadSneakerToTable(sneakerRS.getAll());
-//        }
-        search();
+            search();
+        }
+
     }//GEN-LAST:event_rdoAllProductActionPerformed
 
     private void rdoOnSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoOnSellActionPerformed
-//        if (rdoOnSell.isSelected()) {
-//            btnStopSell.setVisible(true);
-//            btnOnSell.setVisible(false);
+        if (rdoOnSell.isSelected()) {
+            btnStopSell.setVisible(true);
+            btnOnSell.setVisible(false);
 //            loadSneakerToTable(sneakerRS.getAllSPOnSell());
-//        }
-        search();
+            search();
+        }
+
     }//GEN-LAST:event_rdoOnSellActionPerformed
 
     private void rdoStopSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoStopSellActionPerformed
-//        if (rdoStopSell.isSelected()) {
-//            btnStopSell.setVisible(false);
-//            btnOnSell.setVisible(true);
+        if (rdoStopSell.isSelected()) {
+            btnStopSell.setVisible(false);
+            btnOnSell.setVisible(true);
 //            loadSneakerToTable(sneakerRS.getAllSPStopSell());
-//        }
-        search();
+            search();
+        }
+
     }//GEN-LAST:event_rdoStopSellActionPerformed
 
     private void tblProductDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductDetailMouseClicked
@@ -1714,7 +1735,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         try {
             //        lbnPrice.setText(sliderPrice.getValue() + "");
 //        loadSneakerDetailToTable(sdetailRS.getSneakerByGia(Double.parseDouble(sliderPrice.getValue() + "")));
-searchSneakerDetail();
+            searchSneakerDetail();
         } catch (SQLException ex) {
             Logger.getLogger(ManageSneaker.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1756,7 +1777,7 @@ searchSneakerDetail();
             Boolean isChecked = (Boolean) tblProducts.getValueAt(i, 9);
             if (isChecked != null && isChecked) {
                 int id = (int) tblProducts.getValueAt(i, 1);
-                System.out.println(id);
+//                System.out.println(id);
                 isSelected.add(id);
             }
         }
@@ -1799,7 +1820,7 @@ searchSneakerDetail();
     private void btnProductAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductAddActionPerformed
         if (validateForm()) {
             Model_Sneaker sn = readForm();
-            System.out.println(sn);
+//            System.out.println(sn);
             int chon = JOptionPane.showConfirmDialog(this, "Bạn có thêm mới sản phẩm này không?");
             if (chon != JOptionPane.YES_OPTION) {
                 return;
@@ -1823,7 +1844,7 @@ searchSneakerDetail();
         }
         if (validateFormUpdateDetail()) {
             Model_SneakerDetail sn = getFormDetailProduct();
-            System.out.println(sn);
+//            System.out.println(sn);
             if (sdetailRS.updateSneakerDetail(sn) > 0) {
                 JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm thành công");
                 loadSneakerDetailToTable(sdetailRS.getALl());
@@ -1919,7 +1940,7 @@ searchSneakerDetail();
                 JOptionPane.showMessageDialog(this, "Người dùng đã hủy lưu QR");
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Lỗi tạo mã QR");
         }
     }//GEN-LAST:event_btnDownloadQR2ActionPerformed
