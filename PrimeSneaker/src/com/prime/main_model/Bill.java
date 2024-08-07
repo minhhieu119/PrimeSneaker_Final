@@ -11,6 +11,7 @@ public class Bill {
 
     private int order_Id;
     private String staff_id;
+    private String voucher_id;
     private String nameCustomer;
     private String paymentMethod;
     private BigDecimal totalCost;
@@ -27,6 +28,26 @@ public class Bill {
         this.createdDay = createdDay;
     }
 
+    public Bill(int order_Id, String staff_id, String voucher_id, String nameCustomer, String paymentMethod, BigDecimal totalCost, Date createdDay) {
+        this.order_Id = order_Id;
+        this.staff_id = staff_id;
+        this.voucher_id = voucher_id;
+        this.nameCustomer = nameCustomer;
+        this.paymentMethod = paymentMethod;
+        this.totalCost = totalCost;
+        this.createdDay = createdDay;
+    }
+
+    public String getVoucher_id() {
+        return voucher_id;
+    }
+
+    public void setVoucher_id(String voucher_id) {
+        this.voucher_id = voucher_id;
+    }
+
+    
+    
     public int getOrder_Id() {
         return order_Id;
     }
@@ -79,13 +100,24 @@ public class Bill {
         if (this.nameCustomer == null) {
             this.nameCustomer = "Khách lẻ";
         }
+        if (this.voucher_id.equals("0")) {
+            this.voucher_id = "";
+        }
+
         return new Object[]{
             stt,
             this.order_Id,
             this.staff_id,
+            this.voucher_id,
             this.nameCustomer,
             this.paymentMethod,
             this.totalCost,
             this.createdDay,};
     }
+
+    @Override
+    public String toString() {
+        return "Bill{" + "order_Id=" + order_Id + ", staff_id=" + staff_id + ", voucher_id=" + voucher_id + ", nameCustomer=" + nameCustomer + ", paymentMethod=" + paymentMethod + ", totalCost=" + totalCost + ", createdDay=" + createdDay + '}';
+    }
+
 }

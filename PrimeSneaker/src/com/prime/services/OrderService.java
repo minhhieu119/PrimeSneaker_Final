@@ -178,14 +178,14 @@ public class OrderService {
         }
         return v;
     }
-    
-    public Integer updateQuantityVoucher (String name) throws SQLException{
+
+    public Integer updateQuantityVoucher(String name) throws SQLException {
         sql = """
               update Voucher
               set quantity = quantity - 1
               where voucher_name like ?
               """;
-        
+
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
@@ -202,20 +202,8 @@ public class OrderService {
 
     public List<SneakerDetail> searchSD(String key, long price) throws SQLException {
         List<SneakerDetail> listSD = new ArrayList<>();
-//        sql = """
-//              select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
-//              from Sneaker s join Brand b on s.brand_id = b.brand_id
-//              join Category c on s.category_id = c.category_id
-//              join Sole so on s.sole_id = so.sole_id
-//              join Material m on s.material_id = m.material_id
-//              right join SneakerDetail sd on s.sneaker_id = sd.sneaker_id
-//              join Size si on sd.size_id = si.size_id
-//              join Color co on sd.color_id = co.color_id
-//              where quantity > 0 and (sneaker_detail_code like ? or sneaker_name like ? or quantity like ? or brand_name like ?
-//              or category_name like ? or color_name like ? or material_name like ? or sole_name like ? or size_number like ?)
-//              """;
-sql = """
-      select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
+        sql = """
+        select sneaker_detail_code, sneaker_name, price, quantity, category_name, brand_name, color_name, material_name,sole_name, size_number 
                     from Sneaker s join Brand b on s.brand_id = b.brand_id
                     join Category c on s.category_id = c.category_id
                     join Sole so on s.sole_id = so.sole_id
@@ -230,7 +218,7 @@ sql = """
         try {
             c = ConnectionJDBC.getConnection();
             ps = c.prepareStatement(sql);
-ps.setString(1, key);
+            ps.setString(1, key);
             for (int i = 2; i <= 9; i++) {
                 ps.setString(i, "%" + key + "%");
             }
@@ -684,10 +672,10 @@ ps.setString(1, key);
         return o;
     }
 
-    public Integer addCustomer(ModelCustomer mc) throws SQLException {
+    public Integer addCustomer(ModelCustomer mc, int staff) throws SQLException {
         sql = """
-              insert into Customer (full_name, phone_number, gender, [address])
-              values (?, ?, ?, ?)
+              insert into Customer (full_name, phone_number, gender, [address], created_by)
+              values (?, ?, ?, ?, ?)
               """;
         try {
             c = ConnectionJDBC.getConnection();
@@ -696,6 +684,7 @@ ps.setString(1, key);
             ps.setString(2, mc.getPhoneNumber());
             ps.setBoolean(3, mc.isGender());
             ps.setString(4, mc.getAddress());
+            ps.setInt(5, staff);
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -776,7 +765,7 @@ ps.setString(1, key);
 
     public ModelUser getOneUser(int userId) throws SQLException {
         ModelUser mu = new ModelUser();
-        
+
         sql = """
               select user_code, full_name
               from [User]

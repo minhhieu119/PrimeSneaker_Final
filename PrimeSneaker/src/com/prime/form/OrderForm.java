@@ -9,6 +9,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -70,7 +71,6 @@ public class OrderForm extends javax.swing.JPanel {
         }
         fillToListCart(os.getToCart(invoiceId));
         fillToListSneakerDetail(os.getAllSneakerDetail());
-//        System.out.println(sliderPrice.getValue());
     }
 
     private void addVoucher() throws SQLException {
@@ -147,7 +147,6 @@ public class OrderForm extends javax.swing.JPanel {
         invoiceId = (int) tblInvoice.getValueAt(indexOrder, 1);
         Order o = os.getOneOrder(invoiceId);
 //        Integer userId = (Integer) tblInvoice.getValueAt(indexOrder, 2);
-        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         if ((Integer) tblInvoice.getValueAt(indexOrder, 3) == 0) {
             txtOrderCost.setText("0");
             lbnTotalCost.setText("0");
@@ -156,7 +155,8 @@ public class OrderForm extends javax.swing.JPanel {
         txtInvoiceId.setText(tblInvoice.getValueAt(indexOrder, 1) + "");
         txtStaffId.setText(Admin.user.getUserCode() + " - " + Admin.user.getStaffName());
         txtStartDateCreated.setText(tblInvoice.getValueAt(indexOrder, 5) + "");
-        txtOrderCost.setText(o.getTotalCost() + "");
+//        txtOrderCost.setText(o.getTotalCost() + "");
+        txtOrderCost.setText(formatVND(o.getTotalCost()));
         if (o.getVoucherName() == null) {
             cboVoucher.setSelectedIndex(0);
         } else {
@@ -234,32 +234,63 @@ public class OrderForm extends javax.swing.JPanel {
         sd.setSize((float) tblSneakerDetail.getValueAt(index, 10));
         return sd;
     }
+    
+    private String formatVND (long price){
+        String priceStr = "";
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        priceStr = currencyFormat.format(price).replace(" ₫", "");
+        
+        return priceStr;
+    }
 
     private void voucherProcess() throws SQLException {
         Voucher v = os.getOneVoucher((String) cboVoucher.getSelectedItem());
-        long orderCost = Long.parseLong(txtOrderCost.getText());
+        long orderCost = Long.parseLong(txtOrderCost.getText().replace(".", ""));
         if (cboVoucher.getSelectedIndex() == 0) {
             txtDiscoutCost.setText("0");
-            lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+            lbnTotalCost.setText(formatVND((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText())))));
         } else {
+            if (orderCost < v.getMinOrderValue()) {
+                JOptionPane.showMessageDialog(this, "Tối thiểu tổng tiền đơn hàng phải lớn hơn " + v.getMinOrderValue(), "Thông báo", 1);
+                cboVoucher.setSelectedIndex(0);
+                txtDiscoutCost.setText("0");
+                return;
+            }
             boolean type = v.getVoucherType();
             int value = v.getVoucherValue();
             long minOrderValue = v.getMinOrderValue();
+//            if (type) {
+//                if (orderCost >= minOrderValue) {
+//                    txtDiscoutCost.setText(v.getVoucherValue() + "");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                } else {
+//                    txtDiscoutCost.setText("0");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                }
+//            } else {
+//                if (orderCost >= minOrderValue) {
+//                    txtDiscoutCost.setText((long) (orderCost * v.getVoucherValue() / 100) + "");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                } else {
+//                    txtDiscoutCost.setText("0");
+//                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+//                }
+//            }
             if (type) {
                 if (orderCost >= minOrderValue) {
-                    txtDiscoutCost.setText(v.getVoucherValue() + "");
-                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                    txtDiscoutCost.setText(formatVND(v.getVoucherValue()));
+                    lbnTotalCost.setText(formatVND((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText().replace(".", ""))))));
                 } else {
                     txtDiscoutCost.setText("0");
-                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                    lbnTotalCost.setText(formatVND((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText().replace(".", ""))))));
                 }
             } else {
                 if (orderCost >= minOrderValue) {
-                    txtDiscoutCost.setText((long) (orderCost * v.getVoucherValue() / 100) + "");
-                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                    txtDiscoutCost.setText(formatVND((long) (orderCost * v.getVoucherValue() / 100)));
+                    lbnTotalCost.setText(formatVND((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText().replace(".", ""))))));
                 } else {
                     txtDiscoutCost.setText("0");
-                    lbnTotalCost.setText((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText()))) + "");
+                    lbnTotalCost.setText(formatVND((long) (orderCost - (Float.parseFloat(txtDiscoutCost.getText().replace(".", ""))))));
                 }
             }
         }
@@ -1168,11 +1199,13 @@ public class OrderForm extends javax.swing.JPanel {
 
     private void tblSneakerDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSneakerDetailMouseClicked
         try {
-            indexOrder = tblInvoice.getSelectedRow();
-            indexSneaker = tblSneakerDetail.getSelectedRow();
-            boolean vali = false;
+
             if (evt.getClickCount() == 2) {
-                if (invoiceId == -1) {
+                indexOrder = tblInvoice.getSelectedRow();
+                indexSneaker = tblSneakerDetail.getSelectedRow();
+                System.out.println(indexOrder);
+                boolean vali = false;
+                if (indexOrder == -1) {
                     JOptionPane.showMessageDialog(this, "Bạn chưa chọn hóa đơn", "Thông báo", 1);
                     return;
                 } else {
@@ -1533,7 +1566,7 @@ public class OrderForm extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Số tiền mặt nhập vào phải là số!", "Thông báo", 2);
                     return;
                 }
-                int totalCash = Integer.parseInt(lbnTotalCost.getText());
+                int totalCash = Integer.parseInt(lbnTotalCost.getText().replace(".", ""));
                 int change = cash - totalCash;
                 if (change < 0) {
                     JOptionPane.showMessageDialog(this, "Số tiền mặt nhập vào chưa đủ!", "Thông báo", 2);
@@ -1543,7 +1576,7 @@ public class OrderForm extends javax.swing.JPanel {
         }
 
         String paymentMethod = (String) cboPaymentMethod.getSelectedItem();
-        long totalCost = Long.parseLong(lbnTotalCost.getText());
+        long totalCost = Long.parseLong(lbnTotalCost.getText().replace(".", ""));
         Order o = new Order(orderId, userId, customerId, voucherId, paymentMethod, totalCost);
         try {
             if (os.updateOrderPayment(o) > 0) {
@@ -1553,16 +1586,20 @@ public class OrderForm extends javax.swing.JPanel {
                 }
                 String path = "C:/Users/MSII/Desktop/PDF/";
                 String name = "hoa_don" + orderId + ".pdf";
+                String fontPath = "D:\\PRO1041\\PrimeSneaker_Final\\Roboto\\Roboto-Regular.ttf";
                 Document document = new Document();
                 float threeCol = 190f;
                 float threeColWidth[] = {threeCol, threeCol, threeCol};
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(new File(path + name)));
 
                 document.open();
-
-                Font font1 = FontFactory.getFont(FontFactory.TIMES_BOLD, 16, BaseColor.BLACK);
-                Font font2 = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, BaseColor.BLACK);
-                Font font3 = FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK);
+                BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+//                Font font1 = FontFactory.getFont(FontFactory.TIMES_BOLD, 16, BaseColor.BLACK);
+//                Font font2 = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, BaseColor.BLACK);
+//                Font font3 = FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK);
+                Font font1 = new Font(bf, 16);
+                Font font2 = new Font(bf, 10);
+                Font font3 = new Font(bf, 10);
 
                 Paragraph p = new Paragraph("PRIME SNEAKER STORE", font1);
                 p.setAlignment(Element.ALIGN_CENTER);
@@ -1570,23 +1607,23 @@ public class OrderForm extends javax.swing.JPanel {
                 p2.setAlignment(Element.ALIGN_CENTER);
                 Paragraph p3 = new Paragraph("Fanpage: Prime Sneaker", font2);
                 p3.setAlignment(Element.ALIGN_CENTER);
-                Paragraph p4 = new Paragraph("Lien he: 0987654321", font2);
+                Paragraph p4 = new Paragraph("Liên hệ: 0987654321", font2);
                 p4.setAlignment(Element.ALIGN_CENTER);
                 LineSeparator ls = new LineSeparator();
                 ls.setLineWidth(2f);
                 ls.setPercentage(40);
                 ls.setAlignment(Element.ALIGN_CENTER);
-                Paragraph p5 = new Paragraph("HOA DON BAN HANG", font1);
+                Paragraph p5 = new Paragraph("HÓA ĐƠN BÁN HÀNG", font1);
                 p5.setAlignment(Element.ALIGN_CENTER);
-                Paragraph maHoaDon = new Paragraph("Ma hoa don: ", font3);
+                Paragraph maHoaDon = new Paragraph("Mã hóa đơn: ", font3);
                 maHoaDon.add(new Chunk(txtInvoiceId.getText(), font2));
-                Paragraph ngayBan = new Paragraph("Ngay ban: ", font3);
+                Paragraph ngayBan = new Paragraph("Ngày bán: ", font3);
                 ngayBan.add(new Chunk(txtStartDateCreated.getText(), font2));
-                Paragraph thuNgan = new Paragraph("Thu ngan: ", font3);
+                Paragraph thuNgan = new Paragraph("Thu ngân: ", font3);
                 thuNgan.add(new Chunk(txtStaffId.getText(), font2));
-                Paragraph khachHang = new Paragraph("Khach hang: ", font3);
+                Paragraph khachHang = new Paragraph("Khách hàng: ", font3);
                 khachHang.add(new Chunk(txtNameCustomer.getText(), font2));
-                Paragraph sdt = new Paragraph("Dien thoai: ", font3);
+                Paragraph sdt = new Paragraph("Điện thoại: ", font3);
                 sdt.add(new Chunk(txtPhoneNumber.getText(), font2));
 
                 document.add(p);
@@ -1608,13 +1645,13 @@ public class OrderForm extends javax.swing.JPanel {
 
                 PdfPTable table = new PdfPTable(threeColWidth);
                 PdfPCell cell1 = new PdfPCell();
-                cell1.setPhrase(new Phrase("Ten san pham", font3));
+                cell1.setPhrase(new Phrase("Tên sản phẩm", font3));
                 table.addCell(cell1);
                 PdfPCell cell2 = new PdfPCell();
-                cell2.setPhrase(new Phrase("So luong", font3));
+                cell2.setPhrase(new Phrase("Số lượng", font3));
                 table.addCell(cell2);
                 PdfPCell cell3 = new PdfPCell();
-                cell3.setPhrase(new Phrase("Gia", font3));
+                cell3.setPhrase(new Phrase("Giá", font3));
                 table.addCell(cell3);
                 for (int i = 0; i < tblCart.getRowCount(); i++) {
                     String nameTable = (String) tblCart.getValueAt(i, 3);
@@ -1624,16 +1661,16 @@ public class OrderForm extends javax.swing.JPanel {
                     String price = String.valueOf(tblCart.getValueAt(i, 5));
                     table.addCell(new PdfPCell(new Paragraph(nameTable + " - " + brand + " - " + size, font2)));
                     table.addCell(new PdfPCell(new Paragraph(quantityTable, font2)));
-                    table.addCell(new PdfPCell(new Paragraph(price + " VND", font2)));
+                    table.addCell(new PdfPCell(new Paragraph(price + " VNĐ", font2)));
                 }
                 document.add(table);
                 document.add(Chunk.NEWLINE);
-                Paragraph tongCong = new Paragraph("Tong cong:          ", font3);
-                tongCong.add(new Chunk(txtOrderCost.getText() + " VND", font1));
-                Paragraph chietKhau = new Paragraph("Chiet khau:          ", font3);
-                chietKhau.add(new Chunk(txtDiscoutCost.getText() + " VND", font2));
-                Paragraph tienThanhToan = new Paragraph("Tien phai thanh toan:          ", font3);
-                tienThanhToan.add(new Chunk(lbnTotalCost.getText() + " VND", font1));
+                Paragraph tongCong = new Paragraph("Tổng cộng:                            ", font3);
+                tongCong.add(new Chunk(txtOrderCost.getText() + " VNĐ", font2));
+                Paragraph chietKhau = new Paragraph("Chiết khấu:                            ", font3);
+                chietKhau.add(new Chunk(txtDiscoutCost.getText() + " VNĐ", font2));
+                Paragraph tienThanhToan = new Paragraph("Tiền phải thanh toán:          ", font3);
+                tienThanhToan.add(new Chunk(lbnTotalCost.getText() + " VNĐ", font1));
                 document.add(tongCong);
                 document.add(chietKhau);
                 document.add(tienThanhToan);
@@ -1641,7 +1678,7 @@ public class OrderForm extends javax.swing.JPanel {
                 document.add(Chunk.NEWLINE);
                 document.add(Chunk.NEWLINE);
                 document.add(ls);
-                Paragraph camOn = new Paragraph("CAM ON QUY KHACH DA LUA CHON\nPRIME SNEAKER", font2);
+                Paragraph camOn = new Paragraph("CẢM ƠN QUÝ KHÁCH ĐÃ LỰA CHỌN\nPRIME SNEAKER", font2);
                 camOn.setAlignment(Element.ALIGN_CENTER);
                 document.add(camOn);
                 document.close();
@@ -1696,6 +1733,8 @@ public class OrderForm extends javax.swing.JPanel {
             Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
             Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(OrderForm.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_btnPayActionPerformed
@@ -1736,8 +1775,8 @@ public class OrderForm extends javax.swing.JPanel {
             if (txtMoneyCash.getText().trim().isEmpty()) {
                 txtChange.setText("0");
             } else {
-                totalCost = Long.parseLong(lbnTotalCost.getText());
-                txtChange.setText((cash - totalCost) + "");
+                totalCost = Long.parseLong(lbnTotalCost.getText().replace(".", ""));
+                txtChange.setText(formatVND((cash - totalCost)));
             }
         }
 

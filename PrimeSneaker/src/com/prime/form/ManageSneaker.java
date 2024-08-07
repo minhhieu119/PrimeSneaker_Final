@@ -539,12 +539,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         jLabel23 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblProductDetail = new javax.swing.JTable();
-        btnFirst = new javax.swing.JButton();
-        btnLast = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        btnPre = new javax.swing.JButton();
-        btnNext = new javax.swing.JButton();
         sliderPrice = new javax.swing.JSlider();
         txtSearchProdDetail = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -1282,32 +1277,7 @@ public class ManageSneaker extends javax.swing.JPanel {
         });
         jScrollPane4.setViewportView(tblProductDetail);
 
-        btnFirst.setBackground(new java.awt.Color(39, 80, 150));
-        btnFirst.setForeground(new java.awt.Color(255, 255, 255));
-        btnFirst.setText("<<");
-        btnFirst.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFirstActionPerformed(evt);
-            }
-        });
-
-        btnLast.setBackground(new java.awt.Color(39, 80, 150));
-        btnLast.setForeground(new java.awt.Color(255, 255, 255));
-        btnLast.setText(">>");
-        btnLast.setAlignmentY(0.0F);
-
         jLabel2.setText("Tìm theo giá:");
-
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("Page");
-
-        btnPre.setBackground(new java.awt.Color(39, 80, 150));
-        btnPre.setForeground(new java.awt.Color(255, 255, 255));
-        btnPre.setText("<");
-
-        btnNext.setBackground(new java.awt.Color(39, 80, 150));
-        btnNext.setForeground(new java.awt.Color(255, 255, 255));
-        btnNext.setText(">");
 
         sliderPrice.setBackground(new java.awt.Color(39, 80, 150));
         sliderPrice.setMaximum(4000000);
@@ -1365,22 +1335,7 @@ public class ManageSneaker extends javax.swing.JPanel {
                         .addGap(0, 71, Short.MAX_VALUE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGap(331, 331, 331)
-                .addComponent(btnFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLast, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jPanel15Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnFirst, btnLast, btnNext, btnPre});
-
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
@@ -1401,15 +1356,8 @@ public class ManageSneaker extends javax.swing.JPanel {
                                 .addComponent(jLabel1))
                             .addComponent(lbnPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(12, 12, 12)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLast)
-                    .addComponent(btnPre)
-                    .addComponent(btnNext)
-                    .addComponent(jLabel13)
-                    .addComponent(btnFirst))
-                .addGap(25, 25, 25))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel17.setBackground(new java.awt.Color(185, 213, 246));
@@ -1647,10 +1595,6 @@ public class ManageSneaker extends javax.swing.JPanel {
             setForeground(new Color(53, 153, 153));
         }
     }//GEN-LAST:event_txtSearchProdDetailFocusLost
-
-    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFirstActionPerformed
 
     private void btnOnSellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOnSellActionPerformed
         if (index == -1) {
@@ -1956,11 +1900,7 @@ public class ManageSneaker extends javax.swing.JPanel {
     private javax.swing.JButton btnDownloadQR2;
     private javax.swing.JButton btnEditProduct;
     private javax.swing.JButton btnExportToExcel2;
-    private javax.swing.JButton btnFirst;
-    private javax.swing.JButton btnLast;
-    private javax.swing.JButton btnNext;
     private javax.swing.JButton btnOnSell;
-    private javax.swing.JButton btnPre;
     private javax.swing.JButton btnProductAdd;
     private javax.swing.JButton btnProductClear;
     private javax.swing.JButton btnRefresh2;
@@ -1977,7 +1917,6 @@ public class ManageSneaker extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cboSize;
     private javax.swing.JComboBox<String> cboSole;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;

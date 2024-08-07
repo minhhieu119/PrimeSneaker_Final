@@ -44,8 +44,10 @@ public class Statistic extends javax.swing.JPanel {
 
     public Statistic() throws SQLException {
         initComponents();
-        fillToWeekTable(ss.getStatisticOneWeek());
         setOpaque(false);
+        jdcStart.setDateFormatString("dd/MM/yyyy");
+        jdcEnd.setDateFormatString("dd/MM/yyyy");
+        fillToWeekTable(ss.getStatisticOneWeek());
         initData();
         showChart(pnlChart);
         disableOption();
@@ -442,7 +444,7 @@ public class Statistic extends javax.swing.JPanel {
 
             },
             new String [] {
-                "STT", "Thời gian", "Số lượng", "Doanh thu"
+                "STT", "Thời gian", "Số lượng sản phẩm", "Doanh thu"
             }
         ) {
             boolean[] canEdit = new boolean [] {

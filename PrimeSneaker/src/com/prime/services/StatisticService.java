@@ -153,7 +153,7 @@ public class StatisticService {
         List<Statistic> list = new ArrayList<>();
         sql = """
               SELECT MONTH(o.updated_at) AS month,
-                  SUM(o.total_cost) AS total_cost, 
+                  SUM(distinct o.total_cost) AS total_cost, 
                   SUM(od.quantity) AS quantity
               FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
               WHERE YEAR(o.updated_at) = ? and o.[status] like N'Đã thanh toán'
@@ -186,7 +186,7 @@ public class StatisticService {
     public List<Statistic> getStatisticMonth(String year, String month) throws SQLException {
         List<Statistic> list = new ArrayList<>();
         sql = """
-              SELECT DAY(o.updated_at) AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+              SELECT DAY(o.updated_at) AS day, SUM( distinct o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
               FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
               WHERE YEAR(o.updated_at) = ? AND MONTH(o.updated_at) = ? and o.[status] like N'Đã thanh toán'
               GROUP BY DAY(o.updated_at)
@@ -219,7 +219,7 @@ public class StatisticService {
     public List<Statistic> getStatisticDay(String startDate, String endDate) throws SQLException {
         List<Statistic> list = new ArrayList<>();
         sql = """
-              SELECT o.updated_at AS day, SUM(o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
+              SELECT o.updated_at AS day, SUM(distinct o.total_cost) AS total_cost, SUM(od.quantity) AS quantity
               FROM [Order] o JOIN OrderDetail od ON o.order_id = od.order_id
               WHERE o.updated_at BETWEEN ? AND ?  and o.[status] like N'Đã thanh toán'
               GROUP BY o.updated_at

@@ -307,6 +307,7 @@ public class AddVoucher extends javax.swing.JFrame {
         jLabel12.setText("Số lượng");
 
         spfQuantity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
+        spfQuantity.setMinimum(0);
 
         jLabel18.setText("Đơn tối thiểu");
 

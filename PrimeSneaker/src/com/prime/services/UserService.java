@@ -60,6 +60,42 @@ public class UserService {
         return listUser;
     }
 
+    public ArrayList<ModelUser> getAllUsersPaging(int pageIndex, int pageSize) throws SQLException {
+        ArrayList<ModelUser> listUser = new ArrayList<>();
+        String query = "exec SP_Users_Paging ?,?";
+        try {
+            connect = ConnectionJDBC.getConnection();
+            ps = connect.prepareStatement(query);
+            ps.setInt(1, pageIndex);
+            ps.setInt(2, pageSize);
+            result = ps.executeQuery();
+            while (result.next()) {
+                ModelUser user = new ModelUser();
+                user.setUserCode(result.getString("user_code"));
+                user.setRoleId(result.getInt("role_id"));
+//                user.setUserQR(result.getString("user_code"));
+                user.setStaffName(result.getString("full_name"));
+                user.setGender(result.getBoolean("gender"));
+                user.setDob(result.getDate("date_of_birth"));
+                user.setPhone(result.getString("phone_number"));
+                user.setAccountName(result.getString("account_name"));
+                user.setAddress(result.getString("address"));
+                user.setEmail(result.getString("email"));
+                user.setIdCardNumber(result.getString("id_card_number"));
+                user.setStatus(result.getString("status"));
+                user.setPsw(result.getString("password"));
+                listUser.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            result.close();
+            ps.close();
+            connect.close();
+        }
+        return listUser;
+    }
+
     public boolean addUser(ModelUser user) throws SQLException {
         Integer row = null;
         String query = "insert into [User](user_code,role_id, full_name, gender, date_of_birth, phone_number, address, email, id_card_number, account_name, password, status)\n"
@@ -211,7 +247,7 @@ public class UserService {
             ps.setString(5, status);
             ps.setString(6, status);
             result = ps.executeQuery();
-            while (result.next()) {                
+            while (result.next()) {
                 ModelUser user = new ModelUser();
                 user.setUserCode(result.getString("user_code"));
                 user.setRoleId(result.getInt("role_id"));
@@ -229,7 +265,7 @@ public class UserService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             result.close();
             ps.close();
             connect.close();

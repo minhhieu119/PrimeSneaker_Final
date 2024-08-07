@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,15 +24,16 @@ public class BillService {
     ResultSet rs = null;
     String sql = null;
 
-    public ArrayList<Bill> getAllBill() {
+    public ArrayList<Bill> getAllBill() throws SQLException {
         ArrayList<Bill> listOrder = new ArrayList<>();
         String sql = """
                      SELECT distinct dbo.[Order].order_id,
+                        voucher_id,
                         dbo.[User].user_code,
                         dbo.Customer.full_name,
                         dbo.[Order].payment_method,
                         dbo.[Order].total_cost,
-                        dbo.[Order].created_at
+                        dbo.[Order].updated_at
                      FROM 
                         dbo.[Order] LEFT JOIN
                         dbo.[User] ON dbo.[Order].user_id = dbo.[User].user_id LEFT JOIN
@@ -47,14 +49,19 @@ public class BillService {
                 Bill bill = new Bill();
                 bill.setOrder_Id(rs.getInt("order_id"));
                 bill.setStaff_id(rs.getString("user_code"));
+                bill.setVoucher_id(rs.getInt("voucher_id") + "");
                 bill.setNameCustomer(rs.getString("full_name"));
                 bill.setPaymentMethod(rs.getString("payment_method"));
                 bill.setTotalCost(rs.getBigDecimal("total_cost"));
-                bill.setCreatedDay(rs.getDate("created_at"));
+                bill.setCreatedDay(rs.getDate("updated_at"));
                 listOrder.add(bill);
             }
+            return listOrder;
         } catch (Exception e) {
             Logger.getLogger(BillService.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            rs.close();
+            pstm.close();
         }
         return listOrder;
     }
@@ -85,12 +92,12 @@ public class BillService {
 //                + " GROUP BY dbo.[Order].order_id, dbo.[User].user_code, dbo.Customer.full_name, dbo.[Order].payment_method, dbo.[Order].created_at"
 //                + " ORDER BY dbo.[Order].order_id ASC";
         String sql = "SELECT "
-                + " DISTINCT dbo.[Order].order_id, "
+                + " DISTINCT dbo.[Order].order_id, voucher_id, "
                 + " dbo.[User].user_code, "
                 + " dbo.Customer.full_name, "
                 + " dbo.[Order].payment_method, "
                 + " dbo.[Order].total_cost, "
-                + " dbo.[Order].created_at "
+                + " dbo.[Order].updated_at "
                 + " FROM dbo.[Order] "
                 + " LEFT JOIN "
                 + " dbo.Customer ON dbo.Customer.customer_id = dbo.[Order].customer_id "
@@ -100,7 +107,7 @@ public class BillService {
                 + " dbo.OrderDetail ON dbo.OrderDetail.order_id = dbo.[Order].order_id "
                 + " WHERE dbo.[Order].status LIKE N'Đã thanh toán' "
                 + " AND ( ? IS NULL OR dbo.[Order].payment_method LIKE ? ) "
-                + " AND dbo.[Order].created_at BETWEEN ? AND ? "
+                + " AND dbo.[Order].updated_at BETWEEN ? AND ? "
                 + " AND ( ? IS NULL OR dbo.[Order].order_id LIKE ? "
                 + " OR dbo.[User].user_code LIKE ? "
                 + " OR dbo.Customer.full_name LIKE ? ) "
@@ -120,10 +127,11 @@ public class BillService {
                 Bill bill = new Bill();
                 bill.setOrder_Id(rs.getInt("order_id"));
                 bill.setStaff_id(rs.getString("user_code"));
+                bill.setVoucher_id(rs.getInt("voucher_id") + "");
                 bill.setNameCustomer(rs.getString("full_name"));
                 bill.setPaymentMethod(rs.getString("payment_method"));
                 bill.setTotalCost(rs.getBigDecimal("total_cost"));
-                bill.setCreatedDay(rs.getDate("created_at"));
+                bill.setCreatedDay(rs.getDate("updated_at"));
                 listBillSearch.add(bill);
             }
             return listBillSearch;

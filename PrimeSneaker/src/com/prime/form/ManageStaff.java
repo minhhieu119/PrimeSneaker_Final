@@ -1,24 +1,18 @@
 package com.prime.form;
 
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamPanel;
 import com.prime.constant.Role;
 import com.prime.main_model.ModelUser;
 import com.prime.services.UserService;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -37,30 +31,40 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ManageStaff extends javax.swing.JPanel {
-    private WebcamPanel panel = null;
-    private Webcam webcam = null;
+
+//    private WebcamPanel panel = null;
+//    private Webcam webcam = null;
     DefaultTableModel model = new DefaultTableModel();
     UserService svc = new UserService();
     int index;
-
+    int pageIndex;
+    
     public ManageStaff() throws SQLException {
         initComponents();
         setOpaque(false);
+        jdcDOB.setDateFormatString("dd/MM/yyyy");
         model = (DefaultTableModel) tblStaff.getModel();
         ArrayList<ModelUser> listUser = svc.getAllUsers();
-        fillToTable(listUser);
-
-        tblStaff.getColumnModel().getColumn(6).setMinWidth(0);
-        tblStaff.getColumnModel().getColumn(6).setMaxWidth(0);
-        tblStaff.getColumnModel().getColumn(6).setWidth(0);
-
+        lblPage.setText("1");
+        btnPrev.setEnabled(false);
+        pageIndex = Integer.valueOf(lblPage.getText());
+        ArrayList<ModelUser> userPagingList = svc.getAllUsersPaging(pageIndex, 7);
+        
+//        fillToTable(listUser);
+        fillToTable(userPagingList);
         if (tblStaff.getRowCount() > 0) {
             index = 0;
             showDetail(listUser);
         }
+        
+        
+        tblStaff.getColumnModel().getColumn(6).setMinWidth(0);
+        tblStaff.getColumnModel().getColumn(6).setMaxWidth(0);
+        tblStaff.getColumnModel().getColumn(6).setWidth(0);
+
+        
         addPlaceHolder(txtSearchStaff, "Mã NV - Tên NV - SĐT - CCCD - Địa chỉ");
 
-        index = tblStaff.getSelectedRow();
         if (index >= 0) {
             txtStaffId.setEditable(false);
             txtStaffId.setBackground(Color.lightGray);
@@ -105,12 +109,12 @@ public class ManageStaff extends javax.swing.JPanel {
         txtIDCardNumber = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        txtDob = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtAddress = new javax.swing.JTextArea();
         cboStatusForm = new javax.swing.JComboBox<>();
         chkShowPsw = new javax.swing.JCheckBox();
         txtPsw = new javax.swing.JPasswordField();
+        jdcDOB = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         txtSearchStaff = new javax.swing.JTextField();
@@ -123,6 +127,9 @@ public class ManageStaff extends javax.swing.JPanel {
         cboRole = new javax.swing.JComboBox<>();
         cboStatus = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
+        btnPrev = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        lblPage = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -260,8 +267,6 @@ public class ManageStaff extends javax.swing.JPanel {
 
         jLabel23.setText("Trạng thái");
 
-        txtDob.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
-
         txtAddress.setColumns(20);
         txtAddress.setRows(5);
         txtAddress.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
@@ -279,6 +284,8 @@ public class ManageStaff extends javax.swing.JPanel {
         });
 
         txtPsw.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(39, 80, 150)));
+
+        jdcDOB.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -333,20 +340,21 @@ public class ManageStaff extends javax.swing.JPanel {
                                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(21, 21, 21)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtDob)
-                                        .addComponent(cboStatusForm, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(cboStatusForm, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(21, 21, 21)
                                 .addComponent(txtIDCardNumber))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jdcDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(19, 19, 19))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane3, txtDob, txtEmail, txtIDCardNumber, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane3, txtEmail, txtIDCardNumber, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,7 +385,7 @@ public class ManageStaff extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(chkShowPsw)
@@ -402,9 +410,9 @@ public class ManageStaff extends javax.swing.JPanel {
                             .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtIDCardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jdcDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cboStatusForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -415,7 +423,7 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboStatusForm, txtDob, txtEmail, txtIDCardNumber, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboStatusForm, txtEmail, txtIDCardNumber, txtStaffId, txtStaffName, txtStaffPhone, txtUserAccount});
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -572,6 +580,22 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        btnPrev.setText("<<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        btnNext.setText(">>");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        lblPage.setText("Page");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -581,6 +605,14 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(438, 438, 438)
+                .addComponent(btnPrev)
+                .addGap(8, 8, 8)
+                .addComponent(lblPage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnNext)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -589,7 +621,12 @@ public class ManageStaff extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrev)
+                    .addComponent(btnNext)
+                    .addComponent(lblPage))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -604,18 +641,50 @@ public class ManageStaff extends javax.swing.JPanel {
 
     private void btnAddNewStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewStaffActionPerformed
         // TODO add your handling code here:
-        checkNull();
-
-        if (!checkDate()) {
-            showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
-            txtDob.requestFocus();
+//        checkNull();
+        if (txtStaffId.getText().trim().equals("")) {
+            showMess("Mã Nhân viên không được để trống");
+            txtStaffId.requestFocus();
             return;
         }
+        if (txtStaffName.getText().trim().equals("")) {
+            showMess("Tên Nhân viên không được để trống");
+            txtStaffName.requestFocus();
+            return;
+        }
+        if (txtStaffPhone.getText().trim().equals("")) {
+            showMess("Số điện thoại không được để trống");
+            txtStaffPhone.requestFocus();
+            return;
+        }
+        
+        if (txtUserAccount.getText().trim().equals("")) {
+            showMess("Tên tài khoản không được để trống");
+            txtUserAccount.requestFocus();
+            return;
+        }
+        if (txtPsw.getText().trim().equals("")) {
+            showMess("Mật khẩu không được để trống");
+            txtPsw.requestFocus();
+            return;
+        }
+        if (txtIDCardNumber.getText().trim().equals("")) {
+            showMess("CCCD không được để trống");
+            txtIDCardNumber.requestFocus();
+            return;
+        }
+        if (jdcDOB.getDate() == null) {
+            showMess("Cần nhập ngày sinh và nhập đúng định dạng dd/MM/yyyy");
+            jdcDOB.requestFocus();
+            return;
+        }
+        
+
         if (!checkAge()) {
-            showMess("Độ tuổi không cho phép");
+            showMess("Độ tuổi phải từ 18 trở lên");
             return;
         }
-
+        
         if (!txtEmail.getText().trim().equals("")) {
             if (!checkEmail()) {
                 showMess("Email không đúng định dạng");
@@ -680,18 +749,62 @@ public class ManageStaff extends javax.swing.JPanel {
             return;
         }
 
-        checkNull();
+//        checkNull();
         //check định dạng
 
-        if (!checkDate()) {
-            showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
-            txtDob.requestFocus();
+//        if (!checkDate()) {
+//            showMess("Ngày sinh không đúng định dạng yyyy-MM-dd");
+//            jdcDOB.requestFocus();
+//            return;
+//        }
+//        if (!checkAge()) {
+//            showMess("Độ tuổi không cho phép");
+//            return;
+//        }
+
+        if (txtStaffId.getText().trim().equals("")) {
+            showMess("Mã Nhân viên không được để trống");
+            txtStaffId.requestFocus();
             return;
         }
+        if (txtStaffName.getText().trim().equals("")) {
+            showMess("Tên Nhân viên không được để trống");
+            txtStaffName.requestFocus();
+            return;
+        }
+        if (txtStaffPhone.getText().trim().equals("")) {
+            showMess("Số điện thoại không được để trống");
+            txtStaffPhone.requestFocus();
+            return;
+        }
+        
+        if (txtUserAccount.getText().trim().equals("")) {
+            showMess("Tên tài khoản không được để trống");
+            txtUserAccount.requestFocus();
+            return;
+        }
+        if (txtPsw.getText().trim().equals("")) {
+            showMess("Mật khẩu không được để trống");
+            txtPsw.requestFocus();
+            return;
+        }
+        if (txtIDCardNumber.getText().trim().equals("")) {
+            showMess("CCCD không được để trống");
+            txtIDCardNumber.requestFocus();
+            return;
+        }
+        if (jdcDOB.getDate() == null) {
+            showMess("Cần nhập ngày sinh và nhập đúng định dạng dd/MM/yyyy");
+            jdcDOB.requestFocus();
+            return;
+        }
+        
+
         if (!checkAge()) {
-            showMess("Độ tuổi không cho phép");
+            showMess("Độ tuổi phải từ 18 trở lên");
             return;
         }
+        
         if (!txtEmail.getText().trim().equals("")) {
             if (!checkEmail()) {
                 showMess("Email không đúng định dạng");
@@ -706,7 +819,7 @@ public class ManageStaff extends javax.swing.JPanel {
         }
         if (!checkIDNumber()) {
             showMess("Số CCCD gồm 12 chữ số");
-            txtIDCardNumber.requestFocus();
+            txtStaffPhone.requestFocus();
             return;
         }
 
@@ -890,11 +1003,58 @@ public class ManageStaff extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cboStatusActionPerformed
 
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        pageIndex = Integer.valueOf(lblPage.getText()) + 1;
+        try {
+            fillToTable(svc.getAllUsersPaging(pageIndex, 7));
+            lblPage.setText(pageIndex+"");
+            if (pageIndex > 1) {
+                btnPrev.setEnabled(true);
+            }else{
+                btnPrev.setEnabled(false);
+            }
+            
+            if (tblStaff.getRowCount() < 7) {
+                btnNext.setEnabled(false);
+            }else{
+                btnNext.setEnabled(true);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        pageIndex = Integer.valueOf(lblPage.getText()) - 1;
+        try {
+            fillToTable(svc.getAllUsersPaging(pageIndex, 7));
+            lblPage.setText(pageIndex+"");
+            if (pageIndex > 1) {
+                btnPrev.setEnabled(true);
+            }else{
+                btnPrev.setEnabled(false);
+            }
+            
+            if (tblStaff.getRowCount() < 7) {
+                btnNext.setEnabled(false);
+            }else{
+                btnNext.setEnabled(true);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPrevActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNewStaff;
     private javax.swing.JButton btnBlockStaff;
     private javax.swing.JButton btnClearStaff;
     private javax.swing.JButton btnExportExcel;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JButton btnUpdateStaff;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
@@ -925,13 +1085,14 @@ public class ManageStaff extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private com.toedter.calendar.JDateChooser jdcDOB;
+    private javax.swing.JLabel lblPage;
     private javax.swing.JRadioButton rdoAdmin;
     private javax.swing.JRadioButton rdoFemale;
     private javax.swing.JRadioButton rdoMale;
     private javax.swing.JRadioButton rdoStaff;
     private javax.swing.JTable tblStaff;
     private javax.swing.JTextArea txtAddress;
-    private javax.swing.JTextField txtDob;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtIDCardNumber;
     private javax.swing.JPasswordField txtPsw;
@@ -963,6 +1124,7 @@ public class ManageStaff extends javax.swing.JPanel {
             });
         }
     }
+    
 
     private void showDetail(ArrayList<ModelUser> list) throws SQLException {
         ModelUser user = list.get(index);
@@ -981,7 +1143,7 @@ public class ManageStaff extends javax.swing.JPanel {
         txtAddress.setText(user.getAddress());
         txtEmail.setText(user.getEmail());
         txtIDCardNumber.setText(user.getIdCardNumber());
-        txtDob.setText(user.getDob() + "");
+        jdcDOB.setDate(user.getDob());
         cboStatusForm.setSelectedItem(user.getStatus());
 
 //        System.out.println(user);
@@ -1029,9 +1191,12 @@ public class ManageStaff extends javax.swing.JPanel {
         txtAddress.setText("");
         txtEmail.setText("");
         txtIDCardNumber.setText("");
-        txtDob.setText("");
+        jdcDOB.setDate(null);
         txtStaffPhone.setText("");
         tblStaff.clearSelection();
+        rdoStaff.setSelected(true);
+        cboStatusForm.setSelectedIndex(0);
+        rdoMale.setSelected(true);
     }
 
     private void checkNull() {
@@ -1059,7 +1224,7 @@ public class ManageStaff extends javax.swing.JPanel {
             showMess("Mật khẩu không được để trống");
             txtPsw.requestFocus();
             return;
-        }       
+        }
     }
 
     private void showMess(String message) {
@@ -1071,23 +1236,18 @@ public class ManageStaff extends javax.swing.JPanel {
         return validateString(txtEmail.getText(), emailPattern);
     }
 
-    private boolean checkDate() {
-        String datePattern = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
-        return validateString(txtDob.getText(), datePattern);
-    }
-
+//    private boolean checkDate() {
+//        String datePattern = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (0?[1-9]|[1-2][0-9]|3[0-1]), \\d{2}$";
+//        return validateString(jdcDOB.getDate().toString(), datePattern);
+//    }
+    
     private boolean checkAge() {
-        if (checkDate()) {
-            String text = txtDob.getText().trim();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate date = LocalDate.parse(text, dtf);
-            if (LocalDate.now().getYear() - date.getYear() < 18) {
+            Date date = jdcDOB.getDate();
+            if (LocalDate.now().getYear() - (date.getYear()+1900) < 18) {
                 return false;
             }
-        }
         return true;
     }
-
     private boolean checkPhone() {
         String phonePattern = "^(\\+84|0)(3[2-9]|5[689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$";
         return validateString(txtStaffPhone.getText(), phonePattern);
@@ -1116,10 +1276,10 @@ public class ManageStaff extends javax.swing.JPanel {
         user.setAddress(txtAddress.getText());
         user.setEmail(txtEmail.getText());
         user.setIdCardNumber(txtIDCardNumber.getText());
-        String string = txtDob.getText();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse(string);
-        user.setDob(date);
+//        String string = txtDob.getText();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = sdf.parse(string);
+        user.setDob(jdcDOB.getDate());
         user.setStatus((String) cboStatusForm.getSelectedItem());
         return user;
     }
@@ -1154,7 +1314,6 @@ public class ManageStaff extends javax.swing.JPanel {
         return false;
     }
 
-
     private void showDetailSearch() {
         index = tblStaff.getSelectedRow();
         txtStaffId.setText(tblStaff.getValueAt(index, 1).toString());
@@ -1169,7 +1328,7 @@ public class ManageStaff extends javax.swing.JPanel {
         txtAddress.setText(tblStaff.getValueAt(index, 8).toString());
         txtEmail.setText(tblStaff.getValueAt(index, 9).toString());
         txtIDCardNumber.setText(tblStaff.getValueAt(index, 10).toString());
-        txtDob.setText(tblStaff.getValueAt(index, 11).toString());
+        jdcDOB.setDate((Date) tblStaff.getValueAt(index, 11));
         cboStatusForm.setSelectedItem(tblStaff.getValueAt(index, 12).toString());
         tblStaff.setRowSelectionInterval(index, index);
     }

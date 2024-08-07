@@ -31,10 +31,10 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         txtUsername.setBackground(new Color(0, 0, 0, 1));
         txtPassword.setBackground(new Color(0, 0, 0, 1));
-        
+
         txtUsername.setText("hieu119");
         txtPassword.setText("hieu1997");
-        
+
     }
 
     public boolean checkAccount() {
@@ -199,19 +199,18 @@ public class Login extends javax.swing.JFrame {
 
             if (checkAccount()) {
                 try {
-                    Admin.user = ls.getOneUser(account_name);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-//                System.out.println(Admin.user.getAccountName() + " - " + Admin.user.getPsw());
-                this.dispose();
-                try {
+//                    System.out.println(ls.getOneUser(account_name));
+                    if (ls.getOneUser(account_name) != null) {
+                        Admin.user = ls.getOneUser(account_name);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
+                        return;
+                    }
+                    this.dispose();
                     new Main().setVisible(true);
-//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
                 } catch (SQLException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
             } else {
                 JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
             }
@@ -230,20 +229,23 @@ public class Login extends javax.swing.JFrame {
         }
 
         if (checkAccount()) {
-            try {
-                Admin.user = ls.getOneUser(account_name);
-//                System.out.println(Admin.user.getAccountName() + " - " + Admin.user.getPsw());
-                this.dispose();
-                new Main().setVisible(true);
-//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo", 1);
-            } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                
+                try {
+//                    System.out.println(ls.getOneUser(account_name));
+                    if (ls.getOneUser(account_name) != null) {
+                        Admin.user = ls.getOneUser(account_name);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
+                        return;
+                    }
+                    this.dispose();
+                    new Main().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", 0);
             }
-      
+
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     private void showMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showMouseClicked

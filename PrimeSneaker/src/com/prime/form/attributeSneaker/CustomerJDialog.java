@@ -5,6 +5,7 @@
 package com.prime.form.attributeSneaker;
 
 import com.prime.main_model.ModelCustomer;
+import com.prime.model.Admin;
 import com.prime.model.Customer;
 import com.prime.services.OrderService;
 import java.util.regex.Matcher;
@@ -243,7 +244,7 @@ public class CustomerJDialog extends javax.swing.JDialog {
         System.out.println(mc);
 
         try {
-            if (os.addCustomer(mc) > 0) {
+            if (os.addCustomer(mc, Admin.user.getUser_id()) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm thành công", "Thông báo", 1);
                 Customer c = new Customer();
                 c.setCustomerName(txtCustomerName.getText());

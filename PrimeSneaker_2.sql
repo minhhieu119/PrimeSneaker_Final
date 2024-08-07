@@ -89,7 +89,6 @@ create table Voucher
 	min_order_value money check(min_order_value >= 0),
 	[start_date] date,
 	end_date date,
-	[status] nvarchar(50),
 	created_at date default getdate(),
 	updated_at date default getdate(),
 	created_by int,
@@ -319,17 +318,17 @@ values (N'Nguyễn Văn Hiếu', 1, '1990-05-10', N'123 Trịnh Văn Bô, Nam T�
 (N'Nguyễn Văn Phương', 1, '1996-05-22', N'20 Trần Hưng Đạo, Hà Giang', '0918273645'),
 (N'Bùi Huy Hoàng', 1, '2003-02-26', N'30 Lê Lai, Thái Bình', '0354172896')
 
-insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, max_discount,min_order_value, [start_date], end_date, [status])
-values ('VOUCHER1', N'Khuyến mãi hè', 0, 15, 20, 30, 500000, '2024-02-01', '2024-12-30', N'Đang áp dụng'),
-('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 1, 20000, 20, 20000, 500000, '2024-05-01', '2024-11-30', N'Đang áp dụng'),
-('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', 0, 20, 20, 20, 300000, '2024-05-01', '2024-10-31', N'Đang áp dụng'),
-('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 1, 30000, 20, 30000, 600000, '2024-04-01', '2024-09-30', N'Đang áp dụng'),
-('VOUCHER5', N'Khuyến mãi Black Friday', 0, 15, 20, 30, 1000000, '2024-06-01', '2024-08-31', N'Đang áp dụng'),
-('VOUCHER6', N'Khuyến mãi đầu Xuân', 0, 25, 20, 40, 900000, '2024-06-01', '2024-07-31', N'Đang áp dụng'),
-('VOUCHER7', N'Khuyến mãi sinh nhật shop lần 1', 1, 40000, 20, 40000, 400000, '2024-07-01', '2024-10-30', N'Đang áp dụng'),
-('VOUCHER8', N'Khuyến mãi sinh nhật shop lần 2', 1, 15000, 20, 15000, 500000, '2024-08-01', '2024-09-21', N'Sắp áp dụng'),
-('VOUCHER9', N'Khuyến mãi valentine', 0, 10, 20, 20, 300000, '2024-05-01', '2024-10-30', N'Đang áp dụng'),
-('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0, 35, 20, 50, 800000, '2024-01-01', '2024-03-31',N'Hết hạn')
+insert into Voucher (voucher_code, voucher_name, voucher_type, voucher_value, quantity, max_discount,min_order_value, [start_date], end_date)
+values ('VOUCHER1', N'Khuyến mãi hè', 0, 15, 20, 30, 500000, '2024-02-01', '2024-12-30'),
+('VOUCHER2', N'Khuyến mãi 30/4 - 1/5', 1, 20000, 20, 20000, 500000, '2024-05-01', '2024-11-30'),
+('VOUCHER3', N'Khuyến mãi ngày Phụ nữ 20/10', 0, 20, 20, 20, 300000, '2024-05-01', '2024-10-31'),
+('VOUCHER4', N'Khuyến mãi Quốc khánh 2/9', 1, 30000, 20, 30000, 600000, '2024-04-01', '2024-09-30'),
+('VOUCHER5', N'Khuyến mãi Black Friday', 0, 15, 20, 30, 1000000, '2024-06-01', '2024-08-31'),
+('VOUCHER6', N'Khuyến mãi đầu Xuân', 0, 25, 20, 40, 900000, '2024-06-01', '2024-07-31'),
+('VOUCHER7', N'Khuyến mãi sinh nhật shop lần 1', 1, 40000, 20, 40000, 400000, '2024-07-01', '2024-10-30'),
+('VOUCHER8', N'Khuyến mãi sinh nhật shop lần 2', 1, 15000, 20, 15000, 500000, '2024-08-01', '2024-09-21'),
+('VOUCHER9', N'Khuyến mãi valentine', 0, 10, 20, 20, 300000, '2024-05-01', '2024-10-30'),
+('VOUCHER10', N'Khuyến mãi chăm sóc khách hàng', 0, 35, 20, 50, 800000, '2024-01-01', '2024-03-31')
 
 --Nhập dữ liệu bảng Sneaker
 insert into Sneaker(brand_id, category_id, sole_id, material_id, sneaker_name,[status], [description])
@@ -594,3 +593,28 @@ END
 GO
 
 
+CREATE PROCEDURE SP_Users_Paging
+@PageIndex int,
+@PageSize int
+AS
+BEGIN
+	DECLARE @StartIndex int = (@PageIndex-1)*@PageSize
+	SELECT user_code, role_id, full_name, gender, date_of_birth, phone_number, [address], email, id_card_number, account_name, [password], [status]
+		FROM [User]
+		ORDER BY [user_id]
+		OFFSET @StartIndex ROWS
+		FETCH NEXT @PageSize ROWS ONLY
+END
+
+
+CREATE PROCEDURE SP_Customer_Paging
+@PageIndex int,
+@PageSize int
+AS
+BEGIN
+	DECLARE @StartIndex int = (@PageIndex-1)*@PageSize
+	SELECT customer_id, full_name, gender, date_of_birth, [address], phone_number FROM Customer
+		ORDER BY customer_id
+		OFFSET @StartIndex ROWS
+		FETCH NEXT @PageSize ROWS ONLY
+END

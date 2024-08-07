@@ -237,6 +237,7 @@
             </LineBorder>
           </Border>
         </Property>
+        <Property name="minimum" type="int" value="0"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel18">

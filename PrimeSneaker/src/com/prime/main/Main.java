@@ -57,7 +57,11 @@ public class Main extends javax.swing.JFrame {
                     }
                 }
                 if (menuIndex == 1) {
-                    main.showForm(new ManageOrder());
+                    try {
+                        main.showForm(new ManageOrder());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 if (menuIndex == 2) {
                     if (Admin.isAdmin()) {

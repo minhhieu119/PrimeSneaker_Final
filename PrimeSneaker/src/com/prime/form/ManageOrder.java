@@ -34,6 +34,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import jdk.jfr.consumer.EventStream;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -46,9 +51,11 @@ public class ManageOrder extends javax.swing.JPanel {
     DefaultTableModel modelSneakerDetail = new DefaultTableModel();
     BillService bs = new BillService();
 
-    public ManageOrder() {
+    public ManageOrder() throws SQLException {
         initComponents();
         setOpaque(false);
+        jdcStart.setDateFormatString("dd/MM/yyyy");
+        jdcEnd.setDateFormatString("dd/MM/yyyy");
         model = (DefaultTableModel) tblManagerOder.getModel();
 
         loadDataToTableBill(bs.getAllBill());
@@ -61,7 +68,7 @@ public class ManageOrder extends javax.swing.JPanel {
         for (Bill bill : list) {
             i++;
             model.addRow(bill.toDataRow(i));
-//            System.out.println(bill.getTotalCost());
+//            System.out.println(bill);
         }
     }
 
@@ -130,14 +137,15 @@ public class ManageOrder extends javax.swing.JPanel {
         txtSearchBill = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         cboPaymentMethod = new javax.swing.JComboBox<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblManagerOder = new javax.swing.JTable();
         btnXuatExcel = new javax.swing.JButton();
         jdcStart = new com.toedter.calendar.JDateChooser();
         jdcEnd = new com.toedter.calendar.JDateChooser();
         jLabel5 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         btnInHoaDon = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblManagerOder = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblBillDetail = new javax.swing.JTable();
@@ -168,33 +176,6 @@ public class ManageOrder extends javax.swing.JPanel {
                 cboPaymentMethodActionPerformed(evt);
             }
         });
-
-        tblManagerOder.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "STT", "MÃ HÓA ĐƠN", "MÃ NHÂN VIÊN", "TÊN KHÁCH HÀNG", "HÌNH THỨC TT", "TỔNG TIỀN", "NGÀY TẠO"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblManagerOder.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tblManagerOder.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblManagerOderMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tblManagerOder);
 
         btnXuatExcel.setBackground(new java.awt.Color(39, 80, 150));
         btnXuatExcel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -234,6 +215,42 @@ public class ManageOrder extends javax.swing.JPanel {
             }
         });
 
+        btnReset.setBackground(new java.awt.Color(39, 80, 150));
+        btnReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/prime/icon2/reload.png"))); // NOI18N
+        btnReset.setBorder(null);
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
+
+        tblManagerOder.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "STT", "MÃ HÓA ĐƠN", "MÃ NHÂN VIÊN", "MÃ VOUCHER", "TÊN KHÁCH HÀNG", "HÌNH THỨC TT", "TỔNG TIỀN", "NGÀY TẠO"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblManagerOder.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tblManagerOder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblManagerOderMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblManagerOder);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -241,7 +258,6 @@ public class ManageOrder extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -263,10 +279,13 @@ public class ManageOrder extends javax.swing.JPanel {
                         .addGap(260, 260, 260))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnInHoaDon)
                         .addGap(18, 18, 18)
                         .addComponent(btnXuatExcel)))
                 .addContainerGap())
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInHoaDon, btnXuatExcel});
@@ -275,37 +294,35 @@ public class ManageOrder extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtSearchBill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5))
+                    .addComponent(jdcStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(txtSearchBill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))
-                            .addComponent(jdcStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(cboPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(19, 19, 19))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jdcEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(13, 13, 13))))
+                        .addGap(8, 8, 8)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(cboPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel20)
-                        .addGap(13, 13, 13)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdcEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(12, 12, 12)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnXuatExcel)
-                    .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnXuatExcel)
+                        .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jPanel4Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnInHoaDon, btnXuatExcel});
+        jPanel4Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnInHoaDon, btnReset, btnXuatExcel});
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách hóa đơn chi tiết", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 18))); // NOI18N
@@ -341,8 +358,8 @@ public class ManageOrder extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -358,7 +375,7 @@ public class ManageOrder extends javax.swing.JPanel {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 67, Short.MAX_VALUE))
+                .addGap(0, 147, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -396,53 +413,38 @@ public class ManageOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSearchBillKeyPressed
 
     private void btnXuatExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatExcelActionPerformed
-        FileOutputStream output = null;
-        BufferedOutputStream buffer = null;
-        XSSFWorkbook excelExporter = null;
+        try {
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.showSaveDialog(this);
+            File saveFile = jFileChooser.getSelectedFile();
+            if (saveFile != null) {
+                saveFile = new File(saveFile.toString() + ".xlsx");
+                Workbook wb = new XSSFWorkbook();
+                Sheet sheet = wb.createSheet("Account");
 
-        JFileChooser excelFileChooser = new JFileChooser("Desktop");
-        excelFileChooser.setDialogTitle("Save As");
-        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
-        excelFileChooser.setFileFilter(fnef);
-        int excelChooser = excelFileChooser.showSaveDialog(null);
-
-        if (excelChooser == JFileChooser.APPROVE_OPTION) {
-
-            try {
-                excelExporter = new XSSFWorkbook();
-                XSSFSheet sheet = excelExporter.createSheet("Sheet table");
-                for (int i = 0; i < model.getRowCount(); i++) {
-                    XSSFRow excelRow = sheet.createRow(i);
-                    for (int j = 0; j < model.getColumnCount() - 1; j++) {
-                        XSSFCell excelCell = excelRow.createCell(j);
-                        excelCell.setCellValue(model.getValueAt(i, j).toString());
-//                            System.out.println(model.getValueAt(i, j));
+                Row rowCol = sheet.createRow(0);
+                for (int i = 0; i < tblManagerOder.getColumnCount(); i++) {
+                    Cell cell = rowCol.createCell(i);
+                    cell.setCellValue(tblManagerOder.getColumnName(i));
+                }
+                for (int j = 0; j < tblManagerOder.getRowCount(); j++) {
+                    Row row = sheet.createRow(j + 1);
+                    for (int k = 0; k < tblManagerOder.getColumnCount(); k++) {
+                        Cell cell = row.createCell(k);
+                        if (tblManagerOder.getValueAt(j, k) != null) {
+                            cell.setCellValue(tblManagerOder.getValueAt(j, k).toString());
+                        }
                     }
                 }
-                output = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
-                buffer = new BufferedOutputStream(output);
-                excelExporter.write(buffer);
-                JOptionPane.showMessageDialog(this, "Xuất file thành công", "Thông báo", 1);
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                try {
-                    if (buffer != null) {
-                        buffer.close();
-                    }
-                    if (output != null) {
-                        output.close();
-                    }
-                    if (excelExporter != null) {
-                        excelExporter.close();
-                    }
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                wb.write(out);
+                wb.close();
+                out.close();
+                EventStream.openFile(saveFile.toPath());
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!!");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnXuatExcelActionPerformed
 
@@ -476,8 +478,17 @@ public class ManageOrder extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnInHoaDonActionPerformed
 
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        txtSearchBill.setText("");
+        cboPaymentMethod.setSelectedIndex(0);
+        jdcStart.setDate(null);
+        jdcEnd.setDate(null);
+        modelSneakerDetail.setRowCount(0);
+    }//GEN-LAST:event_btnResetActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInHoaDon;
+    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnXuatExcel;
     private javax.swing.JComboBox<String> cboPaymentMethod;
     private javax.swing.JLabel jLabel1;

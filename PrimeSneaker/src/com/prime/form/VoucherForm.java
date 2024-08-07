@@ -35,6 +35,10 @@ public class VoucherForm extends javax.swing.JPanel {
     public VoucherForm() {
         initComponents();
         setOpaque(false);
+        jdcStartDate.setDateFormatString("dd/MM/yyyy");
+        jdcEndDate.setDateFormatString("dd/MM/yyyy");
+        txtSearchStartDate.setDateFormatString("dd/MM/yyyy");
+        txtSearchEndDate.setDateFormatString("dd/MM/yyyy");
         model = (DefaultTableModel) tblVoucher.getModel();
         loadDataToTableVoucher(vrs.findAll());
 //        vrs.AutoUpdateStatus();x1x
@@ -78,7 +82,7 @@ public class VoucherForm extends javax.swing.JPanel {
                 voucherAq.getStartDate(),
                 voucherAq.getEndDate(),
                 voucherAq.getQuantity(),
-                voucherAq.getStatus()
+                voucherAq.getTrangThaiByDate()
             });
 //            System.out.println(voucherAq);
         }
@@ -107,7 +111,6 @@ public class VoucherForm extends javax.swing.JPanel {
         jdcStartDate.setDate(dateStart);
         jdcEndDate.setDate(dateEnd);
         spfQuantity.setValue(Integer.parseInt(tblVoucher.getValueAt(index, 9).toString()));
-        cboStatus.setSelectedItem(tblVoucher.getValueAt(index, 10));
     }
 
     private VoucherAq getForm() {
@@ -121,7 +124,6 @@ public class VoucherForm extends javax.swing.JPanel {
         voucher.setMinOrderValue(Long.parseLong(txtMinOder.getText()));
         voucher.setStartDate(jdcStartDate.getDate());
         voucher.setEndDate(jdcEndDate.getDate());
-        voucher.setStatus(cboStatus.getSelectedItem() + "");
 //        System.out.println(voucher.toString());
         return voucher;
 
@@ -342,15 +344,6 @@ public class VoucherForm extends javax.swing.JPanel {
         String startDate;
         String endDate;
         String key = txtSearchVoucher.getText().trim();
-        if (cboSearchStatus.getSelectedItem().equals("Tất cả")) {
-            status = null;
-        } else if (cboSearchStatus.getSelectedItem().equals("Sắp áp dụng")) {
-            status = "Sắp áp dụng";
-        } else if (cboSearchStatus.getSelectedItem().equals("Đang áp dụng")) {
-            status = "Đang áp dụng";
-        } else {
-            status = "Hết hạn";
-        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String str = "1900-01-01";
         String end = "2100-12-30";
@@ -376,7 +369,8 @@ public class VoucherForm extends javax.swing.JPanel {
 //        System.out.println(startDate);
 //        System.out.println(endDate);
         model.setRowCount(0);
-        loadDataToTableVoucher2(vrs.timKiem(key, status, startDate, endDate));
+        loadDataToTableVoucher2(vrs.timKiem(key, startDate, endDate));
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -397,6 +391,7 @@ public class VoucherForm extends javax.swing.JPanel {
         cboSearchStatus = new javax.swing.JComboBox<>();
         txtSearchVoucher = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
+        btnReset = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         btnUpdateVoucher = new javax.swing.JButton();
         btnAddVoucher = new javax.swing.JButton();
@@ -422,8 +417,6 @@ public class VoucherForm extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jdcEndDate = new com.toedter.calendar.JDateChooser();
-        jLabel1 = new javax.swing.JLabel();
-        cboStatus = new javax.swing.JComboBox<>();
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Quản lý voucher"));
@@ -527,28 +520,37 @@ public class VoucherForm extends javax.swing.JPanel {
 
         jLabel23.setText("Tìm kiếm");
 
+        btnReset.setBackground(new java.awt.Color(39, 80, 150));
+        btnReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/prime/icon2/reload.png"))); // NOI18N
+        btnReset.setBorder(null);
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSearchVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboSearchStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(134, 134, 134)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1039, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1039, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtSearchVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboSearchStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(134, 134, 134)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -563,9 +565,12 @@ public class VoucherForm extends javax.swing.JPanel {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel20)
                             .addComponent(cboSearchStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -695,10 +700,6 @@ public class VoucherForm extends javax.swing.JPanel {
 
         jdcEndDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
-        jLabel1.setText("Trạng thái");
-
-        cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sắp áp dụng", "Đang áp dụng", "Hết hạn" }));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -728,7 +729,7 @@ public class VoucherForm extends javax.swing.JPanel {
                                         .addGap(35, 35, 35)
                                         .addComponent(rdoMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(txtVoucherName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -740,16 +741,9 @@ public class VoucherForm extends javax.swing.JPanel {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(txtMinOder, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(33, 33, 33))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jdcEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jdcEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -778,14 +772,9 @@ public class VoucherForm extends javax.swing.JPanel {
                     .addComponent(jLabel9))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jdcEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jdcEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -839,7 +828,7 @@ public class VoucherForm extends javax.swing.JPanel {
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -1010,16 +999,51 @@ public class VoucherForm extends javax.swing.JPanel {
     private void txtSearchVoucherKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchVoucherKeyReleased
         try {
             search();
+//            cboSearchStatus.setSelectedIndex(0);
         } catch (SQLException ex) {
             Logger.getLogger(VoucherForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtSearchVoucherKeyReleased
 
     private void cboSearchStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSearchStatusActionPerformed
+        txtSearchVoucher.setText("");
+        txtSearchStartDate.setDate(null);
+        txtSearchEndDate.setDate(null);
+        String sql = "";
         try {
-            search();
-        } catch (SQLException ex) {
-            Logger.getLogger(VoucherForm.class.getName()).log(Level.SEVERE, null, ex);
+            if (cboSearchStatus.getSelectedIndex() == 0) {
+                sql = """
+                  SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity
+                  FROM dbo.Voucher
+                  """;
+                model.setRowCount(0);
+                loadDataToTableVoucher2(vrs.timKiemStatus(sql));
+            } else if (cboSearchStatus.getSelectedIndex() == 1) {
+                sql = """
+                  SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity
+                  FROM dbo.Voucher
+                  WHERE start_date > GETDATE() and quantity > 0
+                  """;
+                model.setRowCount(0);
+                loadDataToTableVoucher2(vrs.timKiemStatus(sql));
+            } else if (cboSearchStatus.getSelectedIndex() == 2) {
+                sql = """
+                  SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity
+                  FROM dbo.Voucher
+                  WHERE GETDATE() BETWEEN start_date AND end_date and quantity > 0
+                  """;
+                model.setRowCount(0);
+                loadDataToTableVoucher2(vrs.timKiemStatus(sql));
+            } else {
+                sql = """
+                  SELECT voucher_code, voucher_name, voucher_type, voucher_value, min_order_value, max_discount, [start_date], end_date, quantity
+                  FROM dbo.Voucher
+                  WHERE end_date < GETDATE() or quantity = 0
+                  """;
+                model.setRowCount(0);
+                loadDataToTableVoucher2(vrs.timKiemStatus(sql));
+            }
+        } catch (Exception e) {
         }
     }//GEN-LAST:event_cboSearchStatusActionPerformed
 
@@ -1039,15 +1063,21 @@ public class VoucherForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtSearchEndDatePropertyChange
 
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        txtSearchVoucher.setText("");
+        txtSearchStartDate.setDate(null);
+        txtSearchEndDate.setDate(null);
+        cboSearchStatus.setSelectedIndex(0);
+    }//GEN-LAST:event_btnResetActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddVoucher;
     private javax.swing.JButton btnClearForm;
     private javax.swing.JButton btnExcel;
+    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnUpdateVoucher;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cboSearchStatus;
-    private javax.swing.JComboBox<String> cboStatus;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;

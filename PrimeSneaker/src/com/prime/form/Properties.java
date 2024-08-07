@@ -1044,6 +1044,11 @@ public class Properties extends javax.swing.JPanel {
         btnColorClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnColorClear.setForeground(new java.awt.Color(255, 255, 255));
         btnColorClear.setText("Làm mới");
+        btnColorClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnColorClearActionPerformed(evt);
+            }
+        });
 
         btnColorAdd.setBackground(new java.awt.Color(39, 80, 150));
         btnColorAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -1200,6 +1205,11 @@ public class Properties extends javax.swing.JPanel {
         btnSizeClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnSizeClear.setForeground(new java.awt.Color(255, 255, 255));
         btnSizeClear.setText("Làm mới");
+        btnSizeClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSizeClearActionPerformed(evt);
+            }
+        });
 
         btnSizeAdd.setBackground(new java.awt.Color(39, 80, 150));
         btnSizeAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -1749,6 +1759,16 @@ public class Properties extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
         }
     }//GEN-LAST:event_btnSizeAddActionPerformed
+
+    private void btnColorClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorClearActionPerformed
+        txtColorID.setText("");
+        txtColor.setText("");
+    }//GEN-LAST:event_btnColorClearActionPerformed
+
+    private void btnSizeClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeClearActionPerformed
+        txtSizeID.setText("");
+        txtSize.setText("");
+    }//GEN-LAST:event_btnSizeClearActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBrand;

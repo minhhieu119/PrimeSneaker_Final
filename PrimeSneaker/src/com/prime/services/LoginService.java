@@ -44,7 +44,7 @@ public class LoginService {
         ModelUser mu = new ModelUser();
         String sql = """
                      select user_code, user_id, role_id, full_name, gender, date_of_birth,phone_number, [address], email, id_card_number, account_name, [password], [status]
-                     from [User] where account_name like ?
+                     from [User] where account_name like ? and [status] like N'Đang làm việc'
                      """;
         Connection connect = null;
         PreparedStatement ps = null;
@@ -68,8 +68,10 @@ public class LoginService {
                 mu.setAccountName(result.getString("account_name"));
                 mu.setPsw(result.getString("password"));
                 mu.setStatus(result.getString("status"));
+                return mu;
+            } else {
+                mu = null;
             }
-            return mu;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

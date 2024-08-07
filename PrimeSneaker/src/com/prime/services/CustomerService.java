@@ -48,6 +48,35 @@ public class CustomerService {
         return list;
     }
     
+    public ArrayList<ModelCustomer> getAllCustomerPaging(int pageIndex, int pageSize) throws SQLException {
+        ArrayList<ModelCustomer> list = new ArrayList<>();
+        String query = "exec SP_Customer_Paging ?,?";
+        try {
+            connect = ConnectionJDBC.getConnection();
+            ps = connect.prepareStatement(query);
+            ps.setInt(1, pageIndex);
+            ps.setInt(2, pageSize);
+            result = ps.executeQuery();
+            while (result.next()) {
+                ModelCustomer customer = new ModelCustomer();
+                customer.setCustomerID(result.getInt("customer_id"));
+                customer.setCustomerName(result.getString("full_name"));
+                customer.setPhoneNumber(result.getString("phone_number"));
+                customer.setGender(result.getBoolean("gender"));
+                customer.setAddress(result.getString("address"));
+                customer.setDob(result.getDate("date_of_birth"));
+                list.add(customer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            result.close();
+            ps.close();
+            connect.close();
+        }
+        return list;
+    }
+    
     public boolean addCustomer(ModelCustomer customer) throws SQLException{
         Integer row = null;
         String query = "INSERT INTO Customer(full_name, phone_number, gender, address, date_of_birth)\n"
@@ -159,4 +188,6 @@ public class CustomerService {
         }
         return resultList;
     }
+
+    
 }
